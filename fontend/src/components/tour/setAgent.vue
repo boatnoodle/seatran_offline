@@ -1,0 +1,74 @@
+<template>
+  <div>
+      <h3>ตั้งค่าตัวแทนขาย</h3><hr>
+      <button class="btn btn-info btn-sm" @click="formSetAgent">เพิ่มตัวแทนขาย</button>
+      <div class="row" style="margin-top: 20px;">
+          <div class="col-sm-12">
+            <table class="table table-hover table-bordered table-sm text-center">
+                    <thead class="bg-info text-white">
+                        <tr>
+                            <th>ชื่อตัวแทนขาย</th>
+                            <th>จัดการ</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-for="(data,index) in getAgent" :key="index">
+                            <td>{{ data.nameAgent }}</td>
+                            <td width="10%">
+                                <button @click="updateAgent(data)" class="btn btn-info btn-sm">แก้ไข</button>
+                                <button @click="removeAgent(data._id)" class="btn btn-default btn-sm">ลบ</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+          </div>
+      </div>
+    <form-set-Agent ref="formSetAgent" :Agent="Agent" @finish="actionGetAgent"></form-set-Agent>
+  </div>
+</template>
+<script>
+import formSetAgent from '@/components/tour/formSetAgent'
+export default {
+     data(){
+        return {
+            datas: '',
+            Agent: {}
+        }
+    },
+    components:{
+        formSetAgent
+    }
+    ,
+    methods: {
+        formSetAgent(){
+            this.$refs.formSetAgent.toggleModal()
+        },
+        removeAgent(id){
+            if(confirm('ยืนยันการลบ ?')){
+                this.$store.dispatch('removeAgent',id)
+                .then(()=> {
+                    this.actionGetAgent()
+                })
+                .catch((err) => {
+                    console.log(err)
+                })
+            }
+        },
+        updateAgent(data){
+            this.Agent = data
+            this.formSetAgent()
+        },
+        actionGetAgent(){
+            this.$store.dispatch('getAgent')
+        },
+    },
+    computed: {
+        getAgent(){
+            return this.$store.getters.getAgent
+        }
+    },
+    created(){
+        this.actionGetAgent()
+    }
+}
+</script>
