@@ -12,11 +12,34 @@ module.exports = {
             console.log(err)
         })
     },
+    getTaxiTicket: (req,res,next) => {
+        TaxiTicket.find()
+        .then(result => {
+            res.status(200).json(result)
+        })
+        .catch(err => {
+            console.log(err)
+        })
+    },
     getLastTaxiTicket: (req,res,next) => {
         TaxiTicket.findOne({},'_id',{ sort: {'_id': -1}})
         .exec()
         .then(route => {
             res.status(200).json(route)
+        })
+        .catch(err => {
+            console.log(err)
+        })
+    },
+    getTaxiTicketByDate: (req,res,next) => {
+        var date = new Date(req.body.dateSelect)
+        var datePlus = new Date(new Date(req.body.dateSelect).setDate(date.getDate() + 1))
+        TaxiTicket.find(
+            {"created" : {$gte: date, $lt: datePlus}}
+        )
+        .exec()
+        .then(result => {
+            res.status(200).json(result)
         })
         .catch(err => {
             console.log(err)

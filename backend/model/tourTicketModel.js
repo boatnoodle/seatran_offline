@@ -12,7 +12,11 @@ const tourTicketSchema = new Schema({
     voucher: String,
     nameHotel: String,
     room: String,
-    remark: String
+    remark: String,
+    creadted: {
+        type: Date,
+        default: Date.now
+    }
 })
 
 module.exports = mongoose.model('TourTicket',tourTicketSchema)

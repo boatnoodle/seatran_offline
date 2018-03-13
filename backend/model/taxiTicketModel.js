@@ -9,7 +9,11 @@ const taxiTicketSchema = new Schema({
     amount: {type: Number, required: true},
     total: {type: Number, requried: true},
     typeCar: {type: String, require: true},
-    remark: String
+    remark: String,
+    created: {
+        type: Date,
+        default: Date.now
+    }
 })
 
 module.exports = mongoose.model('TaxiTicket',taxiTicketSchema)
