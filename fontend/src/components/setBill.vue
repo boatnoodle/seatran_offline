@@ -5,7 +5,7 @@
           <div class="col-sm-12">
               <form v-on:submit.prevent="submit">
                 <div class="exReceipt">
-                    <input type="text" v-model="billHead" class="form-control" placeholder="กรุณาระบุหัวบิล">
+                    <input type="text" v-model="billHead" class="form-control text-center" placeholder="กรุณาระบุหัวบิล">
                     <p>xxxxxxxxxxxxxxxxx</p>
                     <div class="content">
                     <div>

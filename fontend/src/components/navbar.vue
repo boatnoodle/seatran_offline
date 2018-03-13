@@ -1,6 +1,8 @@
 <template>
   <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-    <router-link to="/" class="navbar-brand" href="#">SEATRAN TRAVEL</router-link>
+    <router-link to="/" class="navbar-brand" href="#">
+        <img src="../assets/logo.jpg" alt="">
+    </router-link>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
     </button>
@@ -13,8 +15,19 @@
             <li class="nav-item">
                 <router-link to="/tour/sell" class="nav-link" href="#">ขาย Tour</router-link>
             </li>
-            <li class="nav-item">
-                <router-link to="/sellTaxi" class="nav-link" href="#">รายงาน</router-link>
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    รายงาน
+                </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                    <b class="title">ระบบ Taxi</b>
+                    <router-link to="/report/reportTaxiDay" class="dropdown-item" href="#">รายงานประจำวัน</router-link>
+                    <router-link to="/report" class="dropdown-item" href="#">รายงานสรุป</router-link>
+                    <div class="dropdown-divider"></div>
+                       <b class="title">ระบบ Tour</b>
+                    <router-link to="/report" class="dropdown-item" href="#">รายงานประจำวัน</router-link>
+                    <router-link to="/report" class="dropdown-item" href="#">รายงานสรุป</router-link>
+                </div>
             </li>
         </ul>
         <ul class="navbar-nav">

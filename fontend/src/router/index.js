@@ -7,6 +7,7 @@ import setRoute from '@/components/taxi/setRoute'
 import setAgent from '@/components/tour/setAgent'
 import setTour from '@/components/tour/setTour'
 import setBill from '@/components/setBill'
+import reportTaxiDay from '@/components/report/reportTaxiDay'
 
 Vue.use(Router)
 
@@ -46,6 +47,11 @@ export default new Router({
       path: '/setBill',
       name: 'setBill',
       component: setBill
+    },
+    {
+      path: '/report/reportTaxiDay',
+      name: 'reportTaxiDay',
+      component: reportTaxiDay
     }
   ]
 })
