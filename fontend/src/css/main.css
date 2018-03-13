@@ -1,0 +1,29 @@
+@font-face {
+    font-family: rsu-font;
+    src: url('./fonts/RSU_Regular.ttf');
+}
+body{
+    font-family: rsu-font !important;
+ }
+ .boxSell{
+    background: white;
+    width: 100%;
+    min-height: 100vh;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 99999;
+}
+.close{
+    position: absolute;
+    right: 10px;
+    top: 10px;
+}
+.modal-header{
+    padding: 10px;
+}
+.listSetting{
+    font-size: 1.2em;
+    text-align: left;
+    line-height: 2;
+}
