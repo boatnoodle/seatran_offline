@@ -3,7 +3,8 @@ const Schema = mongoose.Schema
 
 const routeTaxiSchema = new Schema({
     nameRoute: {type: String, required: true},
-    priceRoute: {type: Number, required: true}
+    priceTaxi: {type: Number, required: true},
+    priceVan: {type: Number},
 })
 
 module.exports = mongoose.model('RouteTaxi',routeTaxiSchema)

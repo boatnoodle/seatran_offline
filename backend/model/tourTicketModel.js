@@ -13,7 +13,7 @@ const tourTicketSchema = new Schema({
     nameHotel: String,
     room: String,
     remark: String,
-    creadted: {
+    created: {
         type: Date,
         default: Date.now
     }
