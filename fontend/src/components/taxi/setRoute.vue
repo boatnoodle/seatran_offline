@@ -8,14 +8,16 @@
                     <thead class="bg-info text-white">
                         <tr>
                             <th>จุดส่ง</th>
-                            <th>ราคา</th>
+                            <th>ราคารถยนต์</th>
+                            <th>ราคารถตู้</th>
                             <th>จัดการ</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr v-for="(data,index) in getAllRouteTaxi" :key="index">
                             <td>{{ data.nameRoute }}</td>
-                            <td>{{ data.priceRoute }}</td>
+                            <td>{{ data.priceTaxi || '-' }}</td>
+                            <td>{{ data.priceVan || '-' }}</td>
                             <td width="10%">
                                 <button @click="updateRoute(data)" class="btn btn-info btn-sm">แก้ไข</button>
                                 <button @click="removeRoute(data._id)" class="btn btn-default btn-sm">ลบ</button>

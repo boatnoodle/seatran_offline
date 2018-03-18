@@ -5,6 +5,8 @@ import agent from '@/store/module/agent'
 import tour from '@/store/module/tour'
 import taxiTicket from '@/store/module/taxiTicket'
 import tourTicket from '@/store/module/tourTicket'
+import reportTaxi from '@/store/module/reportTaxi'
+import reportTour from '@/store/module/reportTour'
 
 Vue.use(Vuex)
 
@@ -14,7 +16,9 @@ export const store = new Vuex.Store({
         agent,
         tour,
         taxiTicket,
-        tourTicket
+        tourTicket,
+        reportTaxi,
+        reportTour
     }
     // plugins: [vuexLocal.plugin]
 })

@@ -5,7 +5,9 @@ import App from './App'
 import router from './router'
 import './css/main.css'
 import {store} from '@/store'
+import {ClientTable, Event} from 'vue-tables-2';
 
+Vue.use(ClientTable);
 Vue.config.productionTip = false
 
 /* eslint-disable no-new */

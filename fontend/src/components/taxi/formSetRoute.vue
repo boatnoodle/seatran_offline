@@ -12,12 +12,20 @@
             <div class="modal-body">
                 <form v-on:submit.prevent="submit">
                     <div class="form-group">
-                        <label for="exampleInputEmail1">จุดส่ง</label>
+                        <label>จุดส่ง</label>
                         <input type="text" v-model="data.nameRoute" class="form-control" placeholder="กรุณาระบุจุดส่ง">
                     </div>
                     <div class="form-group">
-                        <label for="exampleInputPassword1">ราคา</label>
-                        <input type="number" v-model="data.priceRoute" class="form-control" placeholder="กรุณาระบุราคา">
+                        <div class="form-row">
+                            <div class="col-sm-6">
+                                <label>ราคาแท็กซี่</label>
+                                <input type="number" v-model="data.priceTaxi" class="form-control" placeholder="ระบุราคาแท็กซี่">
+                            </div>
+                            <div class="col-sm-6">
+                                <label>ราคารถตู้</label>
+                                <input type="number" v-model="data.priceVan" class="form-control" placeholder="ระบุราคารถตู้">
+                            </div>
+                        </div>
                     </div>
                     <div class="text-center">
                         <button type="submit" class="btn btn-info btn-sm">บันทึก</button>
@@ -45,7 +53,8 @@ export default {
                 update: false,
                 id: '',
                 nameRoute: '',
-                priceRoute: ''
+                priceTaxi: '',
+                priceVan: ''
             }
         }
     },
@@ -72,7 +81,8 @@ export default {
                 update: false,
                 id: '',
                 nameRoute: '',
-                priceRoute: ''
+                priceTaxi: '',
+                priceVan: ''
             }
         }
     },
@@ -81,7 +91,8 @@ export default {
             this.data.update = true
             this.data.id = val._id
             this.data.nameRoute = val.nameRoute
-            this.data.priceRoute = val.priceRoute
+            this.data.priceTaxi = val.priceTaxi
+            this.data.priceVan = val.priceVan
         }
     },
     mounted(){

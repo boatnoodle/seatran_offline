@@ -1,6 +1,6 @@
 <template>
     <div>
-        <h3 class="text-center">รายงานการขนส่งประจำวัน</h3>
+        <h3 class="text-center">รางานทัวร์ประจำวัน</h3>
         <!-- <p class="text-center">{{ dateToday }}</p> -->
         <form v-on:submit.prevent="submit" class=" col-sm-6 offset-sm-3">
             <div class="form-group row">
@@ -18,38 +18,44 @@
         </div>
         <div class="row">
             <div class="col-sm-12">
-                <table class="table table-sm table-bordered table-hover">
+                <table class="table table-sm table-bordered table-hover text-center">
                     <thead>
                         <tr>
                             <th>รหัส</th>
-                            <th>จุดส่ง</th>
-                            <th>ประเภทรถ</th>
-                            <th>ราคา</th>
-                            <th>จำนวนผู้โดยสาร</th>
-                            <th>ราคารวม</th>
+                            <th>ชื่อ</th>
+                            <th>ตัวแทนขาย</th>
+                            <th>ชื่อทัวร์</th>
+                            <th>ราคาทัวร์</th>
+                            <th>จำนวนคน</th>
+                            <th>ราคาทั้งหมด</th>
+                            <th>Voucher</th>
+                            <th>ชื่อโรงแรม</th>
+                            <th>ห้องที่</th>
                             <th>หมายเหตุ</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr v-for="(data,index) in taxiTicket" :key="index">
+                        <tr v-for="(data,index) in tourTicket" :key="index">
                             <td>{{ data._id }}</td>
-                            <td>{{ data.destination.nameRoute }}</td>
-                            <td>{{ data.typeCar }}</td>
-                            <td>{{ data.price }}</td>
+                            <td>{{ data.name }}</td>
+                            <td>{{ data.nameAgent }}</td>
+                            <td>{{ data.tour.nameTour }}</td>
+                            <td>{{ data.tour.priceTour }}</td>
                             <td>{{ data.amount }}</td>
-                            <td>{{ data.total }}</td>
+                            <td>{{ data.tour.priceTour * data.amount }}</td>
+                            <td>{{ data.voucher || '-' }}</td>
+                            <td>{{ data.nameHotel || '-' }}</td>
+                            <td>{{ data.room || '-' }}</td>
                             <td>{{ data.remark || '-' }}</td>
                         </tr>
                     </tbody>
                     <tfoot>
                         <tr>
-                            <th>รวม</th>
-                            <th></th>
-                            <th></th>
+                            <th colspan="4">รวม</th>
                             <th>{{ total.totalPrice || 0 }}</th>
                             <th>{{ total.totalAmount || 0 }}</th>
                             <th>{{ total.total || 0}}</th>
-                            <th></th>
+                            <th colspan="4"></th>
                         </tr>
                     </tfoot>
                 </table>
@@ -71,7 +77,7 @@ export default {
             data:{
                 dateFrom: '',
             },
-            dataTable: [],
+            dataReady: [],
             dateToday: moment().locale('th').format("Do MMM YYYY"),
             searchKey: '',
             total: {}
@@ -79,51 +85,45 @@ export default {
     },
     methods: {
         submit(){
-            this.$store.dispatch('getTaxiTicketByDate',this.data)
+            this.$store.dispatch('getTourTicketByDate',this.data)
             .then(() => {
-                this.getTaxiTicketByDate
-                this.taxiTicket
+                this.manipulate
             })
         }
     },
     computed: {
-        getTaxiTicketByDate(){
-            this.dataTable = this.$store.getters.getTaxiTicketByDate
-            this.getTotal
-             return this.dataTable
+        manipulate(){ //ข้อผิดพลาด ของการดึงดาต้าเบสยังไม่ดีพอ
+            this.dataReady = []
+            const dataRaw = this.$store.getters.getTourTicketByDate
+            
+            dataRaw.forEach(val => {
+                const obj = val.agent.tour.find(v => v._id == val.tour)
+                const data = {
+                    '_id' : val._id,
+                    'name': val.name,
+                    'nameAgent': val.agent.nameAgent,
+                    'tour': obj,
+                    'amount': val.amount,
+                    'total': val.total,
+                    'voucher': val.voucher,
+                    'nameHotel': val.nameHotel,
+                    'room' : val.room,
+                    'remark': val.remark,
+                    "created": val.created
+                }
+                this.dataReady.push(data)
+            })
         },
-        taxiTicket(){
-            return this.dataTable.filter(v => {
-                  return v._id.match(this.searchKey) || v.destination.nameRoute.match(this.searchKey) || v.typeCar.match(this.searchKey)
+        tourTicket(){
+            return this.dataReady.filter(v => {
+                  return v._id.match(this.searchKey) || v.name.match(this.searchKey) || v.nameAgent.match(this.searchKey) || v.tour.nameTour.match(this.searchKey)
              })
         },
-        getTotal(){
-            if(this.dataTable.length > 0){
-                var totalPrice = this.dataTable.reduce((a,b)=> parseInt(a) + parseInt(b.price),0)
-                var totalAmount = this.dataTable.reduce((a,b) => parseInt(a) + parseInt(b.amount),0)
-                var total = this.dataTable.reduce((a,b) => parseInt(a) + parseInt(b.total),0)
-                this.total = {
-                    totalPrice: totalPrice,
-                    totalAmount: totalAmount,
-                    total: total,
-                    fee: total * 0.3,
-                    grandTotal: total + (total * 0.3)
-                }
-            }else{
-                this.total = {
-                    totalPrice: 0,
-                    totalAmount: 0,
-                    total: 0,
-                    fee: 0,
-                    grandTotal: 0
-                }
-            }
-        }
     },
     watch: {
-        taxiTicket(val){
+        tourTicket(val){
            if(val.length > 0){
-                var totalPrice = val.reduce((a,b)=> parseInt(a) + parseInt(b.price),0)
+                var totalPrice = val.reduce((a,b)=> parseInt(a) + parseInt(b.tour.priceTour),0)
                 var totalAmount = val.reduce((a,b) => parseInt(a) + parseInt(b.amount),0)
                 var total = val.reduce((a,b) => parseInt(a) + parseInt(b.total),0)
                 this.total = {
@@ -148,43 +148,4 @@ export default {
 </script>
 <style scoped>
 
-.VuePagination {
-  text-align: center;
-}
-
-.vue-title {
-  text-align: center;
-  margin-bottom: 10px;
-}
-
-.vue-pagination-ad {
-  text-align: center;
-}
-
-.glyphicon.glyphicon-eye-open {
-  width: 16px;
-  display: block;
-  margin: 0 auto;
-}
-
-th:nth-child(3) {
-  text-align: center;
-}
-
-.VueTables__child-row-toggler {
-  width: 16px;
-  height: 16px;
-  line-height: 16px;
-  display: block;
-  margin: auto;
-  text-align: center;
-}
-
-.VueTables__child-row-toggler--closed::before {
-  content: "+";
-}
-
-.VueTables__child-row-toggler--open::before {
-  content: "-";
-}
 </style>

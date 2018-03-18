@@ -1,12 +1,13 @@
 <template>
     <div>
-        <h3 class="text-center">รายงานการขนส่งประจำวัน</h3>
-        <!-- <p class="text-center">{{ dateToday }}</p> -->
-        <form v-on:submit.prevent="submit" class=" col-sm-6 offset-sm-3">
+        <h3 class="text-center">รายงานการขนส่งประจำช่วง</h3>
+        <form v-on:submit.prevent="submit" class=" col-sm-12">
             <div class="form-group row">
-                <div class="text-right col-sm-2">ค้นหา</div>
-                <input type="date" v-model="data.dateFrom" class="form-control col-sm-8" >
-                <button type="submit" class="btn btn-info btn-sm col-sm-2">ค้นหา</button>
+                <div class="text-right col-sm-2">จากวันที่</div>
+                <input type="date" v-model="data.dateFrom" class="form-control col-sm-3" required>
+                 <div class="text-right col-sm-2">ถึงวันที่</div>
+                <input type="date" v-model="data.dateTo" class="form-control col-sm-3" required>
+                <button type="submit" class="btn btn-info btn-sm">ค้นหา</button>
             </div>
         </form>
         <div class="row">
@@ -21,8 +22,9 @@
                 <table class="table table-sm table-bordered table-hover">
                     <thead>
                         <tr>
+                            <th>วันที่</th>
                             <th>รหัส</th>
-                            <th>จุดส่ง</th>
+                            <th>จุดส่ง</th>  
                             <th>ประเภทรถ</th>
                             <th>ราคา</th>
                             <th>จำนวนผู้โดยสาร</th>
@@ -32,6 +34,7 @@
                     </thead>
                     <tbody>
                         <tr v-for="(data,index) in taxiTicket" :key="index">
+                            <td>{{ dateFormat(data.created) }}</td>
                             <td>{{ data._id }}</td>
                             <td>{{ data.destination.nameRoute }}</td>
                             <td>{{ data.typeCar }}</td>
@@ -44,6 +47,7 @@
                     <tfoot>
                         <tr>
                             <th>รวม</th>
+                            <th></th>
                             <th></th>
                             <th></th>
                             <th>{{ total.totalPrice || 0 }}</th>
@@ -70,6 +74,7 @@ export default {
         return {
             data:{
                 dateFrom: '',
+                dateTo: ''
             },
             dataTable: [],
             dateToday: moment().locale('th').format("Do MMM YYYY"),
@@ -84,6 +89,9 @@ export default {
                 this.getTaxiTicketByDate
                 this.taxiTicket
             })
+        },
+        dateFormat(date){
+            return moment(date).format('D/MM/YYYY')
         }
     },
     computed: {

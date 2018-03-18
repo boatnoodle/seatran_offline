@@ -23,7 +23,15 @@
                                             <option v-for="(data,index) in getAllRouteTaxi"  :key="index" :value="data._id">{{ data.nameRoute }}</option>
                                         </select>
                                     </div>
-                                      <div class="form-group">
+                                    <div class="form-group">
+                                        <label for="exampleInputEmail1">ประเภทรถ</label>
+                                        <select class="form-control" v-model="data.typeCar">
+                                            <option value="">กรุณาเลือกประเภทรถ</option>
+                                            <option value="Limousine">รถยนต์</option>
+                                            <option value="Mini bus">รถตู้</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
                                         <div class="form-row">
                                             <div class="col-sm-6">
                                                 <label for="exampleInputPassword1">ราคา</label>
@@ -38,15 +46,6 @@
                                      <div class="form-group">
                                         <label for="exampleInputPassword1">ราคารวมทั้งสิ้น</label>
                                         <input type="text" v-model="total" class="form-control" placeholder="ราคารวม" readonly>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="exampleInputEmail1">ประเภทรถ</label>
-                                        <select class="form-control" v-model="data.typeCar">
-                                            <option value="">กรุณาเลือกประเภทรถ</option>
-                                            <option value="Mini bus">รถตู้</option>
-                                            <option value="Limousine">รถยนต์</option>
-                                            <option value="Motorcycle">รถจักรยานยนต์</option>
-                                        </select>
                                     </div>
                                     <div class="form-group">
                                         <label for="exampleInputPassword1">หมายเหตุ</label>
@@ -111,17 +110,18 @@
                                     </div>
                                     <div class="card-body">
                                        <div class="exReceipt">
-                                            <h3>{{ billHead }}</h3>
+                                            <h4>TRANSFER VOUCHER</h4>
+                                            <!-- <h3>{{ billHead }}</h3> -->
                                             <p>{{ realTime }}</p>
                                             <p style="text-align: right; font-weight: bold;">No. {{ data._id }}</p>
                                             <div class="content">
                                             <div>
                                                 <span style="font-weight: bold;">Name : </span>
-                                                <span style="float: right">{{ data.namePassenger || '-' }}</span>
+                                                <div style="text-align: left">{{ data.namePassenger || '-' }}</div>
                                             </div>
                                             <div>
                                                 <span style="font-weight: bold;">Destination : </span>
-                                                <span style="float: right">{{ nameRoute || '-' }}</span>
+                                                <div style="text-align: left">{{ nameRoute || '-' }}</div>
                                             </div>
                                             <div>
                                                 <span style="font-weight: bold;">Price : </span>
@@ -205,7 +205,9 @@ export default {
             nameRoute: '',
             realTime: '',
             routeTaxi: [],
-            billHead: ''
+            billHead: '',
+            priceTaxk: '',
+            priceVan: ''
         }
     },
     methods: {
@@ -225,18 +227,19 @@ export default {
         submit(){
             this.$store.dispatch('addTaxiTicket',this.data)
             .then(() => {
+                moment.locale('en');
                 let html = `
-                    <h3 style="text-align: center;">${ this.billHead }</h3>
+                    <h4 style="text-align: center;">TRANSFER VOUCHER</h4>
                     <p style="text-align: center; font-weight: bold;">${ moment(new Date()).format('MM/DD/YYYY, h:mm:ss a') }</p>
                     <p style="text-align: right; font-weight: bold;">No. ${  this.data._id }</p>
                     <div class="content">
                     <div>
                         <span style="font-weight: bold;">Name : </span>
-                        <span style="float: right">${  this.data.namePassenger || '-' }</span>
+                        <div style="text-align:left;">${  this.data.namePassenger || '-' }</div>
                     </div>
                     <div>
                         <span style="font-weight: bold;">Destination : </span>
-                        <span style="float: right">${  this.nameRoute || '-' }</span>
+                        <div style="text-align: left">${  this.nameRoute || '-' }</div>
                     </div>
                     <div>
                         <span style="font-weight: bold;">Price : </span>
@@ -310,9 +313,21 @@ export default {
         selectRoute(val){
             if(val != '' && val != undefined){
                 const obj = this.routeTaxi.find(v => v._id == val)
+                this.data.typeCar = ''
+                this.data.price = ''
                 this.nameRoute = obj.nameRoute
                 this.data.destination = obj._id
-                this.data.price = obj.priceRoute
+                this.priceTaxi = obj.priceTaxi
+                this.priceVan = obj.priceVan
+            }
+        },
+        'data.typeCar'(val){
+            if(val != '' &&  val != undefined){
+                if(val == 'Limousine'){
+                    this.data.price = this.priceTaxi
+                }else{
+                    this.data.price = this.priceVan
+                }
             }
         }
     },

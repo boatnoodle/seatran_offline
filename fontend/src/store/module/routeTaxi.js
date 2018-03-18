@@ -39,7 +39,8 @@ const actions = {
     async updateRoute({commit},data){
         const dataUpdate = {
             nameRoute: data.nameRoute,
-            priceRoute: data.priceRoute
+            priceTaxi: data.priceTaxi,
+            priceVan: data.priceVan
         }
         await axios.put('routeTaxi/updateRoute/'+ data.id,dataUpdate)
         .then(result => {

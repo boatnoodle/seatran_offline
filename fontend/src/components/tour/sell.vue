@@ -125,13 +125,14 @@
                                     </div>
                                     <div class="card-body">
                                        <div class="exReceipt">
+                                           <h4>TOUR VOUCHER</h4>
                                            <h3>{{ billHead }}</h3>
                                            <p></p>
                                            <p style="text-align: right; font-weight: bold;">No. {{ data._id }}</p>
                                             <div class="content">
                                             <div>
                                                 <span style="font-weight: bold;">Name : </span>
-                                                <span style="float: right">{{ data.name || '-'  }}</span>
+                                                <div style="text-align: left">{{ data.name || '-'  }}</div>
                                             </div>
                                             <div>
                                                 <span style="font-weight: bold;">Agent : </span>
@@ -214,7 +215,7 @@
 <script>
 import moment from 'moment'
 import printJS from 'print-js'
-import Jquery from 'jquery'
+// import Jquery from 'jquery'
 import axios from 'axios'
 export default {
    data(){
@@ -259,6 +260,7 @@ export default {
         submit(){
             this.$store.dispatch('addTourTicket',this.data)
             .then(() => {
+                moment.locale('en');
                 let html = `
                         <h3 style="text-align: center;">${ this.billHead }</h3>
                         <p style="text-align: center; font-weight: bold;">${ moment(new Date()).format('MM/DD/YYYY, h:mm:ss a') }</p>
@@ -266,7 +268,7 @@ export default {
                         <div class="content">
                         <div>
                             <span style="font-weight: bold;">Name : </span>
-                            <span style="float: right">${ this.data.name || '-'  }</span>
+                            <div style="text-align: left;">${ this.data.name || '-'  }</div>
                         </div>
                         <div>
                             <span style="font-weight: bold;">Agent : </span>
@@ -311,7 +313,7 @@ export default {
                             <h3>THANK YOU</h3>
                         </div>
                     `
-                Jquery('#printBill').html(html)
+                $('#printBill').html(html)
                 printJS({printable: 'printBill', type: 'html', targetStyles: ['*']})
                 html = ``
                 this.genIdTicket(this.data._id)
