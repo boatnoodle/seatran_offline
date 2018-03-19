@@ -2,23 +2,35 @@ import axios from '@/service/axios'
 
 const state = {
     taxiTicket: {},
+    taxiTicketLasted: {},
     lastId: null
 }
 
 const getters = {
-    getLastTaxiTicket: (state) => state.lastId
+    getLastTaxiTicket: (state) => state.lastId,
+    getTaxiTicketLasted: (state) => state.taxiTicketLasted
 }
 
 const mutations = {
     getLastTaxiTicket(state,lastId){
         state.lastId = lastId
-    }
+    },
+    getTaxiTicketLasted: (state,taxiTicketLasted) => state.taxiTicketLasted = taxiTicketLasted
 }
 const actions = {
     async getLastTaxiTicket({commit}){
         await axios.get('taxiTicket/getLastTaxiTicket')
         .then((response) => {
             commit('getLastTaxiTicket',response.data)
+        })
+        .catch(err => {
+            console.log(err)
+        })
+    },
+    async getTaxiTicketLasted({commit}){
+        await axios.get('taxiTicket/getTaxiTicketLasted')
+        .then((response) => {
+            commit('getTaxiTicketLasted',response.data)
         })
         .catch(err => {
             console.log(err)
@@ -34,31 +46,7 @@ const actions = {
         .catch(err => {
             console.log(err)
         })
-    },
-    // async updateRoute({commit},data){
-    //     const dataUpdate = {
-    //         nameRoute: data.nameRoute,
-    //         priceRoute: data.priceRoute
-    //     }
-    //     await axios.put('routeTaxi/updateRoute/'+ data.id,dataUpdate)
-    //     .then(result => {
-    //         alert('แก้ไขข้อมูลเรียบร้อยแล้ว')
-    //     })
-    //     .catch(err => {
-    //         console.log(err)
-    //     })
-    // },
-    // async removeRoute({commit},id){
-    //     await axios.delete('routeTaxi/removeRoute/'+ id)
-    //     .then(response => {
-    //         if(response.status == 200){
-    //             alert('ลบข้อมูลเรียบร้อยแล้ว')
-    //         }
-    //     })
-    //     .catch(err => {
-    //         console.log(err)
-    //     })
-    // }
+    }
 }
 
 export default {

@@ -1,7 +1,7 @@
 <template>
   <div>
-      <h3>ตั้งค่าตัวแทนขาย</h3><hr>
-      <button class="btn btn-info btn-sm" @click="formSetAgent">เพิ่มตัวแทนขาย</button>
+      <h3><i class="fa fa-briefcase"></i> ตั้งค่าตัวแทนขาย</h3><hr>
+      <button class="btn btn-info btn-sm" @click="formSetAgent"><i class="fa fa-plus"></i> เพิ่มตัวแทนขาย</button>
       <div class="row" style="margin-top: 20px;">
           <div class="col-sm-12">
             <table class="table table-hover table-bordered table-sm text-center">
@@ -14,9 +14,9 @@
                     <tbody>
                         <tr v-for="(data,index) in getAgent" :key="index">
                             <td>{{ data.nameAgent }}</td>
-                            <td width="10%">
-                                <button @click="updateAgent(data)" class="btn btn-info btn-sm">แก้ไข</button>
-                                <button @click="removeAgent(data._id)" class="btn btn-default btn-sm">ลบ</button>
+                            <td width="15%">
+                                <button @click="updateAgent(data)" class="btn btn-info btn-sm"><i class="fa fa-pencil"></i> แก้ไข</button>
+                                <button @click="removeAgent(data._id)" class="btn btn-default btn-sm"><i class="fa fa-trash-o"></i> ลบ</button>
                             </td>
                         </tr>
                     </tbody>

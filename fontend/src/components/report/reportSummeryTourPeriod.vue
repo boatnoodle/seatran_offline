@@ -41,10 +41,10 @@
                         </tr>
                     </tbody>
                      <tfoot>
-                        <tr>
+                        <tr class="bg-dark text-white">
                             <th>Grand Total</th>
+                            <th>{{ total.totalPriceList || 0 }}</th>
                             <th>{{ total.totalAmount || 0 }}</th>
-                            <th>{{ total.totalPrice || 0 }}</th>
                             <th>{{ total.total || 0}}</th>
                         </tr>
                     </tfoot>
@@ -56,8 +56,8 @@
                 
                 <div style="float: right; font-weight: bold; text-align: right">
                     <p>รวม : {{ total.total || 0 }} บาท</p>
-                    <p>(30%) : {{ (total.total *0.3) || 0 }} บาท</p>
-                    <p>รวมทั้งสิ้น : {{ (total.total + (total.total *0.3)) || 0 }} บาท</p>
+                    <p>({{ percentTour * 100 }}%) : {{ (total.total * percentTour) || 0 }} บาท</p>
+                    <p>รวมทั้งสิ้น : {{ (total.total + (total.total * percentTour)) || 0 }} บาท</p>
                 </div>
             </div>
         </div>
@@ -79,7 +79,8 @@ export default {
                 'totalAmount': 0,
                 'totalPrice': 0,
                 'total': 0
-            }
+            },
+            percentTour: ''
         }
     },
     methods: {
@@ -103,6 +104,7 @@ export default {
         manipulate(){ // เหี้ยมาก ยอมรับ โปรเจคหน้าขอแก้ตัว ผิดพลาด ตรงการ ดึงยังดึงไม่ดี ทำให้ต้อง ปรับแต่งก่อนนำใช้ เยอะมาก อาจำทให้ตอนดึงช้าขึ้น ToT
             this.dataReady = []
             this.total = {
+                'totalPriceList': 0,
                 'totalAmount': 0,
                 'totalPrice': 0,
                 'total': 0
@@ -112,6 +114,7 @@ export default {
                 let data = {
                     'nameAgent': element.detailAgentTour[0].nameAgent,
                     'tour': [],
+                    'totalPriceList': 0,
                     'totalAmount': 0,
                     'totalPrice': 0
                 }
@@ -125,23 +128,30 @@ export default {
                                 totalAmountList: val.totalAmount,
                                 totalPriceTour: val.totalPrice
                             }
-                            console.log(tourList.priceList)
-                            data.totalPriceList += parseInt(tourList.priceList)
+                            data.totalPriceList += tourList.priceList
                             data.totalAmount += tourList.totalAmountList
                             data.totalPrice += tourList.totalPriceTour
                             data.tour.push(tourList)
-                            console.log(data.totalPriceList)
                         }
                     })
                 })
-                this.total.totalPriceList += data.totalPriceList
+                this.total.totalPriceList += parseInt(data.totalPriceList)
                 this.total.totalAmount += parseInt(data.totalAmount)
                 this.total.totalPrice += parseInt(data.priceTour)
                 this.total.total += parseInt(data.totalPrice)
                 this.dataReady.push(data)
             });
-            // console.log(this.dataReady)
+        },
+        getPercentTour(){
+            this.$store.dispatch('getPercent')
+            .then(() => {
+                const obj = this.$store.getters.getPercent
+                this.percentTour = obj.percentTour / 100
+            })
         }
+    },
+    created(){
+        this.getPercentTour
     }
 }
 </script>

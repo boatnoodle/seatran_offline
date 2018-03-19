@@ -49,8 +49,8 @@
                 
                 <div style="float: right; font-weight: bold; text-align: right">
                     <p>รวม : {{ total || 0 }} บาท</p>
-                    <p>(30%) : {{ (total*0.3) || 0 }} บาท</p>
-                    <p>รวมทั้งสิ้น : {{ (total + (total*0.3)) || 0 }} บาท</p>
+                    <p>({{percentTaxi * 100}}%) : {{ (total * percentTaxi) || 0 }} บาท</p>
+                    <p>รวมทั้งสิ้น : {{ total + (total * percentTaxi) || 0 }} บาท</p>
                 </div>
             </div>
         </div>
@@ -67,7 +67,8 @@ export default {
             },
             dataTable: [],
             dataReady: [],
-            total: 0
+            total: 0,
+            percentTaxi: ''
         }
     },
     methods: {
@@ -86,9 +87,6 @@ export default {
     computed: {
         getTaxiTicketSummery(){
             this.dataTable = this.$store.getters.getTaxiTicketSummery
-            // this.dataTable.foreach(arrayItem => {
-            //     console.log(arrayItem)
-            // })
              return this.dataTable
         },
         manipulate(){
@@ -126,10 +124,17 @@ export default {
                     return parseInt(a) + parseInt(b.totalPrice)
                 })
             }
+        },
+        getPercentTaxi(){
+            this.$store.dispatch('getPercent')
+            .then(() => {
+                const obj = this.$store.getters.getPercent
+                this.percentTaxi = obj.percentTaxi / 100
+            })
         }
     },
-    watch: {
-
+    created(){
+        this.getPercentTaxi
     }
 }
 </script>

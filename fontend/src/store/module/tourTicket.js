@@ -2,23 +2,35 @@ import axios from '@/service/axios'
 
 const state = {
     tourTicket: {},
+    tourTicketLasted: {},
     lastId: null
 }
 
 const getters = {
-    getLastTourTicket: (state) => state.lastId
+    getLastTourTicket: (state) => state.lastId,
+    getTourTicketLasted: (state) => state.tourTicketLasted
 }
 
 const mutations = {
     getLastTourTicket(state,lastId){
         state.lastId = lastId
-    }
+    },
+    getTourTicketLasted: (state, tourTicketLasted) => state.tourTicketLasted = tourTicketLasted
 }
 const actions = {
     async getLastTourTicket({commit}){
         await axios.get('tourTicket/getLastTourTicket')
         .then((response) => {
             commit('getLastTourTicket',response.data)
+        })
+        .catch(err => {
+            console.log(err)
+        })
+    },
+    async getTourTicketLasted({commit}){
+        await axios.get('tourTicket/getTourTicketLasted')
+        .then((response) => {
+            commit('getTourTicketLasted',response.data)
         })
         .catch(err => {
             console.log(err)
@@ -35,30 +47,6 @@ const actions = {
             console.log(err)
         })
     },
-    // async updateRoute({commit},data){
-    //     const dataUpdate = {
-    //         nameRoute: data.nameRoute,
-    //         priceRoute: data.priceRoute
-    //     }
-    //     await axios.put('routeTaxi/updateRoute/'+ data.id,dataUpdate)
-    //     .then(result => {
-    //         alert('แก้ไขข้อมูลเรียบร้อยแล้ว')
-    //     })
-    //     .catch(err => {
-    //         console.log(err)
-    //     })
-    // },
-    // async removeRoute({commit},id){
-    //     await axios.delete('routeTaxi/removeRoute/'+ id)
-    //     .then(response => {
-    //         if(response.status == 200){
-    //             alert('ลบข้อมูลเรียบร้อยแล้ว')
-    //         }
-    //     })
-    //     .catch(err => {
-    //         console.log(err)
-    //     })
-    // }
 }
 
 export default {

@@ -1,11 +1,11 @@
 <template>
   <div>
-      <h3>ตั้งค่าบิล</h3><hr>
+      <h3><i class="fa fa-files-o"></i> ตั้งค่าบิล</h3><hr>
       <div class="row" style="margin-top: 20px;">
           <div class="col-sm-12">
               <form v-on:submit.prevent="submit">
                 <div class="exReceipt">
-                    <input type="text" v-model="billHead" class="form-control text-center" placeholder="กรุณาระบุหัวบิล">
+                    <input type="text" v-model="data.billHead" class="form-control text-center" placeholder="กรุณาระบุหัวบิล">
                     <p>xxxxxxxxxxxxxxxxx</p>
                     <div class="content">
                     <div>
@@ -35,8 +35,7 @@
                     </div>
                     </div>
                     <div style="margin-top: 40px;">
-                    <h3>RASSADA HARBOUR</h3>
-                    <h3>THANK YOU</h3>
+                        <textarea class="form-control" v-model="data.billFoot" style="text-align: center"  cols="30" rows="5" placeholder="กรุณาระบุท้ายบิล"></textarea>
                     </div>
                 </div>
                 <div class="text-center" style="margin-top: 20px;">
@@ -52,17 +51,21 @@ import axios from 'axios'
 export default {
     data(){
         return {
-            billHead: ''
+            data: {
+                billHead : '',
+                billFoot: ''
+            }
         }
     },
     methods: {
-        async submit(){
-            await axios.put('http://localhost:3000/api/billHead', {
-                billHead: this.billHead,
-            })
+         submit(){
+             const data = {
+                 billHead: this.data.billHead,
+                 billFoot: this.data.billFoot.replace(/\n/g, "<br />")
+             }
+            this.$store.dispatch('updateBillHead',data)
             .then(response => {
-                alert('แก้ไขหัวบิลเรียบร้อยแล้ว')
-                this.getBillHead
+                this.actionGetBillHead
             })
             .catch(error => {
                 console.log(error);
@@ -70,18 +73,21 @@ export default {
         }
     },
     computed: {
-        async getBillHead(){
-            await axios.get('http://localhost:3000/api/billHead')
-            .then((response) => {
-                this.billHead = response.data[0].billHead
+        getBillHead(){
+            const obj = this.$store.getters.getBillHead
+            this.data.billHead = obj.billHead
+            this.data.billFoot = obj.billFoot.replace(/<br\s*[\/]?>/gi, "\n");
+            return obj
+        },
+        actionGetBillHead(){
+            this.$store.dispatch('getBillHead')
+            .then(() => {
+                this.getBillHead
             })
-            .catch(error => {
-                console.log(error);
-            });
         }
     },
      created(){
-         this.getBillHead
+        this.actionGetBillHead
     }
 }
 </script>

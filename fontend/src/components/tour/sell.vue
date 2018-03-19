@@ -17,14 +17,14 @@
                                         <input type="text" ref="name" v-model="data.name" class="form-control" placeholder="ชื่อ-นามสกุล">
                                     </div>
                                     <div class="form-group">
-                                        <label for="exampleInputEmail1">บริษัท</label>
+                                        <label>บริษัท</label>
                                         <select v-model="selectAgent" class="form-control">
                                             <option value="">กรุณาเลือกบริษัท</option>
                                             <option v-for="(data,index) in getTour" :key="index" :value="data._id">{{ data.nameAgent }}</option>
                                         </select>
                                     </div>
                                     <div class="form-group">
-                                        <label for="exampleInputEmail1">รายการทัวร์</label>
+                                        <label>รายการทัวร์</label>
                                         <select v-model="selectTour" class="form-control">
                                             <option value="">กรุณาเลือกรายการทัวร์</option>
                                             <option v-for="(data,index) in tourList" :key="index" :value="data._id">{{ data.nameTour }}</option>
@@ -78,30 +78,19 @@
                             <thead class="text-white bg-info">
                                 <tr>
                                 <th scope="col">#</th>
-                                <th scope="col">First</th>
-                                <th scope="col">Last</th>
-                                <th scope="col">Handle</th>
+                                <th scope="col">ชื่อ</th>
+                                <th scope="col">จำนวนคน</th>
+                                <th scope="col">ราคารวม</th>
+                                <th>หมายเหตุ</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <th colspan="4">Coming Soon.</th>
-                                <!-- <th scope="row">1</th>
-                                <td>Mark</td>
-                                <td>Otto</td>
-                                <td>@mdo</td>
-                                </tr>
-                                <tr>
-                                <th scope="row">2</th>
-                                <td>Jacob</td>
-                                <td>Thornton</td>
-                                <td>@fat</td>
-                                </tr>
-                                <tr>
-                                <th scope="row">3</th>
-                                <td>Larry</td>
-                                <td>the Bird</td>
-                                <td>@twitter</td> -->
+                                <tr v-for="(data,index) in getTourTicketLasted" :key="index">
+                                    <th>{{ index+1 }}</th>
+                                    <th>{{ data.name }}</th>
+                                    <th>{{ data.amount }}</th>
+                                    <th>{{ data.total }}</th>
+                                    <th>{{ data.remark || '-' }}</th>
                                 </tr>
                             </tbody>
                         </table>
@@ -173,14 +162,13 @@
                                             </div>
                                             </div>
                                             <div style="margin-top: 40px;">
-                                                <h3>RASSADA HARBOUR</h3>
-                                                <h3>THANK YOU</h3>
+                                                <h6 id="billFoot"></h6>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                             <div class="col-sm-12" style="margin-top: 20px;">
+                             <!-- <div class="col-sm-12" style="margin-top: 20px;">
                                 <div class="card">
                                     <div class="card-header text-white bg-primary">
                                         ตั้งค่าระบบ Taxi
@@ -199,7 +187,7 @@
                                         </ul>
                                     </div>
                                 </div>
-                            </div>
+                            </div> -->
                         </div>
                     </div>
                 </div>
@@ -240,7 +228,8 @@ export default {
             realTime: '',
             tour: [],
             tourList: [],
-            billHead: ''
+            billHead: '',
+            billFoot: ''
         }
     },
     methods: {
@@ -254,7 +243,7 @@ export default {
             }else{
                 var id = '0001'
             }
-            return this.data._id = prefix + id
+            return this.data._id = prefix + id + "TR"
            
         },
         submit(){
@@ -309,8 +298,7 @@ export default {
                         </div>
                         </div>
                         <div style="text-align:center; margin-top: 40px;">
-                            <h3>RASSADA HARBOUR</h3>
-                            <h3>THANK YOU</h3>
+                            <h6>${ this.billFoot }</h6>
                         </div>
                     `
                 $('#printBill').html(html)
@@ -331,15 +319,19 @@ export default {
                 this.nameAgent = '',
                 this.selectTour = '',
                 this.nameTour = '',
-                this.tour = [],
-                this.tourList = []
+                // this.tour = [],
+                // this.tourList = []
                 $(this.$refs.name).focus()
+                this.$store.dispatch('getTourTicketLasted')
             })
         }
     },
     computed: {
         getTour(){
             return this.tour =  this.$store.getters.getTour
+        },
+        getTourTicketLasted(){
+            return this.$store.getters.getTourTicketLasted
         },
         total(){
             var total = 0
@@ -351,14 +343,14 @@ export default {
         getLastTourTicket(){
             return this.$store.getters.getLastTourTicket
         },
-        async getBillHead(){
-            await axios.get('http://localhost:3000/api/billHead')
-            .then((response) => {
-                this.billHead = response.data[0].billHead
+        getBillHead(){
+            this.$store.dispatch('getBillHead')
+            .then(() => {
+                const obj = this.$store.getters.getBillHead
+                this.billHead = obj.billHead
+                this.billFoot = obj.billFoot
+                $("#billFoot").html(obj.billFoot)
             })
-            .catch(error => {
-                console.log(error);
-            });
         }
     },
     watch: {
@@ -392,6 +384,7 @@ export default {
     },
     created(){
         this.getBillHead
+        this.$store.dispatch('getTourTicketLasted')
         this.$store.dispatch('getTour')
         this.$store.dispatch('getLastTourTicket').then(() => {
             var lastId = this.getLastTourTicket

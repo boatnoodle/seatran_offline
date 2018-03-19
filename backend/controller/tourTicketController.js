@@ -95,33 +95,19 @@ module.exports = {
             console.log('err',err)
             res.send(err.message)
         })
+    },
+    getTourTicketLasted(req,res,next){
+        TourTicket.find()
+        .sort({'created': -1})
+        .limit(5)
+        .exec()
+        .then((result) => {
+            res.status(200).json(result)
+        })
+        .catch((err) => {
+            console.log('err',err)
+            res.send(err.message) 
+        })
     }
-    // getAllRoute: (req,res,next) => {
-    //     TaxiTicket.find()
-    //     .exec()
-    //     .then(route => {
-    //         res.status(200).json(route)
-    //     })
-    //     .catch(err => {
-    //         console.log(err)
-    //     })
-    // },
-    // updateRoute: (req,res,next) => {
-    //     TaxiTicket.findByIdAndUpdate(req.params.id,req.body,{new: true})
-    //     .then((result) => {
-    //         res.status(200).json(result)
-    //     })
-    //     .catch((err) => {
-    //         console.log(err)
-    //     })
-    // },
-    // removeRoute: (req,res,next) => {
-    //     TaxiTicket.findByIdAndRemove(req.params.id)
-    //     .then(result => {
-    //         res.status(200).json(result)
-    //     })
-    //     .catch(err => {
-    //         console.log(err)
-    //     })
-    // }
+    
 }

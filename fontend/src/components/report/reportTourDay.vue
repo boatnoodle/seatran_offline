@@ -61,7 +61,7 @@
                 </table>
                 <div style="float: right; font-weight: bold; text-align: right">
                     <p>รวม : {{ total.total || 0 }} บาท</p>
-                    <p>(30%) : {{ total.fee || 0 }} บาท</p>
+                    <p>({{ percentTour * 100 }}%) : {{ total.fee || 0 }} บาท</p>
                     <p>รวมทั้งสิ้น : {{ total.grandTotal || 0 }} บาท</p>
                 </div>
             </div>
@@ -80,7 +80,8 @@ export default {
             dataReady: [],
             dateToday: moment().locale('th').format("Do MMM YYYY"),
             searchKey: '',
-            total: {}
+            total: {},
+            percentTour: ''
         }
     },
     methods: {
@@ -119,6 +120,13 @@ export default {
                   return v._id.match(this.searchKey) || v.name.match(this.searchKey) || v.nameAgent.match(this.searchKey) || v.tour.nameTour.match(this.searchKey)
              })
         },
+        getPercentTour(){
+            this.$store.dispatch('getPercent')
+            .then(() => {
+                const obj = this.$store.getters.getPercent
+                this.percentTour = obj.percentTour / 100
+            })
+        }
     },
     watch: {
         tourTicket(val){
@@ -130,8 +138,8 @@ export default {
                     totalPrice: totalPrice,
                     totalAmount: totalAmount,
                     total: total,
-                    fee: total * 0.3,
-                    grandTotal: total + (total * 0.3)
+                    fee: total * this.percentTour,
+                    grandTotal: total + (total * this.percentTour)
                 }
             }else{
                 this.total = {
@@ -143,6 +151,9 @@ export default {
                 }
             }
         }
+    },
+    created(){
+        this.getPercentTour
     }
 }
 </script>

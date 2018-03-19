@@ -1,7 +1,7 @@
 <template>
   <div>
-      <h3>ตั้งค่าเส้นทาง</h3><hr>
-      <button class="btn btn-info btn-sm" @click="formSetRoute">เพิ่มเส้นทาง</button>
+      <h3><i class="fa fa-map-signs"></i> ตั้งค่าเส้นทาง</h3><hr>
+      <button class="btn btn-info btn-sm" @click="formSetRoute"><i class="fa fa-plus"></i> เพิ่มเส้นทาง</button>
       <div class="row" style="margin-top: 20px;">
           <div class="col-sm-12">
             <table class="table table-hover table-bordered table-sm text-center">
@@ -18,9 +18,9 @@
                             <td>{{ data.nameRoute }}</td>
                             <td>{{ data.priceTaxi || '-' }}</td>
                             <td>{{ data.priceVan || '-' }}</td>
-                            <td width="10%">
-                                <button @click="updateRoute(data)" class="btn btn-info btn-sm">แก้ไข</button>
-                                <button @click="removeRoute(data._id)" class="btn btn-default btn-sm">ลบ</button>
+                            <td width="20%">
+                                <button @click="updateRoute(data)" class="btn btn-info btn-sm"><i class="fa fa-pencil"></i> แก้ไข</button>
+                                <button @click="removeRoute(data._id)" class="btn btn-default btn-sm"><i class="fa fa-trash-o"></i> ลบ</button>
                             </td>
                         </tr>
                     </tbody>

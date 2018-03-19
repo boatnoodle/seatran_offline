@@ -1,7 +1,6 @@
 <template>
     <div>
         <h3 class="text-center">รายงานการขนส่งประจำวัน</h3>
-        <!-- <p class="text-center">{{ dateToday }}</p> -->
         <form v-on:submit.prevent="submit" class=" col-sm-6 offset-sm-3">
             <div class="form-group row">
                 <div class="text-right col-sm-2">ค้นหา</div>
@@ -55,7 +54,7 @@
                 </table>
                 <div style="float: right; font-weight: bold; text-align: right">
                     <p>รวม : {{ total.total || 0 }} บาท</p>
-                    <p>(30%) : {{ total.fee || 0 }} บาท</p>
+                    <p>({{ percentTaxi * 100 }}%) : {{ total.fee || 0 }} บาท</p>
                     <p>รวมทั้งสิ้น : {{ total.grandTotal || 0 }} บาท</p>
                 </div>
             </div>
@@ -74,7 +73,8 @@ export default {
             dataTable: [],
             dateToday: moment().locale('th').format("Do MMM YYYY"),
             searchKey: '',
-            total: {}
+            total: {},
+            percentTaxi: ''
         }
     },
     methods: {
@@ -106,8 +106,8 @@ export default {
                     totalPrice: totalPrice,
                     totalAmount: totalAmount,
                     total: total,
-                    fee: total * 0.3,
-                    grandTotal: total + (total * 0.3)
+                    fee: total * this.percentTaxi,
+                    grandTotal: total + (total * this.percentTaxi)
                 }
             }else{
                 this.total = {
@@ -118,6 +118,13 @@ export default {
                     grandTotal: 0
                 }
             }
+        },
+        getPercentTaxi(){
+            this.$store.dispatch('getPercent')
+            .then(() => {
+                const obj = this.$store.getters.getPercent
+                this.percentTaxi = obj.percentTaxi / 100
+            })
         }
     },
     watch: {
@@ -130,8 +137,8 @@ export default {
                     totalPrice: totalPrice,
                     totalAmount: totalAmount,
                     total: total,
-                    fee: total * 0.3,
-                    grandTotal: total + (total * 0.3)
+                    fee: total * this.percentTaxi,
+                    grandTotal: total + (total * this.percentTaxi)
                 }
             }else{
                 this.total = {
@@ -143,6 +150,9 @@ export default {
                 }
             }
         }
+    },
+    created(){
+        this.getPercentTaxi
     }
 }
 </script>

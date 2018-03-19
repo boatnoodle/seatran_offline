@@ -1,180 +1,160 @@
 <template>
     <div>
-        <!-- <div class="boxSell"> -->
-            <!-- <router-link to="/" tag="div" class="close"><i class="fa fa-times"></i></router-link> -->
-            <!-- <div class="container"> -->
-                <h3 class="text-center">ระบบออกตั๋ว TAXI {{ data._id }}</h3>
-                <div class="row">
-                    <div class="col-sm-8">
-                        <div class="card">
-                            <div class="card-header text-white bg-primary">
-                                หน้าจอขาย
-                            </div>
-                            <div class="card-body">
-                                <form v-on:submit.prevent="submit">
-                                    <div class="form-group">
-                                        <label for="exampleInputPassword1">ชื่อผู้โดยสาร</label>
-                                        <input ref="namePassenger" type="text" v-model="data.namePassenger" class="form-control" placeholder="กรุณากรอกชื่อผู้โดยสาร">
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="exampleInputEmail1">จุดส่ง</label>
-                                        <select class="form-control" v-model="selectRoute">
-                                            <option value="">กรุณาเลือกจุดส่ง</option>
-                                            <option v-for="(data,index) in getAllRouteTaxi"  :key="index" :value="data._id">{{ data.nameRoute }}</option>
-                                        </select>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="exampleInputEmail1">ประเภทรถ</label>
-                                        <select class="form-control" v-model="data.typeCar">
-                                            <option value="">กรุณาเลือกประเภทรถ</option>
-                                            <option value="Limousine">รถยนต์</option>
-                                            <option value="Mini bus">รถตู้</option>
-                                        </select>
-                                    </div>
-                                    <div class="form-group">
-                                        <div class="form-row">
-                                            <div class="col-sm-6">
-                                                <label for="exampleInputPassword1">ราคา</label>
-                                                <input type="text" v-model="data.price" class="form-control" placeholder="ราคา">
-                                            </div>
-                                            <div class="col-sm-6">
-                                                <label for="exampleInputPassword1">จำนวนผู้โดยสาร</label>
-                                                <input type="text" v-model="data.amount" class="form-control" placeholder="กรุณาระบุจำนวนผู้โดยสาร">
-                                            </div>
-                                        </div>
-                                    </div>
-                                     <div class="form-group">
-                                        <label for="exampleInputPassword1">ราคารวมทั้งสิ้น</label>
-                                        <input type="text" v-model="total" class="form-control" placeholder="ราคารวม" readonly>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="exampleInputPassword1">หมายเหตุ</label>
-                                        <textarea cols="30" v-model="data.remark" rows="5" class="form-control" placeholder="ระบุหมายเหตุ"></textarea>
-                                    </div>
-                                    <div class="text-center">
-                                        <button type="submit" class="btn btn-primary">บันทึก</button>
-                                        <button type="reset" class="btn btn-danger">ยกเลิก</button>
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
-                        <h3 style="margin-top: 20px;" class="text-center">รายการขายล่าสุด</h3>
-                        <table class="table table-sm table-hover text-center">
-                            <thead class="text-white bg-info">
-                                <tr>
-                                <th scope="col">#</th>
-                                <th scope="col">ชื่อผู้โดยสาร</th>
-                                <th scope="col">จุดส่ง</th>
-                                <th scope="col">ราคารวม</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <th colspan="4">Coming Soon.</th>
-                                <!-- <th scope="row">1</th>
-                                <td>Mark</td>
-                                <td>Otto</td>
-                                <td>@mdo</td>
-                                </tr>
-                                <tr>
-                                <th scope="row">2</th>
-                                <td>Jacob</td>
-                                <td>Thornton</td>
-                                <td>@fat</td>
-                                </tr>
-                                <tr>
-                                <th scope="row">3</th>
-                                <td>Larry</td>
-                                <td>the Bird</td>
-                                <td>@twitter</td> -->
-                                </tr>
-                            </tbody>
-                        </table>
+        <h3 class="text-center">ระบบออกตั๋ว TAXI {{ data._id }}</h3>
+        <div class="row">
+            <div class="col-sm-8">
+                <div class="card">
+                    <div class="card-header text-white bg-primary">
+                        หน้าจอขาย
                     </div>
-                    <div class="col-sm-4">
-                        <div class="row">
-                            <div class="col-sm-12">
-                                <div class="card">
-                                    <div class="card-header text-white bg-info">
-                                        ราคารวมทั้งสิ้น
+                    <div class="card-body">
+                        <form v-on:submit.prevent="submit">
+                            <div class="form-group">
+                                <label for="exampleInputPassword1">ชื่อผู้โดยสาร</label>
+                                <input ref="namePassenger" type="text" v-model="data.namePassenger" class="form-control" placeholder="กรุณากรอกชื่อผู้โดยสาร">
+                            </div>
+                            <div class="form-group">
+                                <label for="exampleInputEmail1">จุดส่ง</label>
+                                <select class="form-control" v-model="selectRoute">
+                                    <option value="">กรุณาเลือกจุดส่ง</option>
+                                    <option v-for="(data,index) in getAllRouteTaxi"  :key="index" :value="data._id">{{ data.nameRoute }}</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="exampleInputEmail1">ประเภทรถ</label>
+                                <select class="form-control" v-model="data.typeCar">
+                                    <option value="">กรุณาเลือกประเภทรถ</option>
+                                    <option value="Limousine">รถยนต์</option>
+                                    <option value="Mini bus">รถตู้</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <div class="form-row">
+                                    <div class="col-sm-6">
+                                        <label for="exampleInputPassword1">ราคา</label>
+                                        <input type="text" v-model="data.price" class="form-control" placeholder="ราคา">
                                     </div>
-                                    <div class="card-body">
-                                        <div class="boxShowTotal bg-dark">{{ total }}</div>
+                                    <div class="col-sm-6">
+                                        <label for="exampleInputPassword1">จำนวนผู้โดยสาร</label>
+                                        <input type="text" v-model="data.amount" class="form-control" placeholder="กรุณาระบุจำนวนผู้โดยสาร">
                                     </div>
                                 </div>
                             </div>
-                             <div class="col-sm-12" style="margin-top: 20px;">
-                                <div class="card">
-                                    <div class="card-header text-white bg-success">
-                                        ตัวอย่างใบเสร็จ
-                                    </div>
-                                    <div class="card-body">
-                                       <div class="exReceipt">
-                                            <h4>TRANSFER VOUCHER</h4>
-                                            <!-- <h3>{{ billHead }}</h3> -->
-                                            <p>{{ realTime }}</p>
-                                            <p style="text-align: right; font-weight: bold;">No. {{ data._id }}</p>
-                                            <div class="content">
-                                            <div>
-                                                <span style="font-weight: bold;">Name : </span>
-                                                <div style="text-align: left">{{ data.namePassenger || '-' }}</div>
-                                            </div>
-                                            <div>
-                                                <span style="font-weight: bold;">Destination : </span>
-                                                <div style="text-align: left">{{ nameRoute || '-' }}</div>
-                                            </div>
-                                            <div>
-                                                <span style="font-weight: bold;">Price : </span>
-                                                <span style="float: right">{{ data.price || '-' }}</span>
-                                            </div>
-                                            <div>
-                                                <span style="font-weight: bold;">No. of Passenger : </span>
-                                                <span style="float: right">{{ data.amount || '-' }}</span>
-                                            </div>
-                                             <div>
-                                                <span style="font-weight: bold;">Type car : </span>
-                                                <span style="float: right">{{ data.typeCar || '-' }}</span>
-                                            </div>
-                                            <div>
-                                                <span style="font-weight: bold;">Remark : </span>
-                                                <span style="float: right">{{ data.remark || '-' }}</span>
-                                            </div>
-                                            <hr style="border: 1px dotted;">
-                                            <div>
-                                                <span style="font-weight: bold;">Total : </span>
-                                                <span style="float: right">{{ data.total || '-' }}</span>
-                                            </div>
-                                            </div>
-                                            <div style="margin-top: 40px;">
-                                                <h3>RASSADA HARBOUR</h3>
-                                                <h3>THANK YOU</h3>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
+                                <div class="form-group">
+                                <label for="exampleInputPassword1">ราคารวมทั้งสิ้น</label>
+                                <input type="text" v-model="total" class="form-control" placeholder="ราคารวม" readonly>
                             </div>
-                            <div class="col-sm-12" style="margin-top: 20px;">
-                                <div class="card">
-                                    <div class="card-header text-white bg-primary">
-                                        ตั้งค่าระบบ Taxi
-                                    </div>
-                                    <div class="card-body text-center">
-                                        <ul class="listSetting">
-                                            <li>
-                                                <router-link to="/taxi/setRoute">ตั้งค่าเส้นทาง</router-link>
-                                            </li>
-                                            <li>
-                                                <router-link to="/setBill">ตั้งค่าบิล</router-link>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                </div>
+                            <div class="form-group">
+                                <label for="exampleInputPassword1">หมายเหตุ</label>
+                                <textarea cols="30" v-model="data.remark" rows="5" class="form-control" placeholder="ระบุหมายเหตุ"></textarea>
                             </div>
-                        </div>
+                            <div class="text-center">
+                                <button type="submit" class="btn btn-primary">บันทึก</button>
+                                <button type="reset" class="btn btn-danger">ยกเลิก</button>
+                            </div>
+                        </form>
                     </div>
                 </div>
-            <!-- </div> -->
-        <!-- </div> -->
+                <h3 style="margin-top: 20px;" class="text-center">รายการขายล่าสุด</h3>
+                <table class="table table-sm table-hover text-center">
+                    <thead class="text-white bg-info">
+                        <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">ชื่อผู้โดยสาร</th>
+                        <th scope="col">จุดส่ง</th>
+                        <th scope="col">ราคารวม</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-for="(data,index) in getTicketTaxiLasted" :key="index">
+                            <th>{{ index + 1 }}</th>
+                            <th>{{ data.namePassenger }}</th>
+                            <th>{{ data.destination.nameRoute }}</th>
+                            <th>{{ data.total }}</th>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="col-sm-4">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="card">
+                            <div class="card-header text-white bg-info">
+                                ราคารวมทั้งสิ้น
+                            </div>
+                            <div class="card-body">
+                                <div class="boxShowTotal bg-dark">{{ total }}</div>
+                            </div>
+                        </div>
+                    </div>
+                        <div class="col-sm-12" style="margin-top: 20px;">
+                        <div class="card">
+                            <div class="card-header text-white bg-success">
+                                ตัวอย่างใบเสร็จ
+                            </div>
+                            <div class="card-body">
+                                <div class="exReceipt">
+                                    <h4>TRANSFER VOUCHER</h4>
+                                    <p>{{ realTime }}</p>
+                                    <p style="text-align: right; font-weight: bold;">No. {{ data._id }}</p>
+                                    <div class="content">
+                                    <div>
+                                        <span style="font-weight: bold;">Name : </span>
+                                        <div style="text-align: left">{{ data.namePassenger || '-' }}</div>
+                                    </div>
+                                    <div>
+                                        <span style="font-weight: bold;">Destination : </span>
+                                        <div style="text-align: left">{{ nameRoute || '-' }}</div>
+                                    </div>
+                                    <div>
+                                        <span style="font-weight: bold;">Price : </span>
+                                        <span style="float: right">{{ data.price || '-' }}</span>
+                                    </div>
+                                    <div>
+                                        <span style="font-weight: bold;">No. of Passenger : </span>
+                                        <span style="float: right">{{ data.amount || '-' }}</span>
+                                    </div>
+                                        <div>
+                                        <span style="font-weight: bold;">Type car : </span>
+                                        <span style="float: right">{{ data.typeCar || '-' }}</span>
+                                    </div>
+                                    <div>
+                                        <span style="font-weight: bold;">Remark : </span>
+                                        <span style="float: right">{{ data.remark || '-' }}</span>
+                                    </div>
+                                    <hr style="border: 1px dotted;">
+                                    <div>
+                                        <span style="font-weight: bold;">Total : </span>
+                                        <span style="float: right">{{ data.total || '-' }}</span>
+                                    </div>
+                                    </div>
+                                    <div style="margin-top: 40px;">
+                                        <h6 id="billFoot"></h6>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- <div class="col-sm-12" style="margin-top: 20px;">
+                        <div class="card">
+                            <div class="card-header text-white bg-primary">
+                                ตั้งค่าระบบ Taxi
+                            </div>
+                            <div class="card-body text-center">
+                                <ul class="listSetting">
+                                    <li>
+                                        <router-link to="/taxi/setRoute">ตั้งค่าเส้นทาง</router-link>
+                                    </li>
+                                    <li>
+                                        <router-link to="/setBill">ตั้งค่าบิล</router-link>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div> -->
+                </div>
+            </div>
+        </div>
         <div v-show="false">
             <div id="printBill" style="text-align: left; line-height: 2">
             
@@ -185,7 +165,6 @@
 <script>
 import moment from 'moment'
 import printJS from 'print-js'
-import Jquery from 'jquery'
 import axios from 'axios'
 
 export default {
@@ -205,9 +184,10 @@ export default {
             nameRoute: '',
             realTime: '',
             routeTaxi: [],
-            billHead: '',
             priceTaxk: '',
-            priceVan: ''
+            priceVan: '',
+            billHead: '',
+            billFoot: ''
         }
     },
     methods: {
@@ -221,7 +201,7 @@ export default {
             }else{
                 var id = '0001'
             }
-            return this.data._id = prefix + id
+            return this.data._id = prefix + id + "TX"
            
         },
         submit(){
@@ -263,12 +243,11 @@ export default {
                         <span style="float: right">${  this.data.total || '-' }</span>
                     </div>
                     </div>
-                    <div style="text-align: center; margin-top: 40px;">
-                        <h3>RASSADA HARBOUR</h3>
-                        <h3>THANK YOU</h3>
-                    </div>
+                     <div style="text-align:center; margin-top: 40px;">
+                            <h6>${ this.billFoot }</h6>
+                        </div>
                 `
-                Jquery('#printBill').html(html)
+                $('#printBill').html(html)
                 printJS({printable: 'printBill', type: 'html', targetStyles: ['*']})
                 html = ``
                 this.genIdTicket(this.data._id)
@@ -282,12 +261,16 @@ export default {
                 this.selectRoute = '',
                 this.nameRoute= ''
                 $(this.$refs.namePassenger).focus()
+                this.$store.dispatch('getTaxiTicketLasted')
             })
         }
     },
     computed: {
         getAllRouteTaxi(){
             return this.routeTaxi =  this.$store.getters.getAllRouteTaxi
+        },
+        getTicketTaxiLasted(){
+            return this.$store.getters.getTaxiTicketLasted
         },
         total(){
             var total = 0
@@ -299,14 +282,14 @@ export default {
         getLastTaxiTicket(){
             return this.$store.getters.getLastTaxiTicket
         },
-        async getBillHead(){
-            await axios.get('http://localhost:3000/api/billHead')
-            .then((response) => {
-                this.billHead = response.data[0].billHead
+        getBillHead(){
+            this.$store.dispatch('getBillHead')
+            .then(() => {
+                const obj = this.$store.getters.getBillHead
+                this.billHead = obj.billHead
+                this.billFoot = obj.billFoot
+                $("#billFoot").html(obj.billFoot)
             })
-            .catch(error => {
-                console.log(error);
-            });
         }
     },
     watch: {
@@ -335,7 +318,9 @@ export default {
         $(this.$refs.namePassenger).focus()
     },
     created(){
+        this.getTicketTaxiLasted
         this.getBillHead
+        this.$store.dispatch('getTaxiTicketLasted')
         this.$store.dispatch('getAllRouteTaxi')
         this.$store.dispatch('getLastTaxiTicket').then(() => {
             var lastId = this.getLastTaxiTicket

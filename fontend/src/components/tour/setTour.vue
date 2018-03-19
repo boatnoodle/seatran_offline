@@ -1,7 +1,7 @@
 <template>
   <div>
-      <h3>ตั้งค่ารายการทัวร์</h3><hr>
-      <button class="btn btn-info btn-sm" @click="formSetTour">ตั้งค่าทัวร์</button>
+      <h3><i class="fa fa-list-ol"></i> ตั้งค่ารายการทัวร์</h3><hr>
+      <button class="btn btn-info btn-sm" @click="formSetTour"><i class="fa fa-plus"></i> ตั้งค่าทัวร์</button>
       <div class="row" style="margin-top: 20px;">
           <div class="col-sm-12">
             <table class="table table-hover table-bordered table-sm text-center">
@@ -17,10 +17,10 @@
                          </thead>
                         <tbody>
                             <template v-if="data.tour.length > 0">
-                            <tr v-for="data in data.tour">
-                                <td>{{ data.nameTour }}</td>
-                                <td>{{ data.priceTour }}</td>
-                            </tr>
+                                <tr v-for="data in data.tour">
+                                    <td>{{ data.nameTour }}</td>
+                                    <td>{{ data.priceTour }}</td>
+                                </tr>
                             </template>
                             <tr v-else>
                                 <td>ไม่มีรายการทัวร์</td>        

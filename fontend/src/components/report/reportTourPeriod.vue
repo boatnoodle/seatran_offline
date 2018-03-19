@@ -1,7 +1,6 @@
 <template>
     <div>
         <h3 class="text-center">รายงานทัวร์ประจำช่วง</h3>
-        <!-- <p class="text-center">{{ dateToday }}</p> -->
         <form v-on:submit.prevent="submit">
             <div class="form-group row">
                 <div class="text-right col-sm-2">จากวันที่</div>
@@ -34,7 +33,6 @@
                             <th>Voucher</th>
                             <th>ชื่อโรงแรม</th>
                             <th>ห้องที่</th>
-                            <!-- <th>หมายเหตุ</th> -->
                         </tr>
                     </thead>
                     <tbody>
@@ -50,12 +48,11 @@
                             <td>{{ data.voucher || '-' }}</td>
                             <td>{{ data.nameHotel || '-' }}</td>
                             <td>{{ data.room || '-' }}</td>
-                            <td>{{ data.remark || '-' }}</td>
                         </tr>
                     </tbody>
                     <tfoot>
                         <tr>
-                            <th colspan="4">รวม</th>
+                            <th colspan="5">รวม</th>
                             <th>{{ total.totalPrice || 0 }}</th>
                             <th>{{ total.totalAmount || 0 }}</th>
                             <th>{{ total.total || 0}}</th>
@@ -65,7 +62,7 @@
                 </table>
                 <div style="float: right; font-weight: bold; text-align: right">
                     <p>รวม : {{ total.total || 0 }} บาท</p>
-                    <p>(30%) : {{ total.fee || 0 }} บาท</p>
+                    <p>({{ percentTour * 100 }}%) : {{ total.fee || 0 }} บาท</p>
                     <p>รวมทั้งสิ้น : {{ total.grandTotal || 0 }} บาท</p>
                 </div>
             </div>
@@ -85,7 +82,8 @@ export default {
             dataReady: [],
             dateToday: moment().locale('th').format("Do MMM YYYY"),
             searchKey: '',
-            total: {}
+            total: {},
+            percentTour: ''
         }
     },
     methods: {
@@ -127,6 +125,13 @@ export default {
                   return v._id.match(this.searchKey) || v.name.match(this.searchKey) || v.nameAgent.match(this.searchKey) || v.tour.nameTour.match(this.searchKey)
              })
         },
+        getPercentTour(){
+            this.$store.dispatch('getPercent')
+            .then(() => {
+                const obj = this.$store.getters.getPercent
+                this.percentTour = obj.percentTour / 100
+            })
+        }
     },
     watch: {
         tourTicket(val){
@@ -138,8 +143,8 @@ export default {
                     totalPrice: totalPrice,
                     totalAmount: totalAmount,
                     total: total,
-                    fee: total * 0.3,
-                    grandTotal: total + (total * 0.3)
+                    fee: total * this.percentTour,
+                    grandTotal: total + (total * this.percentTour)
                 }
             }else{
                 this.total = {
@@ -151,6 +156,9 @@ export default {
                 }
             }
         }
+    },
+    created(){
+        this.getPercentTour
     }
 }
 </script>
