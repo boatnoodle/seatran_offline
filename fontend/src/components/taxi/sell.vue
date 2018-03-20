@@ -156,7 +156,7 @@
             </div>
         </div>
         <div v-show="false">
-            <div id="printBill" style="text-align: left; line-height: 2">
+            <div id="printBill" style="text-align: left; line-height: 2;">
             
             </div>
         </div>
@@ -164,6 +164,7 @@
 </template>
 <script>
 import moment from 'moment'
+import Jquery from 'jquery'
 import printJS from 'print-js'
 import axios from 'axios'
 
@@ -208,7 +209,7 @@ export default {
             this.$store.dispatch('addTaxiTicket',this.data)
             .then(() => {
                 moment.locale('en');
-                let html = `
+                var html = `
                     <h4 style="text-align: center;">TRANSFER VOUCHER</h4>
                     <p style="text-align: center; font-weight: bold;">${ moment(new Date()).format('MM/DD/YYYY, h:mm:ss a') }</p>
                     <p style="text-align: right; font-weight: bold;">No. ${  this.data._id }</p>
@@ -247,7 +248,7 @@ export default {
                             <h6>${ this.billFoot }</h6>
                         </div>
                 `
-                $('#printBill').html(html)
+                Jquery('#printBill').html(html)
                 printJS({printable: 'printBill', type: 'html', targetStyles: ['*']})
                 html = ``
                 this.genIdTicket(this.data._id)

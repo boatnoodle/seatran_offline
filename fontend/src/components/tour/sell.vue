@@ -194,7 +194,7 @@
             <!-- </div> -->
         <!-- </div> -->
         <div v-show="false">
-            <div id="printBill" style="text-align: left; line-height: 2">
+            <div id="printBill" style="text-align: left; line-height: 2; color: black">
             
             </div>
         </div>
@@ -203,7 +203,7 @@
 <script>
 import moment from 'moment'
 import printJS from 'print-js'
-// import Jquery from 'jquery'
+import Jquery from 'jquery'
 import axios from 'axios'
 export default {
    data(){
@@ -303,7 +303,7 @@ export default {
                     `
                 $('#printBill').html(html)
                 printJS({printable: 'printBill', type: 'html', targetStyles: ['*']})
-                html = ``
+                // html = ``
                 this.genIdTicket(this.data._id)
                 this.data.name = '',
                 this.data.agent = '',

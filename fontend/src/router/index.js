@@ -117,7 +117,7 @@ const router = new Router({
 })
 //  
 router.beforeEach((to,from,next) => {
-  if(store.getters.checkLoginUser.length == 0 && to.path !== '/user/login'){
+  if(!store.getters.checkLoginUser && to.path !== '/user/login'){
     next({
       path: '/user/login'
     })
