@@ -114,7 +114,7 @@
                                     </div>
                                     <div class="card-body">
                                        <div class="exReceipt">
-                                           <h4>TOUR VOUCHER</h4>
+                                           <h4 style="border: 1px solid; padding: 30px;">TOUR VOUCHER</h4>
                                            <h3>{{ billHead }}</h3>
                                            <p></p>
                                            <p style="text-align: right; font-weight: bold;">No. {{ data._id }}</p>
@@ -194,7 +194,7 @@
             <!-- </div> -->
         <!-- </div> -->
         <div v-show="false">
-            <div id="printBill" style="text-align: left; line-height: 2; color: black">
+            <div id="printBill" style="text-align: left; line-height: 2;">
             
             </div>
         </div>
@@ -243,7 +243,7 @@ export default {
             }else{
                 var id = '0001'
             }
-            return this.data._id = prefix + id + "TR"
+            return this.data._id =  "TR" + prefix + id
            
         },
         submit(){
@@ -251,6 +251,7 @@ export default {
             .then(() => {
                 moment.locale('en');
                 let html = `
+                        <h4 style="text-align: center; border: 1px solid; padding: 30px;">TOUR VOUCHER</h4>
                         <h3 style="text-align: center;">${ this.billHead }</h3>
                         <p style="text-align: center; font-weight: bold;">${ moment(new Date()).format('MM/DD/YYYY, h:mm:ss a') }</p>
                         <p style="text-align: right; font-weight: bold;">No. ${ this.data._id }</p>
@@ -303,7 +304,7 @@ export default {
                     `
                 $('#printBill').html(html)
                 printJS({printable: 'printBill', type: 'html', targetStyles: ['*']})
-                // html = ``
+                html = ``
                 this.genIdTicket(this.data._id)
                 this.data.name = '',
                 this.data.agent = '',
@@ -319,8 +320,6 @@ export default {
                 this.nameAgent = '',
                 this.selectTour = '',
                 this.nameTour = '',
-                // this.tour = [],
-                // this.tourList = []
                 $(this.$refs.name).focus()
                 this.$store.dispatch('getTourTicketLasted')
             })

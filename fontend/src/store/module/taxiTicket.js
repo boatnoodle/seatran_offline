@@ -47,6 +47,17 @@ const actions = {
         .catch(err => {
             console.log(err)
         })
+    },
+    async addTaxiTicketRealTime({commit},data){
+        await axios.post('taxiTicket/addTaxiTicketRealTime',data)
+        .then(res => {
+            if(res){
+                console.log(res)
+            }
+        })
+        .catch(err => {
+            console.log(err)
+        })
     }
 }
 

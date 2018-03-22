@@ -10,8 +10,15 @@
                     <div class="card-body">
                         <form v-on:submit.prevent="submit">
                             <div class="form-group">
-                                <label for="exampleInputPassword1">ชื่อผู้โดยสาร</label>
-                                <input ref="namePassenger" type="text" v-model="data.namePassenger" class="form-control" placeholder="กรุณากรอกชื่อผู้โดยสาร">
+                                <label for="exampleInputPassword1">เลือกประเภท {{ data.namePassenger }}</label>
+                                <select v-model="selectTypeNamePassenger" class="form-control">
+                                    <option value="cash">Cash</option>
+                                    <option value="defineName">ระบุชื่อผู้โดยสาร</option>
+                                </select>
+                            </div>
+                            <div v-show="selectTypeNamePassenger == 'defineName'" class="form-group">
+                                <label>ชื่อผู้โดยสาร</label>
+                                <input type="text" v-model="data.namePassenger" class="form-control" placeholder="กรุณากรอกชื่อผู้โดยสาร">
                             </div>
                             <div class="form-group">
                                 <label for="exampleInputEmail1">จุดส่ง</label>
@@ -94,7 +101,7 @@
                             </div>
                             <div class="card-body">
                                 <div class="exReceipt">
-                                    <h4>TRANSFER VOUCHER</h4>
+                                    <h4 style=" border: 1px solid; padding: 30px;">TRANSFER VOUCHER</h4>
                                     <p>{{ realTime }}</p>
                                     <p style="text-align: right; font-weight: bold;">No. {{ data._id }}</p>
                                     <div class="content">
@@ -173,7 +180,7 @@ export default {
         return {
             data: {
                 _id: '',
-                namePassenger: '',
+                namePassenger: 'cash',
                 destination: '',
                 price: '',
                 amount: '',
@@ -181,6 +188,7 @@ export default {
                 typeCar: '',
                 remark: ''
             },
+            selectTypeNamePassenger: 'cash',
             selectRoute: '',
             nameRoute: '',
             realTime: '',
@@ -202,15 +210,15 @@ export default {
             }else{
                 var id = '0001'
             }
-            return this.data._id = prefix + id + "TX"
+            return this.data._id = "TX" + prefix + id 
            
         },
         submit(){
-            this.$store.dispatch('addTaxiTicket',this.data)
+            this.$store.dispatch('addTaxiTicketRealTime',this.data)
             .then(() => {
                 moment.locale('en');
-                var html = `
-                    <h4 style="text-align: center;">TRANSFER VOUCHER</h4>
+                let html = `
+                    <h4 style="text-align: center; border: 1px solid; padding: 30px;">TRANSFER VOUCHER</h4>
                     <p style="text-align: center; font-weight: bold;">${ moment(new Date()).format('MM/DD/YYYY, h:mm:ss a') }</p>
                     <p style="text-align: right; font-weight: bold;">No. ${  this.data._id }</p>
                     <div class="content">
@@ -251,8 +259,8 @@ export default {
                 Jquery('#printBill').html(html)
                 printJS({printable: 'printBill', type: 'html', targetStyles: ['*']})
                 html = ``
-                this.genIdTicket(this.data._id)
-                this.data.namePassenger =  '',
+                this.selectTypeNamePassenger = 'cash'
+                this.data.namePassenger =  'cash',
                 this.data.destination =  '',
                 this.data.price =  '',
                 this.data.amount =  '',
@@ -261,7 +269,10 @@ export default {
                 this.data.remark =  '',
                 this.selectRoute = '',
                 this.nameRoute= ''
-                $(this.$refs.namePassenger).focus()
+                this.$store.dispatch('getLastTaxiTicket').then(() => {
+                    const lastedId = this.getLastTaxiTicket._id
+                    this.genIdTicket(lastedId)
+                })
                 this.$store.dispatch('getTaxiTicketLasted')
             })
         }
@@ -275,9 +286,12 @@ export default {
         },
         total(){
             var total = 0
-            if(this.data.price != '' &&  this.data.amount != ''){
+            if(this.data.price != '' &&  this.data.amount != '' && this.data.typeCar != 'Limousine'){
                 var total = this.data.price * this.data.amount
-            }   this.data.total = total
+            }else if(this.data.price != '' && this.data.amount != ''){
+                var total = this.data.price
+            }   
+            this.data.total = total
             return total
         },
         getLastTaxiTicket(){
@@ -313,10 +327,14 @@ export default {
                     this.data.price = this.priceVan
                 }
             }
+        },
+        selectTypeNamePassenger(val){
+            if(val == 'defineName'){
+                this.data.namePassenger = ''
+            }else{
+                this.data.namePassenger = 'cash'
+            }
         }
-    },
-    mounted(){
-        $(this.$refs.namePassenger).focus()
     },
     created(){
         this.getTicketTaxiLasted
