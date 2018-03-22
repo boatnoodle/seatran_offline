@@ -11,4 +11,6 @@ route.post('/getTaxiTicketSummery',taxiTicket.getTaxiTicketSummery)
 
 route.post('/addTaxiTicket',taxiTicket.addTaxiTicket)
 
+route.post('/addTaxiTicketRealTime',taxiTicket.addTaxiTicketRealTime)
+
 module.exports = route

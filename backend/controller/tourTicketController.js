@@ -12,6 +12,16 @@ module.exports = {
             console.log(err)
         })
     },
+    addTourTicketRealTime: (req,res,next) => {
+        const tourTicket = new TourTicket(req.body)
+        tourTicket.save()
+        .then(result => {
+            res.status(200).json(result)
+        })
+        .catch(err => {
+            console.log(err)
+        })
+    },
     getLastTourTicket: (req,res,next) => {
         TourTicket.findOne({},'_id',{ sort: {'_id': -1}})
         .exec()
