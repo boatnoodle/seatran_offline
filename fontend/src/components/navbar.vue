@@ -15,22 +15,26 @@
                 <li class="nav-item">
                     <router-link to="/tour/sell" class="nav-link" href="#"><i class="fa fa-bus"></i> ขาย Tour</router-link>
                 </li>
-                <li class="nav-item dropdown" v-show="statusShow && status != 1">
+                <li class="nav-item dropdown" v-show="statusShow">
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         <i class="fa fa-file-text-o"></i> รายงาน
                     </a>
                     <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                         <b class="title">ระบบ Taxi</b>
                         <router-link to="/report/reportTaxiDay" class="dropdown-item">รายงานประจำวัน</router-link>
-                        <router-link to="/report/reportTaxiPeriod" class="dropdown-item">รายงานประจำช่วง</router-link>
-                        <router-link to="/report/reportSummeryTaxiDay" class="dropdown-item">รายงานสรุปประจำวัน</router-link>
-                        <router-link to="/report/reportSummeryTaxiPeriod" class="dropdown-item">รางานสรุปประจำช่วง</router-link>
+                        <div v-show="status != 1">
+                            <router-link to="/report/reportTaxiPeriod" class="dropdown-item">รายงานประจำช่วง</router-link>
+                            <router-link to="/report/reportSummeryTaxiDay" class="dropdown-item">รายงานสรุปประจำวัน</router-link>
+                            <router-link to="/report/reportSummeryTaxiPeriod" class="dropdown-item">รางานสรุปประจำช่วง</router-link>
+                        </div>
                         <div class="dropdown-divider"></div>
                         <b class="title">ระบบ Tour</b>
                         <router-link to="/report/reportTourDay" class="dropdown-item">รายงานประจำวัน</router-link>
-                        <router-link to="/report/reportTourPeriod" class="dropdown-item">รายงานประจำช่วง</router-link>
-                        <router-link to="/report/reportSummeryTourDay" class="dropdown-item">รายงานสรุปประจำวัน</router-link>
-                        <router-link to="/report/reportSummeryTourPeriod" class="dropdown-item">รายงานสรุปประจำช่วง</router-link>
+                        <div v-show="status != 1">
+                            <router-link to="/report/reportTourPeriod" class="dropdown-item">รายงานประจำช่วง</router-link>
+                            <router-link to="/report/reportSummeryTourDay" class="dropdown-item">รายงานสรุปประจำวัน</router-link>
+                            <router-link to="/report/reportSummeryTourPeriod" class="dropdown-item">รายงานสรุปประจำช่วง</router-link>
+                        </div>
                         
                     </div>
                 </li>
