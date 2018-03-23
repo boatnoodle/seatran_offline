@@ -1,16 +1,17 @@
 <template>
     <div>
-        <h3 class="text-center">รายงานการขนส่งประจำช่วง</h3>
-        <form v-on:submit.prevent="submit" class=" col-sm-12">
+        <h3 id="titlePrint" class="text-center">รายงานการขนส่งประจำช่วง</h3>
+        <form v-on:submit.prevent="submit" class="col-sm-12 no-print">
             <div class="form-group row">
                 <div class="text-right col-sm-2">จากวันที่</div>
                 <input type="date" v-model="data.dateFrom" class="form-control col-sm-3" required>
                  <div class="text-right col-sm-2">ถึงวันที่</div>
                 <input type="date" v-model="data.dateTo" class="form-control col-sm-3" required>
                 <button type="submit" class="btn btn-info btn-sm">ค้นหา</button>
+                <button type="button" @click="printReport" style="margin-left: 10px;" class="btn btn-default"><i class="fa fa-print"></i> พิมพ์</button>
             </div>
         </form>
-        <div class="row">
+        <div class="row no-print">
             <div class="col-sm-12">
                 <div class="form-group">
                     <input type="text" v-model="searchKey" placeholder="ค้นหาผ่าน รหัส,จุดส่ง,ประเภทรถ" class="form-control" >
@@ -18,7 +19,7 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-sm-12">
+            <div id="section-to-print" class="col-sm-12">
                 <table class="table table-sm table-bordered table-hover">
                     <thead>
                         <tr>
@@ -68,7 +69,6 @@
 </template>
 <script>
 import moment from 'moment';
-
 export default {
     data(){
         return {
@@ -93,6 +93,9 @@ export default {
         },
         dateFormat(date){
             return moment(date).format('D/MM/YYYY')
+        },
+        printReport(){
+            window.print();
         }
     },
     computed: {
@@ -166,7 +169,6 @@ export default {
 }
 </script>
 <style scoped>
-
 .VuePagination {
   text-align: center;
 }

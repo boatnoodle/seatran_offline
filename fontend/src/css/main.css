@@ -1,3 +1,19 @@
+@media print {
+    .no-print, .no-print *
+    {
+        display: none !important;
+    }
+    #section-to-print, #section-to-print * {
+        display: static !important;
+    }
+    #section-to-print {
+        font-size: 24px;
+    }
+    #titlePrint{
+        font-size: 30px;
+        margin-bottom: 20px;
+    }
+  }
 @font-face {
     font-family: rsu-font;
     src: url('./fonts/RSU_Regular.ttf');

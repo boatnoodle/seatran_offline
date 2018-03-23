@@ -1,16 +1,21 @@
 <template>
     <div>
-        <h3 class="text-center">รายงานสรุปการขนส่งประจำวัน</h3>
+        <h3 id="titlePrint" class="text-center">รายงานสรุปการขนส่งประจำวัน</h3>
         <!-- <p class="text-center">{{ dateToday }}</p> -->
-        <form v-on:submit.prevent="submit" class=" col-sm-6 offset-sm-3">
+        <form v-on:submit.prevent="submit" class="col-sm-6 offset-sm-3 no-print">
             <div class="form-group row">
                 <div class="text-right col-sm-2">ค้นหา</div>
                 <input type="date" v-model="data.dateFrom" class="form-control col-sm-8" >
                 <button type="submit" class="btn btn-info btn-sm col-sm-2">ค้นหา</button>
             </div>
         </form>
+        <div class="row no-print" style="margin-bottom: 15px;">
+            <div class="col-sm-12 text-right">
+                <button id="notPrint" type="button" @click="printReport" class="btn btn-default"><i class="fa fa-print"></i> พิมพ์</button>
+            </div>
+        </div>
         <div class="row">
-            <div class="col-sm-12">
+            <div id="section-to-print" class="col-sm-12">
                 <table class="table table-sm table-bordered table-hover text-center">
                     <thead>
                         <tr>
@@ -45,8 +50,7 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-sm-12">
-                
+            <div id="section-to-print" class="col-sm-12">
                 <div style="float: right; font-weight: bold; text-align: right">
                     <p>รวม : {{ total || 0 }} บาท</p>
                     <p>({{percentTaxi * 100}}%) : {{ (total * percentTaxi) || 0 }} บาท</p>
@@ -82,6 +86,9 @@ export default {
         setTotal(total,total2){
             this.total += (total + total2)
             return total
+        },
+        printReport(){
+            window.print();
         }
     },
     computed: {

@@ -188,8 +188,8 @@
     </div>
 </template>
 <script>
-import moment from 'moment'
 import printJS from 'print-js'
+import moment from 'moment'
 import Jquery from 'jquery'
 import axios from 'axios'
 export default {
