@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="no-print">
         <h3 class="text-center">ระบบออกตั๋ว TAXI {{ data._id }}</h3>
         <div class="row">
             <div class="col-sm-8">
@@ -108,42 +108,44 @@
                             </div>
                             <div class="card-body">
                                 <div class="exReceipt">
-                                    <h4 style=" border: 1px solid; padding: 30px;">TRANSFER VOUCHER</h4>
-                                    <p>{{ realTime }}</p>
-                                    <p style="text-align: right; font-weight: bold;">No. {{ data._id }}</p>
-                                    <div class="content">
-                                    <div>
-                                        <span style="font-weight: bold;">Name : </span>
-                                        <div style="text-align: left">{{ data.namePassenger || '-' }}</div>
-                                    </div>
-                                    <div>
-                                        <span style="font-weight: bold;">Destination : </span>
-                                        <div style="text-align: left">{{ nameRoute || '-' }}</div>
-                                    </div>
-                                    <div>
-                                        <span style="font-weight: bold;">Price : </span>
-                                        <span style="float: right">{{ data.price || '-' }}</span>
-                                    </div>
-                                    <div>
-                                        <span style="font-weight: bold;">No. of Passenger : </span>
-                                        <span style="float: right">{{ data.amount || '-' }}</span>
-                                    </div>
+                                    <div id="section-to-print2" >
+                                        <h4 style="border: 1px solid; padding: 30px;">TRANSFER VOUCHER</h4>
+                                        <p>{{ realTime }}</p>
+                                        <p style="text-align: right; font-weight: bold;">No. {{ data._id }}</p>
+                                        <div class="content">
                                         <div>
-                                        <span style="font-weight: bold;">Type car : </span>
-                                        <span style="float: right">{{ data.typeCar || '-' }}</span>
-                                    </div>
-                                    <div>
-                                        <span style="font-weight: bold;">Remark : </span>
-                                        <span style="float: right">{{ data.remark || '-' }}</span>
-                                    </div>
-                                    <hr style="border: 1px dotted;">
-                                    <div>
-                                        <span style="font-weight: bold;">Total : </span>
-                                        <span style="float: right">{{ data.total || '-' }}</span>
-                                    </div>
-                                    </div>
-                                    <div style="margin-top: 40px;">
-                                        <h6 id="billFoot"></h6>
+                                            <span style="font-weight: bold;">Name : </span>
+                                            <div style="text-align: left">{{ data.namePassenger || '-' }}</div>
+                                        </div>
+                                        <div>
+                                            <span style="font-weight: bold;">Destination : </span>
+                                            <div style="text-align: left">{{ nameRoute || '-' }}</div>
+                                        </div>
+                                        <div>
+                                            <span style="font-weight: bold;">Price : </span>
+                                            <span style="float: right">{{ data.price || '-' }}</span>
+                                        </div>
+                                        <div>
+                                            <span style="font-weight: bold;">No. of Passenger : </span>
+                                            <span style="float: right">{{ data.amount || '-' }}</span>
+                                        </div>
+                                            <div>
+                                            <span style="font-weight: bold;">Type car : </span>
+                                            <span style="float: right">{{ data.typeCar || '-' }}</span>
+                                        </div>
+                                        <div>
+                                            <span style="font-weight: bold;">Remark : </span>
+                                            <span style="float: right">{{ data.remark || '-' }}</span>
+                                        </div>
+                                        <hr style="border: 1px dotted;">
+                                        <div>
+                                            <span style="font-weight: bold;">Total : </span>
+                                            <span style="float: right">{{ data.total || '-' }}</span>
+                                        </div>
+                                        </div>
+                                        <div style="margin-top: 40px;">
+                                            <h6 id="billFoot"></h6>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -225,7 +227,7 @@ export default {
             this.$store.dispatch('addTaxiTicketRealTime',this.data)
             .then(() => {
                 moment.locale('en');
-                let html = `
+                 let html = `
                     <h4 style="text-align: center; border: 1px solid; padding: 30px;">TRANSFER VOUCHER</h4>
                     <p style="text-align: center; font-weight: bold;">${ moment(new Date()).format('MM/DD/YYYY, h:mm:ss a') }</p>
                     <p style="text-align: right; font-weight: bold;">No. ${  this.data._id }</p>
@@ -261,11 +263,14 @@ export default {
                     </div>
                     </div>
                      <div style="text-align:center; margin-top: 40px;">
-                            <h6>${ this.billFoot }</h6>
-                        </div>
+                        <h6>${ this.billFoot }</h6>
+                    </div>
                 `
-                Jquery('#printBill').html(html)
-                printJS({printable: 'printBill', type: 'html', targetStyles: ['*']})
+                window.print()
+                window.print()
+                window.print()
+                // Jquery('#printBill').html(html)
+                // printJS({printable: 'printBill', type: 'html', targetStyles: ['*']})
                 html = ``
                 this.selectTypeNamePassenger = 'cash'
                 this.data.namePassenger =  'cash',
@@ -363,6 +368,9 @@ export default {
 }
 </script>
 <style scoped>
+    @media print {
+       
+    }
     .boxShowTotal{
         text-align: right;
         padding: 10px;

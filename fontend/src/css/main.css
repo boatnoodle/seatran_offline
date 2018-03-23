@@ -1,18 +1,20 @@
 @media print {
-    .no-print, .no-print *
-    {
-        display: none !important;
-    }
-    #section-to-print, #section-to-print * {
-        display: static !important;
-    }
-    #section-to-print {
-        font-size: 24px;
-    }
-    #titlePrint{
+    body * {
+        visibility: hidden;
+        position: relative;
+      }
+      #section-to-print2, #section-to-print2 * {
+        visibility: visible;
+      }
+      #section-to-print2 {
+        position: fixed;
+        width: 100% !important;
         font-size: 30px;
-        margin-bottom: 20px;
-    }
+        padding: 20px;
+        /* height: 100vh !important; */
+        left: 0 !important;
+        top: 0 !important;
+      }
   }
 @font-face {
     font-family: rsu-font;
