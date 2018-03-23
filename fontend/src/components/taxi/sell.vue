@@ -10,42 +10,56 @@
                     <div class="card-body">
                         <form v-on:submit.prevent="submit">
                             <div class="form-group">
-                                <label for="exampleInputPassword1">ชื่อผู้โดยสาร</label>
-                                <input ref="namePassenger" type="text" v-model="data.namePassenger" class="form-control" placeholder="กรุณากรอกชื่อผู้โดยสาร">
+                                <label>เลือกประเภท</label>
+                                <select v-model="selectTypeNamePassenger" class="form-control">
+                                    <option value="cash">Cash</option>
+                                    <option value="defineName">ระบุชื่อผู้โดยสาร</option>
+                                </select>
+                            </div>
+                            <div v-show="selectTypeNamePassenger == 'defineName'" class="form-group">
+                                <label>ชื่อผู้โดยสาร</label>
+                                <input type="text" v-model="data.namePassenger" class="form-control" placeholder="กรุณากรอกชื่อผู้โดยสาร">
                             </div>
                             <div class="form-group">
-                                <label for="exampleInputEmail1">จุดส่ง</label>
+                                <label>จุดส่ง</label>
                                 <select class="form-control" v-model="selectRoute">
                                     <option value="">กรุณาเลือกจุดส่ง</option>
                                     <option v-for="(data,index) in getAllRouteTaxi"  :key="index" :value="data._id">{{ data.nameRoute }}</option>
                                 </select>
                             </div>
                             <div class="form-group">
-                                <label for="exampleInputEmail1">ประเภทรถ</label>
+                                <label>ประเภทรถ</label>
                                 <select class="form-control" v-model="data.typeCar">
                                     <option value="">กรุณาเลือกประเภทรถ</option>
                                     <option value="Limousine">รถยนต์</option>
                                     <option value="Mini bus">รถตู้</option>
                                 </select>
                             </div>
+                            <div v-show="data.typeCar == 'Mini bus'" class="form-group">
+                                <label>ประเภท</label>
+                                <select class="form-control" v-model="selectJoinVan">
+                                    <option value="false">เหมา</option>
+                                    <option value="true">Join</option>
+                                </select>
+                            </div>
                             <div class="form-group">
                                 <div class="form-row">
                                     <div class="col-sm-6">
-                                        <label for="exampleInputPassword1">ราคา</label>
+                                        <label>ราคา</label>
                                         <input type="text" v-model="data.price" class="form-control" placeholder="ราคา">
                                     </div>
                                     <div class="col-sm-6">
-                                        <label for="exampleInputPassword1">จำนวนผู้โดยสาร</label>
+                                        <label>จำนวนผู้โดยสาร</label>
                                         <input type="text" v-model="data.amount" class="form-control" placeholder="กรุณาระบุจำนวนผู้โดยสาร">
                                     </div>
                                 </div>
                             </div>
                                 <div class="form-group">
-                                <label for="exampleInputPassword1">ราคารวมทั้งสิ้น</label>
+                                <label>ราคารวมทั้งสิ้น</label>
                                 <input type="text" v-model="total" class="form-control" placeholder="ราคารวม" readonly>
                             </div>
                             <div class="form-group">
-                                <label for="exampleInputPassword1">หมายเหตุ</label>
+                                <label>หมายเหตุ</label>
                                 <textarea cols="30" v-model="data.remark" rows="5" class="form-control" placeholder="ระบุหมายเหตุ"></textarea>
                             </div>
                             <div class="text-center">
@@ -94,7 +108,7 @@
                             </div>
                             <div class="card-body">
                                 <div class="exReceipt">
-                                    <h4>TRANSFER VOUCHER</h4>
+                                    <h4 style=" border: 1px solid; padding: 30px;">TRANSFER VOUCHER</h4>
                                     <p>{{ realTime }}</p>
                                     <p style="text-align: right; font-weight: bold;">No. {{ data._id }}</p>
                                     <div class="content">
@@ -156,7 +170,7 @@
             </div>
         </div>
         <div v-show="false">
-            <div id="printBill" style="text-align: left; line-height: 2">
+            <div id="printBill" style="text-align: left; line-height: 2;">
             
             </div>
         </div>
@@ -164,6 +178,7 @@
 </template>
 <script>
 import moment from 'moment'
+import Jquery from 'jquery'
 import printJS from 'print-js'
 import axios from 'axios'
 
@@ -172,7 +187,7 @@ export default {
         return {
             data: {
                 _id: '',
-                namePassenger: '',
+                namePassenger: 'cash',
                 destination: '',
                 price: '',
                 amount: '',
@@ -180,7 +195,9 @@ export default {
                 typeCar: '',
                 remark: ''
             },
+            selectTypeNamePassenger: 'cash',
             selectRoute: '',
+            selectJoinVan: 'false',
             nameRoute: '',
             realTime: '',
             routeTaxi: [],
@@ -201,15 +218,15 @@ export default {
             }else{
                 var id = '0001'
             }
-            return this.data._id = prefix + id + "TX"
+            return this.data._id = "TX" + prefix + id 
            
         },
         submit(){
-            this.$store.dispatch('addTaxiTicket',this.data)
+            this.$store.dispatch('addTaxiTicketRealTime',this.data)
             .then(() => {
                 moment.locale('en');
                 let html = `
-                    <h4 style="text-align: center;">TRANSFER VOUCHER</h4>
+                    <h4 style="text-align: center; border: 1px solid; padding: 30px;">TRANSFER VOUCHER</h4>
                     <p style="text-align: center; font-weight: bold;">${ moment(new Date()).format('MM/DD/YYYY, h:mm:ss a') }</p>
                     <p style="text-align: right; font-weight: bold;">No. ${  this.data._id }</p>
                     <div class="content">
@@ -247,11 +264,11 @@ export default {
                             <h6>${ this.billFoot }</h6>
                         </div>
                 `
-                $('#printBill').html(html)
+                Jquery('#printBill').html(html)
                 printJS({printable: 'printBill', type: 'html', targetStyles: ['*']})
                 html = ``
-                this.genIdTicket(this.data._id)
-                this.data.namePassenger =  '',
+                this.selectTypeNamePassenger = 'cash'
+                this.data.namePassenger =  'cash',
                 this.data.destination =  '',
                 this.data.price =  '',
                 this.data.amount =  '',
@@ -260,7 +277,10 @@ export default {
                 this.data.remark =  '',
                 this.selectRoute = '',
                 this.nameRoute= ''
-                $(this.$refs.namePassenger).focus()
+                this.$store.dispatch('getLastTaxiTicket').then(() => {
+                    const lastedId = this.getLastTaxiTicket._id
+                    this.genIdTicket(lastedId)
+                })
                 this.$store.dispatch('getTaxiTicketLasted')
             })
         }
@@ -274,9 +294,12 @@ export default {
         },
         total(){
             var total = 0
-            if(this.data.price != '' &&  this.data.amount != ''){
+            if(this.data.price != '' &&  this.data.amount != '' && this.data.typeCar == 'Mini bus' && this.selectJoinVan == 'true'){
                 var total = this.data.price * this.data.amount
-            }   this.data.total = total
+            }else if(this.data.price != '' && this.data.amount != ''){
+                var total = this.data.price
+            }   
+            this.data.total = total
             return total
         },
         getLastTaxiTicket(){
@@ -309,13 +332,17 @@ export default {
                 if(val == 'Limousine'){
                     this.data.price = this.priceTaxi
                 }else{
-                    this.data.price = this.priceVan
+                    this.data.price = this.priceVan         
                 }
             }
+        },
+        selectTypeNamePassenger(val){
+            if(val == 'defineName'){
+                this.data.namePassenger = ''
+            }else{
+                this.data.namePassenger = 'cash'
+            }
         }
-    },
-    mounted(){
-        $(this.$refs.namePassenger).focus()
     },
     created(){
         this.getTicketTaxiLasted

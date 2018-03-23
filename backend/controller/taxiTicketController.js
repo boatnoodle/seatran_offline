@@ -2,14 +2,48 @@ const mongoose = require('mongoose')
 const TaxiTicket = require('../model/taxiTicketModel')
 module.exports = {
     addTaxiTicket: (req,res,next) => {
-        const route = new TaxiTicket(req.body)
-        route.save()
+        const taxiTicket = new TaxiTicket(req.body)
+        taxiTicket.save()
         .then(result => {
             res.status(200).json(result)
         })
         .catch(err => {
             console.log(err)
         })
+    },
+    addTaxiTicketRealTime: (req,res,next) => {
+        TaxiTicket.findOne({},'_id',{sort: {'created': -1}})
+        .exec()
+        .then((result) => {
+            if(result != null){
+                var _id = result._id
+                let font = _id.substr(0,8)
+                let back = '000'+ (parseInt(_id.substr(-4)) + 1)
+                _id = font + back.substr(-4)
+            }else{
+                var _id = req.body._id
+            }
+            
+            const data = {
+                _id: _id,
+                namePassenger: req.body.namePassenger,
+                destination: req.body.destination,
+                price: req.body.price,
+                amount: req.body.amount,
+                total: req.body.total,
+                typeCar: req.body.typeCar,
+                remark: req.body.remark
+            }
+            const taxiTicket = new TaxiTicket(data)
+            taxiTicket.save()
+            .then(result => {
+                res.status(200).json(result)
+            })
+            .catch(err => {
+                console.log(err)
+            })
+        })
+      
     },
     getTaxiTicket: (req,res,next) => {
         TaxiTicket.find()

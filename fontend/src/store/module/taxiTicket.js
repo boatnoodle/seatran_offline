@@ -40,7 +40,19 @@ const actions = {
         await axios.post('taxiTicket/addTaxiTicket',data)
         .then(res => {
             if(res){
-               alert('เพิ่มข้อมูลเรียบร้อยแล้ว')
+            //    alert('เพิ่มข้อมูลเรียบร้อยแล้ว')
+            console.log(res)
+            }
+        })
+        .catch(err => {
+            console.log(err)
+        })
+    },
+    async addTaxiTicketRealTime({commit},data){
+        await axios.post('taxiTicket/addTaxiTicketRealTime',data)
+        .then(res => {
+            if(res){
+                console.log(res)
             }
         })
         .catch(err => {
