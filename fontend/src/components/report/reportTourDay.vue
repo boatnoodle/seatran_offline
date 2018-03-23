@@ -29,8 +29,6 @@
                             <th>จำนวนคน</th>
                             <th>ราคาทั้งหมด</th>
                             <th>Voucher</th>
-                            <th>ชื่อโรงแรม</th>
-                            <th>ห้องที่</th>
                             <th>หมายเหตุ</th>
                         </tr>
                     </thead>
@@ -44,8 +42,6 @@
                             <td>{{ data.amount }}</td>
                             <td>{{ data.tour.priceTour * data.amount }}</td>
                             <td>{{ data.voucher || '-' }}</td>
-                            <td>{{ data.nameHotel || '-' }}</td>
-                            <td>{{ data.room || '-' }}</td>
                             <td>{{ data.remark || '-' }}</td>
                         </tr>
                     </tbody>
@@ -107,8 +103,6 @@ export default {
                     'amount': val.amount,
                     'total': val.total,
                     'voucher': val.voucher,
-                    'nameHotel': val.nameHotel,
-                    'room' : val.room,
                     'remark': val.remark,
                     "created": val.created
                 }

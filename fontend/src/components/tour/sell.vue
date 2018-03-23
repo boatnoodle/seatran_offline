@@ -51,18 +51,6 @@
                                         <input type="text" v-model="data.voucher" class="form-control" placeholder="กรุณาระบุหมายเลข Voucher">
                                     </div>
                                     <div class="form-group">
-                                        <div class="form-row">
-                                            <div class="col-sm-6">
-                                                <label>ชื่อโรงแรม</label>
-                                                <input type="text" v-model="data.nameHotel" class="form-control" placeholder="กรุณาระบุชื่อโรงแรม">
-                                            </div>
-                                            <div class="col-sm-6">
-                                                <label>หมายเลขห้อง</label>
-                                                <input type="text" v-model="data.room" class="form-control" placeholder="กรุณาระบุหมายเลขห้อง">
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
                                         <label>หมายเหตุ</label>
                                         <textarea cols="30" v-model="data.remark" rows="5" class="form-control" placeholder="ระบุหมายเหตุ"></textarea>
                                     </div>
@@ -144,14 +132,6 @@
                                                 <span style="float: right">{{ data.voucher || '-' }}</span>
                                             </div>
                                             <div>
-                                                <span style="font-weight: bold;">Hotel : </span>
-                                                <span style="float: right">{{ data.nameHotel || '-' }}</span>
-                                            </div>
-                                             <div>
-                                                <span style="font-weight: bold;">Room No. : </span>
-                                                <span style="float: right">{{ data.room || '-' }}</span>
-                                            </div>
-                                              <div>
                                                 <span style="font-weight: bold;">Remark. : </span>
                                                 <span style="float: right">{{ data.remark || '-' }}</span>
                                             </div>
@@ -217,8 +197,6 @@ export default {
                 amount: '',
                 total: '',
                 voucher: '',
-                nameHotel: '',
-                room: '',
                 remark: ''
             },
             selectAgent: '',
@@ -281,14 +259,6 @@ export default {
                             <span style="float: right">${ this.data.voucher || '-' }</span>
                         </div>
                         <div>
-                            <span style="font-weight: bold;">Hotel : </span>
-                            <span style="float: right">${ this.data.nameHotel || '-' }</span>
-                        </div>
-                            <div>
-                            <span style="font-weight: bold;">Room No. : </span>
-                            <span style="float: right">${ this.data.room || '-' }</span>
-                        </div>
-                            <div>
                             <span style="font-weight: bold;">Remark. : </span>
                             <span style="float: right">${ this.data.remark || '-' }</span>
                         </div>
@@ -313,8 +283,6 @@ export default {
                 this.data.amount = '',
                 this.data.total = '',
                 this.data.voucher = '',
-                this.data.nameHotel = '',
-                this.data.room = '',
                 this.data.remark = ''
                 this.selectAgent = '',
                 this.nameAgent = '',

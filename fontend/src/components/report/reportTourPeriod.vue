@@ -31,8 +31,7 @@
                             <th>จำนวนคน</th>
                             <th>ราคาทั้งหมด</th>
                             <th>Voucher</th>
-                            <th>ชื่อโรงแรม</th>
-                            <th>ห้องที่</th>
+                            <th>หมายเหตุ</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -46,8 +45,7 @@
                             <td>{{ data.amount }}</td>
                             <td>{{ data.tour.priceTour * data.amount }}</td>
                             <td>{{ data.voucher || '-' }}</td>
-                            <td>{{ data.nameHotel || '-' }}</td>
-                            <td>{{ data.room || '-' }}</td>
+                            <td>{{ data.remark || '-' }}</td>
                         </tr>
                     </tbody>
                     <tfoot>
