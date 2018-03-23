@@ -10,8 +10,6 @@ const tourTicketSchema = new Schema({
     amount: {type: Number, required: true},
     total: {type: Number, requried: true},
     voucher: String,
-    nameHotel: String,
-    room: String,
     remark: String,
     created: {
         type: Date,
