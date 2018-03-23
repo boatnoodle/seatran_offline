@@ -18,7 +18,7 @@
                             </div>
                             <div v-show="selectTypeNamePassenger == 'defineName'" class="form-group">
                                 <label>ชื่อผู้โดยสาร</label>
-                                <input type="text" v-model="data.namePassenger" class="form-control" placeholder="กรุณากรอกชื่อผู้โดยสาร">
+                                <input type="text" ref="namePassenger" v-model="data.namePassenger" class="form-control" placeholder="กรุณากรอกชื่อผู้โดยสาร">
                             </div>
                             <div class="form-group">
                                 <label>จุดส่ง</label>
@@ -339,6 +339,7 @@ export default {
         selectTypeNamePassenger(val){
             if(val == 'defineName'){
                 this.data.namePassenger = ''
+                this.$nextTick(() => this.$refs.namePassenger.focus())
             }else{
                 this.data.namePassenger = 'cash'
             }

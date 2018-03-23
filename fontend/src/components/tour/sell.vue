@@ -13,6 +13,13 @@
                             <div class="card-body">
                                 <form v-on:submit.prevent="submit">
                                     <div class="form-group">
+                                        <label>เลือกประเภท</label>
+                                        <select v-model="selectTypeName" class="form-control">
+                                            <option value="cash">Cash</option>
+                                            <option value="defineName">ระบุชื่อ-นามสกุล</option>
+                                        </select>
+                                    </div>
+                                    <div v-show="selectTypeName == 'defineName'" class="form-group">
                                         <label>ชื่อ-นามสกุล</label>
                                         <input type="text" ref="name" v-model="data.name" class="form-control" placeholder="ชื่อ-นามสกุล">
                                     </div>
@@ -190,7 +197,7 @@ export default {
         return {
             data: {
                 _id: '',
-                name: '',
+                name: 'cash',
                 agent: '',
                 tour: '',
                 price: '',
@@ -199,6 +206,7 @@ export default {
                 voucher: '',
                 remark: ''
             },
+            selectTypeName: 'cash',
             selectAgent: '',
             nameAgent: '',
             selectTour: '',
@@ -276,7 +284,8 @@ export default {
                 printJS({printable: 'printBill', type: 'html', targetStyles: ['*']})
                 html = ``
                 this.genIdTicket(this.data._id)
-                this.data.name = '',
+                this.selectTypeName = 'cash'
+                this.data.name = 'cash',
                 this.data.agent = '',
                 this.data.tour = '',
                 this.data.price = '',
@@ -288,7 +297,6 @@ export default {
                 this.nameAgent = '',
                 this.selectTour = '',
                 this.nameTour = '',
-                $(this.$refs.name).focus()
                 this.$store.dispatch('getTourTicketLasted')
             })
         }
@@ -344,10 +352,16 @@ export default {
                 this.nameTour = ''
                 this.data.price = ''
             }
+        },
+        selectTypeName(val){
+            if(val == 'defineName'){
+                this.data.name = ''
+                this.$nextTick(() => this.$refs.name.focus())
+                
+            }else{
+                this.data.name = 'cash'
+            }
         }
-    },
-    mounted(){
-        $(this.$refs.name).focus()
     },
     created(){
         this.getBillHead
