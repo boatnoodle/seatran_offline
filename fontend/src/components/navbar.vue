@@ -56,6 +56,7 @@
                         <router-link to="/user/setUser" class="dropdown-item">ตั้งค่าผู้ใช้</router-link>
                         <router-link to="/setBill" class="dropdown-item">ตั้งค่าบิล</router-link>
                         <router-link to="/setPercent" class="dropdown-item">ตั้งค่า % รายงาน</router-link>
+                        <router-link to="/setPrint" class="dropdown-item">ตั้งค่าการปริ้น</router-link>
                     </div>
                 </li>
                 <li class="nav-item active" v-show="statusShow">

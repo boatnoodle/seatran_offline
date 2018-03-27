@@ -19,6 +19,7 @@ import reportSummeryTourDay from '@/components/report/reportSummeryTourDay'
 import reportSummeryTourPeriod from '@/components/report/reportSummeryTourPeriod'
 import setBill from '@/components/setBill'
 import setPercent from '@/components/setPercent'
+import setPrint from '@/components/setPrint'
 
 Vue.use(Router)
 const router = new Router({
@@ -112,6 +113,11 @@ const router = new Router({
       path: '/setPercent',
       name: 'setPercent',
       component: setPercent
+    }, 
+    {
+      path: '/setPrint',
+      name: 'setPrint',
+      component: setPrint
     } 
   ]
 })

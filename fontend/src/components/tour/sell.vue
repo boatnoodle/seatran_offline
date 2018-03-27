@@ -109,82 +109,60 @@
                                     </div>
                                     <div class="card-body">
                                        <div class="exReceipt">
-                                           <h4 style="border: 1px solid; padding: 30px;">TOUR VOUCHER</h4>
-                                           <h3>{{ billHead }}</h3>
-                                           <p></p>
-                                           <p style="text-align: right; font-weight: bold;">No. {{ data._id }}</p>
-                                            <div class="content">
-                                            <div>
-                                                <span style="font-weight: bold;">Name : </span>
-                                                <div style="text-align: left">{{ data.name || '-'  }}</div>
-                                            </div>
-                                            <div>
-                                                <span style="font-weight: bold;">Agent : </span>
-                                                <span style="float: right">{{ nameAgent || '-' }}</span>
-                                            </div>
-                                            <div>
-                                                <span style="font-weight: bold;">Tour : </span>
-                                                <span style="float: right">{{ nameTour || '-' }}</span>
-                                            </div>
-                                            <div>
-                                                <span style="font-weight: bold;">Price : </span>
-                                                <span style="float: right">{{ data.price || '-' }}</span>
-                                            </div>
-                                            <div>
-                                                <span style="font-weight: bold;">No of Person (s) : </span>
-                                                <span style="float: right">{{ data.amount || '-' }}</span>
-                                            </div>
-                                            <div>
-                                                <span style="font-weight: bold;">Voucher : </span>
-                                                <span style="float: right">{{ data.voucher || '-' }}</span>
-                                            </div>
-                                            <div>
-                                                <span style="font-weight: bold;">Remark. : </span>
-                                                <span style="float: right">{{ data.remark || '-' }}</span>
-                                            </div>
-                                            <hr style="border: 1px dotted;">
-                                            <div>
-                                                <span style="font-weight: bold;">Total : </span>
-                                                <span style="float: right">{{ total }}</span>
-                                            </div>
-                                            </div>
-                                            <div style="margin-top: 40px;">
-                                                <h6 id="billFoot"></h6>
+                                           <div id="section-to-print2">
+                                            <h4 style="border: 1px solid; padding: 30px;">TOUR VOUCHER</h4>
+                                            <h3>{{ billHead }}</h3>
+                                                <p id="realTime"></p>
+                                            <p></p>
+                                            <p style="text-align: right; font-weight: bold;">No. {{ data._id }}</p>
+                                                <div class="content">
+                                                <div>
+                                                    <span style="font-weight: bold;">Name : </span>
+                                                    <div style="text-align: left">{{ data.name || '-'  }}</div>
+                                                </div>
+                                                <div>
+                                                    <span style="font-weight: bold;">Agent : </span>
+                                                    <span style="float: right">{{ nameAgent || '-' }}</span>
+                                                </div>
+                                                <div>
+                                                    <span style="font-weight: bold;">Tour : </span>
+                                                    <span style="float: right">{{ nameTour || '-' }}</span>
+                                                </div>
+                                                <div>
+                                                    <span style="font-weight: bold;">Price : </span>
+                                                    <span style="float: right">{{ data.price || '-' }}</span>
+                                                </div>
+                                                <div>
+                                                    <span style="font-weight: bold;">No of Person (s) : </span>
+                                                    <span style="float: right">{{ data.amount || '-' }}</span>
+                                                </div>
+                                                <div>
+                                                    <span style="font-weight: bold;">Voucher : </span>
+                                                    <span style="float: right">{{ data.voucher || '-' }}</span>
+                                                </div>
+                                                <div>
+                                                    <span style="font-weight: bold;">Remark. : </span>
+                                                    <span style="float: right">{{ data.remark || '-' }}</span>
+                                                </div>
+                                                <hr style="border: 1px dotted;">
+                                                <div>
+                                                    <span style="font-weight: bold;">Total : </span>
+                                                    <span style="float: right">{{ total }}</span>
+                                                </div>
+                                                </div>
+                                                <div style="margin-top: 40px;">
+                                                    <h6 id="billFoot"></h6>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                             <!-- <div class="col-sm-12" style="margin-top: 20px;">
-                                <div class="card">
-                                    <div class="card-header text-white bg-primary">
-                                        ตั้งค่าระบบ Taxi
-                                    </div>
-                                    <div class="card-body text-center">
-                                        <ul class="listSetting">
-                                            <li>
-                                                <router-link to="/tour/setAgent">ตั้งค่าบริษัท</router-link>
-                                            </li>
-                                             <li>
-                                                <router-link to="/tour/setTour">ตั้งค่าทัวร์</router-link>
-                                            </li>
-                                            <li>
-                                                <router-link to="/setBill">ตั้งค่าบิล</router-link>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </div> -->
                         </div>
                     </div>
                 </div>
             <!-- </div> -->
         <!-- </div> -->
-        <div v-show="false">
-            <div id="printBill" style="text-align: left; line-height: 2;">
-            
-            </div>
-        </div>
     </div>
 </template>
 <script>
@@ -215,7 +193,9 @@ export default {
             tour: [],
             tourList: [],
             billHead: '',
-            billFoot: ''
+            billFoot: '',
+            statusPrint: '',
+            amountPrint: ''
         }
     },
     methods: {
@@ -236,53 +216,13 @@ export default {
             this.$store.dispatch('addTourTicket',this.data)
             .then(() => {
                 moment.locale('en');
-                let html = `
-                        <h4 style="text-align: center; border: 1px solid; padding: 30px;">TOUR VOUCHER</h4>
-                        <h3 style="text-align: center;">${ this.billHead }</h3>
-                        <p style="text-align: center; font-weight: bold;">${ moment(new Date()).format('MM/DD/YYYY, h:mm:ss a') }</p>
-                        <p style="text-align: right; font-weight: bold;">No. ${ this.data._id }</p>
-                        <div class="content">
-                        <div>
-                            <span style="font-weight: bold;">Name : </span>
-                            <div style="text-align: left;">${ this.data.name || '-'  }</div>
-                        </div>
-                        <div>
-                            <span style="font-weight: bold;">Agent : </span>
-                            <span style="float: right">${ this.nameAgent || '-' }</span>
-                        </div>
-                        <div>
-                            <span style="font-weight: bold;">Tour : </span>
-                            <span style="float: right">${ this.nameTour || '-' }</span>
-                        </div>
-                        <div>
-                            <span style="font-weight: bold;">Price : </span>
-                            <span style="float: right">${ this.data.price || '-' }</span>
-                        </div>
-                        <div>
-                            <span style="font-weight: bold;">No of Person (s) : </span>
-                            <span style="float: right">${ this.data.amount || '-' }</span>
-                        </div>
-                        <div>
-                            <span style="font-weight: bold;">Voucher : </span>
-                            <span style="float: right">${ this.data.voucher || '-' }</span>
-                        </div>
-                        <div>
-                            <span style="font-weight: bold;">Remark. : </span>
-                            <span style="float: right">${ this.data.remark || '-' }</span>
-                        </div>
-                        <hr style="border: 1px dotted;">
-                        <div>
-                            <span style="font-weight: bold;">Total : </span>
-                            <span style="float: right">${ this.total }</span>
-                        </div>
-                        </div>
-                        <div style="text-align:center; margin-top: 40px;">
-                            <h6>${ this.billFoot }</h6>
-                        </div>
-                    `
-                $('#printBill').html(html)
-                printJS({printable: 'printBill', type: 'html', targetStyles: ['*']})
-                html = ``
+                Jquery('#realTime').text(moment(new Date()).format('MM/DD/YYYY, h:mm:ss a'))
+                if(this.statusPrint){
+                    for(let i = 0; i< this.amountPrint; i++){
+                        // console.log('time')
+                        window.print()
+                    }
+                }
                 this.genIdTicket(this.data._id)
                 this.selectTypeName = 'cash'
                 this.data.name = 'cash',
@@ -326,6 +266,15 @@ export default {
                 this.billFoot = obj.billFoot
                 $("#billFoot").html(obj.billFoot)
             })
+        },
+        getPrintSetting(){
+            this.$store.dispatch('getPrintSetting')
+            .then(() => {
+                const obj = this.$store.getters.getPrintSetting
+                this.statusPrint = obj.statusPrint
+                this.amountPrint = obj.amountPrint
+            })
+            
         }
     },
     watch: {
@@ -364,6 +313,7 @@ export default {
         }
     },
     created(){
+        this.getPrintSetting // get print setting (statusPrint , amountPrint)
         this.getBillHead
         this.$store.dispatch('getTourTicketLasted')
         this.$store.dispatch('getTour')

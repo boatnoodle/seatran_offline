@@ -2,18 +2,21 @@ import axios from '@/service/axios'
 
 const state = {
     billHead: '',
-    percent: ''
+    percent: '',
+    printSetting: {}
 }
 
 const getters = {
     getBillHead: (state) => state.billHead,
     getPercent: (state) => state.percent,
+    getPrintSetting: (state) => state.printSetting
 
 }
 
 const mutations = {
     getBillHead: (state,billHead) => state.billHead = billHead,
     getPercent: (state,percent) => state.percent = percent,
+    getPrintSetting: (state,printSetting) => state.printSetting = printSetting,
 
 }
 const actions = {
@@ -56,7 +59,27 @@ const actions = {
         .catch(err => {
             console.log(err)
         })
-    }
+    },
+    async getPrintSetting({commit}){
+        await axios.get('system/getPrintSetting')
+        .then((response) => {
+            commit('getPrintSetting',response.data)
+        })
+        .catch(err => {
+            console.log(err)
+        })
+    },
+    async updatePrintSetting({commit},data){
+        await axios.post('system/updatePrintSetting',data)
+        .then(res => {
+            if(res){
+               alert('แก้ไขการตั้งค่าการออกใบเสร็จเรียบร้อยแล้ว')
+            }
+        })
+        .catch(err => {
+            console.log(err)
+        })
+    },
 }
 
 export default {

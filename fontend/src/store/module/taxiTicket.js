@@ -41,7 +41,7 @@ const actions = {
         .then(res => {
             if(res){
             //    alert('เพิ่มข้อมูลเรียบร้อยแล้ว')
-            console.log(res)
+            // console.log(res)
             }
         })
         .catch(err => {

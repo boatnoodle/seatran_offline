@@ -1,7 +1,7 @@
 @media print {
     body * {
         visibility: hidden;
-        position: relative;
+        /* position: relative; */
       }
       #section-to-print2, #section-to-print2 * {
         visibility: visible;
@@ -9,11 +9,19 @@
       #section-to-print2 {
         position: fixed;
         width: 100% !important;
+        top: 0 !important;
+        left: 0 !important;
         font-size: 30px;
         padding: 20px;
         /* height: 100vh !important; */
-        left: 0 !important;
-        top: 0 !important;
+      }
+      #section-to-print2 h4{
+        font-size: 30px;
+        font-weight: bold;
+      }
+      #section-to-print2 h6{
+        font-size: 24px;
+        font-weight: bold;
       }
   }
 @font-face {

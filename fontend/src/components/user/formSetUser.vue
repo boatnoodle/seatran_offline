@@ -46,6 +46,7 @@
 </template>
 <script>
 import axios from '@/service/axios'
+import Jquery from 'jquery'
 export default {
     props: {
         user: {

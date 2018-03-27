@@ -1,5 +1,5 @@
 <template>
-    <div class="no-print">
+    <div>
         <h3 class="text-center">ระบบออกตั๋ว TAXI {{ data._id }}</h3>
         <div class="row">
             <div class="col-sm-8">
@@ -73,18 +73,20 @@
                 <table class="table table-sm table-hover text-center">
                     <thead class="text-white bg-info">
                         <tr>
-                        <th scope="col">#</th>
-                        <th scope="col">ชื่อผู้โดยสาร</th>
-                        <th scope="col">จุดส่ง</th>
-                        <th scope="col">ราคารวม</th>
+                            <th scope="col">รหัสตั๋ว</th>
+                            <th scope="col">ชื่อผู้โดยสาร</th>
+                            <th scope="col">จุดส่ง</th>
+                            <th scope="col">ราคารวม</th>
+                            <th>ยกเลิก</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr v-for="(data,index) in getTicketTaxiLasted" :key="index">
-                            <th>{{ index + 1 }}</th>
+                            <th>{{ data._id }}</th>
                             <th>{{ data.namePassenger }}</th>
                             <th>{{ data.destination.nameRoute }}</th>
                             <th>{{ data.total }}</th>
+                            <th><button @click="modalCancel" class="btn btn-danger btn-sm">ยกเลิก</button></th>
                         </tr>
                     </tbody>
                 </table>
@@ -108,9 +110,9 @@
                             </div>
                             <div class="card-body">
                                 <div class="exReceipt">
-                                    <div id="section-to-print2" >
+                                    <div id="section-to-print2">
                                         <h4 style="border: 1px solid; padding: 30px;">TRANSFER VOUCHER</h4>
-                                        <p>{{ realTime }}</p>
+                                        <p id="realTime"></p>
                                         <p style="text-align: right; font-weight: bold;">No. {{ data._id }}</p>
                                         <div class="content">
                                         <div>
@@ -151,29 +153,32 @@
                             </div>
                         </div>
                     </div>
-                    <!-- <div class="col-sm-12" style="margin-top: 20px;">
-                        <div class="card">
-                            <div class="card-header text-white bg-primary">
-                                ตั้งค่าระบบ Taxi
-                            </div>
-                            <div class="card-body text-center">
-                                <ul class="listSetting">
-                                    <li>
-                                        <router-link to="/taxi/setRoute">ตั้งค่าเส้นทาง</router-link>
-                                    </li>
-                                    <li>
-                                        <router-link to="/setBill">ตั้งค่าบิล</router-link>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div> -->
                 </div>
             </div>
         </div>
-        <div v-show="false">
-            <div id="printBill" style="text-align: left; line-height: 2;">
-            
+        <!-- Modal cancel -->
+        <div ref="modalCancel" class="modal" tabindex="-1" role="dialog">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header text-white bg-info">
+                        <h5 class="modal-title">ยกเลิกตั๋ว</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form v-on:submit.prevent="submit">
+                            <div class="form-group">
+                                <label>หมายเหตุ</label>
+                                <input type="text" v-model="data.username" class="form-control" placeholder="กรุณาระบุหมายเหตุการยกเลิก" required>
+                            </div>
+                            <div class="text-center">
+                                <button type="submit" class="btn btn-info btn-sm">บันทึก</button>
+                                <button type="button" class="btn btn-default btn-sm"  data-dismiss="modal" aria-label="Close">ยกเลิก</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -206,7 +211,9 @@ export default {
             priceTaxk: '',
             priceVan: '',
             billHead: '',
-            billFoot: ''
+            billFoot: '',
+            statusPrint: '',
+            amountPrint: ''
         }
     },
     methods: {
@@ -227,51 +234,13 @@ export default {
             this.$store.dispatch('addTaxiTicketRealTime',this.data)
             .then(() => {
                 moment.locale('en');
-                 let html = `
-                    <h4 style="text-align: center; border: 1px solid; padding: 30px;">TRANSFER VOUCHER</h4>
-                    <p style="text-align: center; font-weight: bold;">${ moment(new Date()).format('MM/DD/YYYY, h:mm:ss a') }</p>
-                    <p style="text-align: right; font-weight: bold;">No. ${  this.data._id }</p>
-                    <div class="content">
-                    <div>
-                        <span style="font-weight: bold;">Name : </span>
-                        <div style="text-align:left;">${  this.data.namePassenger || '-' }</div>
-                    </div>
-                    <div>
-                        <span style="font-weight: bold;">Destination : </span>
-                        <div style="text-align: left">${  this.nameRoute || '-' }</div>
-                    </div>
-                    <div>
-                        <span style="font-weight: bold;">Price : </span>
-                        <span style="float: right">${  this.data.price || '-' }</span>
-                    </div>
-                    <div>
-                        <span style="font-weight: bold;">No. of Passenger : </span>
-                        <span style="float: right">${  this.data.amount || '-' }</span>
-                    </div>
-                        <div>
-                        <span style="font-weight: bold;">Type car : </span>
-                        <span style="float: right">${  this.data.typeCar || '-' }</span>
-                    </div>
-                    <div>
-                        <span style="font-weight: bold;">Remark : </span>
-                        <span style="float: right">${  this.data.remark || '-' }</span>
-                    </div>
-                    <hr style="border: 1px dotted;">
-                    <div>
-                        <span style="font-weight: bold;">Total : </span>
-                        <span style="float: right">${  this.data.total || '-' }</span>
-                    </div>
-                    </div>
-                     <div style="text-align:center; margin-top: 40px;">
-                        <h6>${ this.billFoot }</h6>
-                    </div>
-                `
-                window.print()
-                window.print()
-                window.print()
-                // Jquery('#printBill').html(html)
-                // printJS({printable: 'printBill', type: 'html', targetStyles: ['*']})
-                html = ``
+                Jquery('#realTime').text(moment(new Date()).format('MM/DD/YYYY, h:mm:ss a'))
+                if(this.statusPrint){
+                    for(let i = 0; i< this.amountPrint; i++){
+                        // console.log('time')
+                        window.print()
+                    }
+                }
                 this.selectTypeNamePassenger = 'cash'
                 this.data.namePassenger =  'cash',
                 this.data.destination =  '',
@@ -288,6 +257,9 @@ export default {
                 })
                 this.$store.dispatch('getTaxiTicketLasted')
             })
+        },
+        modalCancel(){
+            $(this.$refs.modalCancel).modal('toggle')
         }
     },
     computed: {
@@ -318,6 +290,15 @@ export default {
                 this.billFoot = obj.billFoot
                 $("#billFoot").html(obj.billFoot)
             })
+        },
+        getPrintSetting(){
+            this.$store.dispatch('getPrintSetting')
+            .then(() => {
+                const obj = this.$store.getters.getPrintSetting
+                this.statusPrint = obj.statusPrint
+                this.amountPrint = obj.amountPrint
+            })
+            
         }
     },
     watch: {
@@ -351,6 +332,7 @@ export default {
         }
     },
     created(){
+        this.getPrintSetting // get print setting (statusPrint , amountPrint)
         this.getTicketTaxiLasted
         this.getBillHead
         this.$store.dispatch('getTaxiTicketLasted')
@@ -368,9 +350,6 @@ export default {
 }
 </script>
 <style scoped>
-    @media print {
-       
-    }
     .boxShowTotal{
         text-align: right;
         padding: 10px;
