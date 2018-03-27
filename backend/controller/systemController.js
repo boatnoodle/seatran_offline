@@ -7,7 +7,9 @@ module.exports = {
             billHead: req.body.billHead,
             billFoot: req.body.billFoot,
             percentTaxi: req.body.percentTaxi,
-            percentTour: req.body.percentTour
+            percentTour: req.body.percentTour,
+            statusPrint: req.body.statusPrint,
+            amountPrint: req.body.amountPrint
         })
         system.save()
         .then((result) => {
@@ -47,6 +49,25 @@ module.exports = {
     },
     getPercent: (req,res,next)=> {
         System.findOne({_id: "seatran_offline"},'percentTaxi percentTour')
+        .exec()
+        .then((result) => {
+            res.status(200).json(result)
+        })
+        .catch(err => {
+            console.log(err)
+        })
+    },
+    updatePrintSetting: (req,res,next) => {
+        System.update({ _id: "seatran_offline"}, { $set: { statusPrint: req.body.statusPrint, amountPrint: req.body.amountPrint }})
+        .then(result => {
+            res.status(200).json(result)
+        })
+        .catch(err => {
+            console.log(err)
+        })
+    },
+    getPrintSetting: (req,res,next)=> {
+        System.findOne({_id: "seatran_offline"},'statusPrint amountPrint')
         .exec()
         .then((result) => {
             res.status(200).json(result)

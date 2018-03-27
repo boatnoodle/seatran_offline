@@ -13,6 +13,10 @@ const taxiTicketSchema = new Schema({
     created: {
         type: Date,
         default: Date.now
+    },
+    statusTicket: {
+        type: Number,
+        defualt: 1
     }
 })
 

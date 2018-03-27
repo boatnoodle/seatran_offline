@@ -10,6 +10,9 @@ route.post('/updateBillHead',systemController.updateBillHead)
 route.get('/getPercent',systemController.getPercent)
 route.post('/updatePercent',systemController.updatePercent)
 
+route.get('/getPrintSetting',systemController.getPrintSetting)
+route.post('/updatePrintSetting',systemController.updatePrintSetting)
+
 // route.delete('/removeRoute/:id',routeTaxiController.removeRoute)
 
 module.exports = route

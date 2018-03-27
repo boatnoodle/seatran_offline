@@ -13,4 +13,6 @@ route.post('/addTaxiTicket',taxiTicket.addTaxiTicket)
 
 route.post('/addTaxiTicketRealTime',taxiTicket.addTaxiTicketRealTime)
 
+route.put('/cancelTaxiTicket/:id', taxiTicket.cancelTaxiTicket)
+
 module.exports = route

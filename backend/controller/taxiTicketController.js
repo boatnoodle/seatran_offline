@@ -148,6 +148,15 @@ module.exports = {
             console.log('err',err)
             res.send(err.message) 
         })
+    },
+    cancelTaxiTicket(req,res,next){
+        TaxiTicket.update({_id: req.params.id}, { $set : {remark: req.body.remark, statusTicket: 99}})
+        .then(result => {
+            console.log(result)
+        })
+        .catch(err => {
+            console.log(err.message)
+        })
     }
     
 }

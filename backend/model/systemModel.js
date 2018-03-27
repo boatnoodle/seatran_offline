@@ -17,6 +17,14 @@ const systemSchema = new Schema({
     },
     percentTour: {
         type: Number
+    },
+    statusPrint: {
+        type: Boolean,
+        default: true
+    },
+    amountPrint: {
+        type: Number,
+        default: 1
     }
 })
 
