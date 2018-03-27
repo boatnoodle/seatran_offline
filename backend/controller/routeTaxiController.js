@@ -14,6 +14,7 @@ module.exports = {
     },
     getAllRoute: (req,res,next) => {
         RouteTaxi.find()
+        .sort('nameRoute') // sort by name route
         .exec()
         .then(route => {
             res.status(200).json(route)
