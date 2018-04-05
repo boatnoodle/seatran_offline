@@ -12,11 +12,12 @@ module.exports = {
         })
     },
     addTaxiTicketRealTime: (req,res,next) => {
-        TaxiTicket.findOne({},'_id',{sort: {'created': -1}})
+        TaxiTicket.findById(req.body._id)
+        // TaxiTicket.findOne({},'_id',{sort: {'created': -1}})
         .exec()
         .then((result) => {
             if(result != null){
-                var _id = result._id
+                var _id = req.body._id
                 let font = _id.substr(0,8)
                 let back = '000'+ (parseInt(_id.substr(-4)) + 1)
                 _id = font + back.substr(-4)
