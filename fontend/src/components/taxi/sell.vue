@@ -220,7 +220,7 @@ export default {
         genIdTicket(lastId){
             // lastId = "001" fortest
             var prefix = moment().format('Y') + moment().format('MM')
-            if(lastId){
+            if(lastId && (lastId.substr(6,2) == prefix.substr(4,2))){
                 var lastId = lastId.substr(-4)
                 var newId = '000' + (parseInt(lastId) + 1)
                 var id = newId.substr(-4)
