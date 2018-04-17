@@ -98,6 +98,8 @@ export default {
         },
         manipulate(){
             this.dataReady = []
+            this.total = 0
+            // console.log(this.dataTable)
             this.dataTable.forEach(element => {
                 let data = {
                     nameRoute: element.destination[0].nameRoute,

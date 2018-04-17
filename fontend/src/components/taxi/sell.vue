@@ -46,11 +46,11 @@
                                 <div class="form-row">
                                     <div class="col-sm-6">
                                         <label>ราคา</label>
-                                        <input type="text" v-model="data.price" class="form-control" placeholder="ราคา">
+                                        <input type="number" v-model="data.price" class="form-control" placeholder="ราคา">
                                     </div>
                                     <div class="col-sm-6">
                                         <label>จำนวนผู้โดยสาร</label>
-                                        <input type="text" v-model="data.amount" class="form-control" placeholder="กรุณาระบุจำนวนผู้โดยสาร">
+                                        <input type="number" v-model="data.amount" class="form-control" placeholder="กรุณาระบุจำนวนผู้โดยสาร">
                                     </div>
                                 </div>
                             </div>
@@ -86,7 +86,10 @@
                             <th>{{ data.namePassenger }}</th>
                             <th>{{ data.destination.nameRoute }}</th>
                             <th>{{ data.total }}</th>
-                            <th><button @click="modalCancel" class="btn btn-danger btn-sm">ยกเลิก</button></th>
+                            <th>
+                                <div v-if="data.statusTicket == 99" style="color: red; font-weight: bold">ยกเลิก</div>
+                                <button v-else @click="modalCancel(data._id)" class="btn btn-danger btn-sm">ยกเลิก</button>
+                            </th>
                         </tr>
                     </tbody>
                 </table>
@@ -167,10 +170,10 @@
                         </button>
                     </div>
                     <div class="modal-body">
-                        <form v-on:submit.prevent="submit">
+                        <form v-on:submit.prevent="cencelTicket">
                             <div class="form-group">
                                 <label>หมายเหตุ</label>
-                                <input type="text" v-model="data.username" class="form-control" placeholder="กรุณาระบุหมายเหตุการยกเลิก" required>
+                                <input type="text" v-model="cancelTaxiTicket.remark" class="form-control" placeholder="กรุณาระบุหมายเหตุการยกเลิก" required>
                             </div>
                             <div class="text-center">
                                 <button type="submit" class="btn btn-info btn-sm">บันทึก</button>
@@ -213,7 +216,11 @@ export default {
             billHead: '',
             billFoot: '',
             statusPrint: '',
-            amountPrint: ''
+            amountPrint: '',
+            cancelTaxiTicket: {
+                _id: '',
+                remark: ''
+            }
         }
     },
     methods: {
@@ -258,8 +265,18 @@ export default {
                 this.$store.dispatch('getTaxiTicketLasted')
             })
         },
-        modalCancel(){
+        modalCancel(_id){
+            this.cancelTaxiTicket._id = _id
             $(this.$refs.modalCancel).modal('toggle')
+        },
+        cencelTicket(){
+            this.$store.dispatch('cancelTaxiTicket',this.cancelTaxiTicket)
+            .then(() => {
+                this.cancelTaxiTicket._id = ''
+                this.cancelTaxiTicket.remark = ''
+                this.$store.dispatch('getTaxiTicketLasted')
+                $(this.$refs.modalCancel).modal('hide')
+            })
         }
     },
     computed: {
@@ -350,20 +367,20 @@ export default {
 }
 </script>
 <style scoped>
-    .boxShowTotal{
-        text-align: right;
-        padding: 10px;
-        font-size: 4em;
-        color: white;
-    }
-    .exReceipt{
-        width: 100%;
-        border: 1px solid;
-        margin: 0 auto;
-        padding: 50px;
-        text-align: center;
-    }
-    .exReceipt .content{
-        text-align: left;
-    }
+.boxShowTotal {
+  text-align: right;
+  padding: 10px;
+  font-size: 4em;
+  color: white;
+}
+.exReceipt {
+  width: 100%;
+  border: 1px solid;
+  margin: 0 auto;
+  padding: 50px;
+  text-align: center;
+}
+.exReceipt .content {
+  text-align: left;
+}
 </style>

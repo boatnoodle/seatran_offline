@@ -58,6 +58,17 @@ const actions = {
         .catch(err => {
             console.log(err)
         })
+    },
+    async cancelTaxiTicket({commit},data){
+        await axios.put('taxiTicket/cancelTaxiTicket/' + data._id , data)
+        .then(res =>{
+            if(res){
+                console.log(res)
+            }
+        })
+        .catch(err =>{
+            console.log(err)
+        })
     }
 }
 
