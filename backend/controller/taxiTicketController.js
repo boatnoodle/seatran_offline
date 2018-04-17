@@ -78,7 +78,28 @@ module.exports = {
         .populate('destination','nameRoute -_id')
         .exec()
         .then(result => {
-            res.status(200).json(result)
+            var obj = [];
+            result.forEach(element => {
+                if(element.statusTicket == 99){
+                    var data = {
+                        created: element.created,
+                        _id: element._id,
+                        namePassenger: element.namePassenger,
+                        destination: element.destination,
+                        price: 0,
+                        amount: 0,
+                        total: 0,
+                        typeCar: element.typeCar,
+                        remark: element.remark,
+                        statusTicket: element.statusTicket,
+                        __v: element.__v
+                    }
+                }else{
+                    var data = element
+                }
+                obj.push(data)
+            });
+            res.status(200).json(obj)
         })
         .catch(err => {
             console.log('err',err.message)
@@ -94,7 +115,10 @@ module.exports = {
         TaxiTicket.aggregate([
             {
                 $match: {
-                    created: {$gte: new Date(req.body.dateFrom), $lt: dateTo}
+                    created: {$gte: new Date(req.body.dateFrom), $lt: dateTo},
+                    statusTicket: {
+                        $ne: 99
+                    }
                 }
             },
             {
@@ -104,7 +128,7 @@ module.exports = {
                         typeCar: "$typeCar"
                     },
                     created: {$first: '$created'},
-                    totalPrice: {$sum: {$multiply: ["$price","$amount"]}},
+                    totalPrice: {$sum: '$total'},
                     totalAmount: {$sum: "$amount"}
                 }
             },
@@ -115,8 +139,8 @@ module.exports = {
                     totalByTypeCar: {
                         $push: {
                             typeCar: "$_id.typeCar",
-                            totalAmount: "$totalAmount",
-                            totalPrice: "$totalPrice"
+                            totalPrice: "$totalPrice",
+                            totalAmount: "$totalAmount"
                         }
                     }
                 }
@@ -143,6 +167,7 @@ module.exports = {
         .populate('destination')
         .exec()
         .then((result) => {
+            console.log(result)
             res.status(200).json(result)
         })
         .catch((err) => {
@@ -153,7 +178,7 @@ module.exports = {
     cancelTaxiTicket(req,res,next){
         TaxiTicket.update({_id: req.params.id}, { $set : {remark: req.body.remark, statusTicket: 99}})
         .then(result => {
-            console.log(result)
+            res.status(200).json(result)
         })
         .catch(err => {
             console.log(err.message)
