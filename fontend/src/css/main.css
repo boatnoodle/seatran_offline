@@ -3,10 +3,10 @@
         visibility: hidden;
         /* position: relative; */
       }
-      #section-to-print2, #section-to-print2 * {
+      #section-to-print, #section-to-print * {
         visibility: visible;
       }
-      #section-to-print2 {
+      #section-to-print {
         position: fixed;
         width: 100% !important;
         top: 0 !important;
@@ -15,11 +15,11 @@
         padding: 20px;
         /* height: 100vh !important; */
       }
-      #section-to-print2 h4{
+      #section-to-print h4{
         font-size: 30px;
         font-weight: bold;
       }
-      #section-to-print2 h6{
+      #section-to-print h6{
         font-size: 24px;
         font-weight: bold;
       }
