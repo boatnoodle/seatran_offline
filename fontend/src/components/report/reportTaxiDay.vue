@@ -45,7 +45,7 @@
                             <td>{{ data.remark || '-' }}</td>
                         </tr>
                     </tbody>
-                    <tfoot>
+                    <tfoot id="section-to-hide">
                         <tr>
                             <th>รวม</th>
                             <th></th>

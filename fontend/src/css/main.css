@@ -1,55 +1,59 @@
 @media print {
-    body * {
-        visibility: hidden;
-        /* position: relative; */
-      }
-      #section-to-print, #section-to-print * {
-        visibility: visible;
-      }
-      #section-to-print {
-        position: fixed;
-        width: 100% !important;
-        top: 0 !important;
-        left: 0 !important;
-        font-size: 30px;
-        padding: 20px;
-        /* height: 100vh !important; */
-      }
-      #section-to-print h4{
-        font-size: 30px;
-        font-weight: bold;
-      }
-      #section-to-print h6{
-        font-size: 24px;
-        font-weight: bold;
-      }
+  body * {
+    visibility: hidden;
+    /* position: relative; */
   }
+  #section-to-hide *{
+    visibility: hidden !important;
+  }
+  #section-to-print,
+  #section-to-print * {
+    visibility: visible;
+  }
+  #section-to-print {
+    position: absolute;
+    width: 100% !important;
+    top: 0 !important;
+    left: 0 !important;
+    font-size: 30px;
+    padding: 20px;
+    /* height: 100vh !important; */
+  }
+  #section-to-print h4 {
+    font-size: 30px;
+    font-weight: bold;
+  }
+  #section-to-print h6 {
+    font-size: 24px;
+    font-weight: bold;
+  }
+}
 @font-face {
-    font-family: rsu-font;
-    src: url('./fonts/RSU_Regular.ttf');
+  font-family: rsu-font;
+  src: url("./fonts/RSU_Regular.ttf");
 }
-body{
-    font-family: rsu-font !important;
- }
- .boxSell{
-    background: white;
-    width: 100%;
-    min-height: 100vh;
-    position: absolute;
-    top: 0;
-    left: 0;
-    z-index: 99999;
+body {
+  font-family: rsu-font !important;
 }
-.close{
-    position: absolute;
-    right: 10px;
-    top: 10px;
+.boxSell {
+  background: white;
+  width: 100%;
+  min-height: 100vh;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 99999;
 }
-.modal-header{
-    padding: 10px;
+.close {
+  position: absolute;
+  right: 10px;
+  top: 10px;
 }
-.listSetting{
-    font-size: 1.2em;
-    text-align: left;
-    line-height: 2;
+.modal-header {
+  padding: 10px;
+}
+.listSetting {
+  font-size: 1.2em;
+  text-align: left;
+  line-height: 2;
 }
