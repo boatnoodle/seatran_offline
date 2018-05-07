@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div id="section-to-print">
         <h3 id="titlePrint" class="text-center">รายงานสรุปการขนส่งประจำวัน</h3>
         <!-- <p class="text-center">{{ dateToday }}</p> -->
         <form v-on:submit.prevent="submit" class="col-sm-6 offset-sm-3 no-print">
@@ -15,7 +15,7 @@
             </div>
         </div>
         <div class="row">
-            <div id="section-to-print" class="col-sm-12">
+            <div class="col-sm-12">
                 <table class="table table-sm table-bordered table-hover text-center">
                     <thead>
                         <tr>
@@ -50,11 +50,11 @@
             </div>
         </div>
         <div class="row">
-            <div id="section-to-print" class="col-sm-12">
+            <div class="col-sm-12">
                 <div style="float: right; font-weight: bold; text-align: right">
                     <p>รวม : {{ total || 0 }} บาท</p>
                     <p>({{percentTaxi * 100}}%) : {{ (total * percentTaxi) || 0 }} บาท</p>
-                    <p>รวมทั้งสิ้น : {{ total + (total * percentTaxi) || 0 }} บาท</p>
+                    <p>รวมทั้งสิ้น : {{ total - (total * percentTaxi) || 0 }} บาท</p>
                 </div>
             </div>
         </div>

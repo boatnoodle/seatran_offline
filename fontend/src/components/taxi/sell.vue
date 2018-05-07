@@ -70,7 +70,7 @@
                     </div>
                 </div>
                 <h3 style="margin-top: 20px;" class="text-center">รายการขายล่าสุด</h3>
-                <table class="table table-sm table-hover text-center">
+                <table class="table table-sm table-hover text-center tableRecentTicket">
                     <thead class="text-white bg-info">
                         <tr>
                             <th scope="col">รหัสตั๋ว</th>
@@ -261,8 +261,15 @@ export default {
                 this.$store.dispatch('getLastTaxiTicket').then(() => {
                     const lastedId = this.getLastTaxiTicket._id
                     this.genIdTicket(lastedId)
+                    $(".tableRecentTicket").dataTable().fnDestroy()
                 })
-                this.$store.dispatch('getTaxiTicketLasted')
+                this.$store.dispatch('getTaxiTicketLasted').then(() => {
+                    $(".tableRecentTicket").DataTable({
+                        bDestroy: true,
+                        lengthMenu: [[5, 10, 25, 50, -1], [5, 10, 25, 50, "All"]],
+                        order: [[0, "DESC"]]
+                    });
+                })
             })
         },
         modalCancel(_id){
@@ -362,6 +369,13 @@ export default {
                 this.genIdTicket()
             }
         })
+    },
+    mounted(){
+        $(".tableRecentTicket").DataTable({
+          bDestroy: true,
+          lengthMenu: [[5, 10, 25, 50, -1], [5, 10, 25, 50, "All"]],
+          order: [[0, "DESC"]]
+        });
     }
     
 }
