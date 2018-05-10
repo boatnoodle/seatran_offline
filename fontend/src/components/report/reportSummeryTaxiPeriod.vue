@@ -10,6 +10,8 @@
                 <button type="submit" class="btn btn-info btn-sm">ค้นหา</button>
             </div>
         </form>
+        <h6 class="titleDatePrint text-center">รายงานประจำวันที่: {{data.dateFrom || '-'}} ถึง {{data.dateTo || '-'}}</h6>
+        
         <div class="row no-print" style="margin-bottom: 15px;">
             <div class="col-sm-12 text-right">
                 <button id="notPrint" type="button" @click="printReport" class="btn btn-default"><i class="fa fa-print"></i> พิมพ์</button>

@@ -8,7 +8,7 @@
                 <button type="submit" class="btn btn-info btn-sm col-sm-2">ค้นหา</button>
             </div>
         </form>
-        <h5 class="text-center" >รายงานประจำวันที่ {{ data.dateFrom || '-' }}</h5>
+        <h6 class="titleDatePrint text-center" >รายงานประจำวันที่ {{ data.dateFrom || '-' }}</h6>
         <div class="row no-print" style="margin-bottom: 15px;">
             <div class="col-sm-12 text-right">
                 <button id="notPrint" type="button" @click="printReport" class="btn btn-default"><i class="fa fa-print"></i> พิมพ์</button>
