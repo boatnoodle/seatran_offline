@@ -11,6 +11,7 @@
                 <button type="button" @click="printReport" style="margin-left: 10px;" class="btn btn-default"><i class="fa fa-print"></i> พิมพ์</button>
             </div>
         </form>
+        <h6 class="titleDatePrint text-center">รายงานประจำวันที่: {{data.dateFrom || '-'}} ถึง {{data.dateTo || '-'}}</h6>
         <div class="row no-print">
             <div class="col-sm-12">
                 <div class="form-group">
