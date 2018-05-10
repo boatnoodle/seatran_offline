@@ -163,7 +163,7 @@ module.exports = {
         })
     },
     getTaxiTicketLasted(req,res,next){
-        TaxiTicket.find().sort({'created': -1}).limit(5)
+        TaxiTicket.find().sort({'created': -1})
         .populate('destination')
         .exec()
         .then((result) => {

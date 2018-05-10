@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div id="section-to-print" >
         <h3 id="titlePrint" class="text-center">รายงานการขนส่งประจำช่วง</h3>
         <form v-on:submit.prevent="submit" class="col-sm-12 no-print">
             <div class="form-group row">
@@ -19,7 +19,7 @@
             </div>
         </div>
         <div class="row">
-            <div id="section-to-print" class="col-sm-12">
+            <div class="col-sm-12">
                 <table class="table table-sm table-bordered table-hover">
                     <thead>
                         <tr>
@@ -60,8 +60,8 @@
                 </table>
                 <div style="float: right; font-weight: bold; text-align: right">
                     <p>รวม : {{ total.total || 0 }} บาท</p>
-                    <p>({{ percentTaxi * 100 }}%) : {{ total.fee || 0 }} บาท</p>
-                    <p>รวมทั้งสิ้น : {{ total.grandTotal || 0 }} บาท</p>
+                    <p>ส่วนแบ่งกำไร ({{ percentTaxi * 100 }}%) : {{ total.fee || 0 }} บาท</p>
+                    <p>คงเหลือหลังหักส่วนแบ่ง : {{ total.grandTotal || 0 }} บาท</p>
                 </div>
             </div>
         </div>
@@ -119,7 +119,7 @@ export default {
                     totalAmount: totalAmount,
                     total: total,
                     fee: total * this.percentTaxi,
-                    grandTotal: total + (total * this.percentTaxi)
+                    grandTotal: total - (total * this.percentTaxi)
                 }
             }else{
                 this.total = {
@@ -150,7 +150,7 @@ export default {
                     totalAmount: totalAmount,
                     total: total,
                     fee: total * this.percentTaxi,
-                    grandTotal: total + (total * this.percentTaxi)
+                    grandTotal: total - (total * this.percentTaxi)
                 }
             }else{
                 this.total = {
