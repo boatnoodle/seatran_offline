@@ -33,6 +33,7 @@
                             <th>จำนวนผู้โดยสาร</th>
                             <th>ราคารวม</th>
                             <th>หมายเหตุ</th>
+                            <th>วันที่</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -44,6 +45,7 @@
                             <td>{{ data.amount }}</td>
                             <td>{{ data.total }}</td>
                             <td>{{ data.remark || '-' }}</td>
+                            <td>{{ dateFormat(data.created) }}</td>
                         </tr>
                     </tbody>
                     <tfoot id="section-to-hide">
@@ -54,6 +56,7 @@
                             <th>{{ total.totalPrice || 0 }}</th>
                             <th>{{ total.totalAmount || 0 }}</th>
                             <th>{{ total.total || 0}}</th>
+                            <th></th>
                             <th></th>
                         </tr>
                     </tfoot>
@@ -76,82 +79,94 @@
     </div>
 </template>
 <script>
-import moment from 'moment';
+import moment from "moment";
 
 export default {
-    data(){
-        return {
-            data:{
-                dateFrom: '',
-            },
-            dataTable: [],
-            dateToday: moment().locale('th').format("Do MMM YYYY"),
-            searchKey: '',
-            total: {},
-            percentTaxi: ''
-        }
+  data() {
+    return {
+      data: {
+        dateFrom: ""
+      },
+      dataTable: [],
+      dateToday: moment()
+        .locale("th")
+        .format("Do MMM YYYY"),
+      searchKey: "",
+      total: {},
+      percentTaxi: ""
+    };
+  },
+  methods: {
+    submit() {
+      this.$store.dispatch("getTaxiTicketByDate", this.data).then(() => {
+        this.getTaxiTicketByDate;
+        this.taxiTicket;
+      });
     },
-    methods: {
-        submit(){
-            this.$store.dispatch('getTaxiTicketByDate',this.data)
-            .then(() => {
-                this.getTaxiTicketByDate
-                this.taxiTicket
-            })
-        },
-        printReport(){
-            window.print();
-        }
+    printReport() {
+      window.print();
     },
-    computed: {
-        getTaxiTicketByDate(){
-            this.dataTable = this.$store.getters.getTaxiTicketByDate
-             return this.dataTable
-        },
-        taxiTicket(){
-            return this.dataTable.filter(v => {
-                  return v._id.match(this.searchKey) || v.destination.nameRoute.match(this.searchKey) || v.typeCar.match(this.searchKey)
-             })
-        },
-        getPercentTaxi(){
-            this.$store.dispatch('getPercent')
-            .then(() => {
-                const obj = this.$store.getters.getPercent
-                this.percentTaxi = obj.percentTaxi / 100
-            })
-        }
-    },
-    watch: {
-        taxiTicket(val){
-           if(val.length > 0){
-                var totalPrice = val.reduce((a,b)=> parseInt(a) + parseInt(b.price),0)
-                var totalAmount = val.reduce((a,b) => parseInt(a) + parseInt(b.amount),0)
-                var total = val.reduce((a,b) => parseInt(a) + parseInt(b.total),0)
-                this.total = {
-                    totalPrice: totalPrice,
-                    totalAmount: totalAmount,
-                    total: total,
-                    fee: total * this.percentTaxi,
-                    grandTotal: total - (total * this.percentTaxi)
-                }
-            }else{
-                this.total = {
-                    totalPrice: 0,
-                    totalAmount: 0,
-                    total: 0,
-                    fee: 0,
-                    grandTotal: 0
-                }
-            }
-        }
-    },
-    created(){
-        this.getPercentTaxi
+    dateFormat(isoDate){
+        return moment(isoDate).format("YYYY-MM-DD HH:mm")
     }
-}
+  },
+  computed: {
+    getTaxiTicketByDate() {
+      this.dataTable = this.$store.getters.getTaxiTicketByDate;
+      return this.dataTable;
+    },
+    taxiTicket() {
+      return this.dataTable.filter(v => {
+        return (
+          v._id.match(this.searchKey) ||
+          v.destination.nameRoute.match(this.searchKey) ||
+          v.typeCar.match(this.searchKey)
+        );
+      });
+    },
+    getPercentTaxi() {
+      this.$store.dispatch("getPercent").then(() => {
+        const obj = this.$store.getters.getPercent;
+        this.percentTaxi = obj.percentTaxi / 100;
+      });
+    }
+  },
+  watch: {
+    taxiTicket(val) {
+      if (val.length > 0) {
+        var totalPrice = val.reduce(
+          (a, b) => parseInt(a) + parseInt(b.price),
+          0
+        );
+        var totalAmount = val.reduce(
+          (a, b) => parseInt(a) + parseInt(b.amount),
+          0
+        );
+        var total = val.reduce((a, b) => parseInt(a) + parseInt(b.total), 0);
+        this.total = {
+          totalPrice: totalPrice,
+          totalAmount: totalAmount,
+          total: total,
+          fee: total * this.percentTaxi,
+          grandTotal: total - total * this.percentTaxi
+        };
+      } else {
+        this.total = {
+          totalPrice: 0,
+          totalAmount: 0,
+          total: 0,
+          fee: 0,
+          grandTotal: 0
+        };
+      }
+    }
+  },
+  created() {
+    this.getPercentTaxi;
+  }
+};
 </script>
 <style scoped>
-
 .VuePagination {
   text-align: center;
 }

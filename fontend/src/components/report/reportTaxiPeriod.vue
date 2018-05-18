@@ -101,7 +101,7 @@ export default {
             })
         },
         dateFormat(date){
-            return moment(date).format('D/MM/YYYY')
+            return moment(date).format('D/MM/YYYY HH:mm')
         },
         printReport(){
             window.print();
