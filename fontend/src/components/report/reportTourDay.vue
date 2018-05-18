@@ -21,8 +21,8 @@
                 </div>
             </div>
         </div>
-        <div class="row">
-            <div id="section-to-print" class="col-sm-12">
+        <div id="section-to-print" class="row">
+            <div class="col-sm-12">
                 <table class="table table-sm table-bordered table-hover text-center">
                     <thead>
                         <tr>
@@ -66,98 +66,118 @@
                     <p>รวมทั้งสิ้น : {{ total.grandTotal || 0 }} บาท</p>
                 </div>
             </div>
+            <div class="col-sm-12">
+                <div style="float: right; font-weight: bold; text-align: center; margin-top: 50px;">
+                    <p>..............................................</p>
+                    <p>( ผู้จัดทำ )</p>
+                    <p style="margin-top: 50px;">..............................................</p>
+                    <p>( ผู้ตรวจสอบ )</p>
+                </div>
+            </div>
         </div>
     </div>
 </template>
 <script>
-import moment from 'moment';
+import moment from "moment";
 
 export default {
-    data(){
-        return {
-            data:{
-                dateFrom: '',
-            },
-            dataReady: [],
-            dateToday: moment().locale('th').format("Do MMM YYYY"),
-            searchKey: '',
-            total: {},
-            percentTour: ''
-        }
+  data() {
+    return {
+      data: {
+        dateFrom: ""
+      },
+      dataReady: [],
+      dateToday: moment()
+        .locale("th")
+        .format("Do MMM YYYY"),
+      searchKey: "",
+      total: {},
+      percentTour: ""
+    };
+  },
+  methods: {
+    submit() {
+      this.$store.dispatch("getTourTicketByDate", this.data).then(() => {
+        this.manipulate;
+      });
     },
-    methods: {
-        submit(){
-            this.$store.dispatch('getTourTicketByDate',this.data)
-            .then(() => {
-                this.manipulate
-            })
-        },
-        printReport(){
-            window.print();
-        }
-    },
-    computed: {
-        manipulate(){ //ข้อผิดพลาด ของการดึงดาต้าเบสยังไม่ดีพอ
-            this.dataReady = []
-            const dataRaw = this.$store.getters.getTourTicketByDate
-            
-            dataRaw.forEach(val => {
-                const obj = val.agent.tour.find(v => v._id == val.tour)
-                const data = {
-                    '_id' : val._id,
-                    'name': val.name,
-                    'nameAgent': val.agent.nameAgent,
-                    'tour': obj,
-                    'amount': val.amount,
-                    'total': val.total,
-                    'voucher': val.voucher,
-                    'remark': val.remark,
-                    "created": val.created
-                }
-                this.dataReady.push(data)
-            })
-        },
-        tourTicket(){
-            return this.dataReady.filter(v => {
-                  return v._id.match(this.searchKey) || v.name.match(this.searchKey) || v.nameAgent.match(this.searchKey) || v.tour.nameTour.match(this.searchKey)
-             })
-        },
-        getPercentTour(){
-            this.$store.dispatch('getPercent')
-            .then(() => {
-                const obj = this.$store.getters.getPercent
-                this.percentTour = obj.percentTour / 100
-            })
-        }
-    },
-    watch: {
-        tourTicket(val){
-           if(val.length > 0){
-                var totalPrice = val.reduce((a,b)=> parseInt(a) + parseInt(b.tour.priceTour),0)
-                var totalAmount = val.reduce((a,b) => parseInt(a) + parseInt(b.amount),0)
-                var total = val.reduce((a,b) => parseInt(a) + parseInt(b.total),0)
-                this.total = {
-                    totalPrice: totalPrice,
-                    totalAmount: totalAmount,
-                    total: total,
-                    fee: total * this.percentTour,
-                    grandTotal: total + (total * this.percentTour)
-                }
-            }else{
-                this.total = {
-                    totalPrice: 0,
-                    totalAmount: 0,
-                    total: 0,
-                    fee: 0,
-                    grandTotal: 0
-                }
-            }
-        }
-    },
-    created(){
-        this.getPercentTour
+    printReport() {
+      window.print();
     }
-}
+  },
+  computed: {
+    manipulate() {
+      //ข้อผิดพลาด ของการดึงดาต้าเบสยังไม่ดีพอ
+      this.dataReady = [];
+      const dataRaw = this.$store.getters.getTourTicketByDate;
+
+      dataRaw.forEach(val => {
+        const obj = val.agent.tour.find(v => v._id == val.tour);
+        const data = {
+          _id: val._id,
+          name: val.name,
+          nameAgent: val.agent.nameAgent,
+          tour: obj,
+          amount: val.amount,
+          total: val.total,
+          voucher: val.voucher,
+          remark: val.remark,
+          created: val.created
+        };
+        this.dataReady.push(data);
+      });
+    },
+    tourTicket() {
+      return this.dataReady.filter(v => {
+        return (
+          v._id.match(this.searchKey) ||
+          v.name.match(this.searchKey) ||
+          v.nameAgent.match(this.searchKey) ||
+          v.tour.nameTour.match(this.searchKey)
+        );
+      });
+    },
+    getPercentTour() {
+      this.$store.dispatch("getPercent").then(() => {
+        const obj = this.$store.getters.getPercent;
+        this.percentTour = obj.percentTour / 100;
+      });
+    }
+  },
+  watch: {
+    tourTicket(val) {
+      if (val.length > 0) {
+        var totalPrice = val.reduce(
+          (a, b) => parseInt(a) + parseInt(b.tour.priceTour),
+          0
+        );
+        var totalAmount = val.reduce(
+          (a, b) => parseInt(a) + parseInt(b.amount),
+          0
+        );
+        var total = val.reduce((a, b) => parseInt(a) + parseInt(b.total), 0);
+        this.total = {
+          totalPrice: totalPrice,
+          totalAmount: totalAmount,
+          total: total,
+          fee: total * this.percentTour,
+          grandTotal: total + total * this.percentTour
+        };
+      } else {
+        this.total = {
+          totalPrice: 0,
+          totalAmount: 0,
+          total: 0,
+          fee: 0,
+          grandTotal: 0
+        };
+      }
+    }
+  },
+  created() {
+    this.getPercentTour;
+  }
+};
 </script>
 <style scoped>
 

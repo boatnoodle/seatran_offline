@@ -56,12 +56,20 @@
                 </table>
             </div>
         </div>
-        <div class="row">
-            <div id="section-to-print" class="col-sm-12">
+        <div id="section-to-print" class="row">
+            <div class="col-sm-12">
                 <div style="float: right; font-weight: bold; text-align: right">
                     <p>รวม : {{ total.total || 0 }} บาท</p>
                     <p>({{ percentTour * 100 }}%) : {{ (total.total * percentTour) || 0 }} บาท</p>
                     <p>รวมทั้งสิ้น : {{ (total.total + (total.total * percentTour)) || 0 }} บาท</p>
+                </div>
+            </div>
+            <div class="col-sm-12">
+                <div style="float: right; font-weight: bold; text-align: center; margin-top: 50px;">
+                    <p>..............................................</p>
+                    <p>( ผู้จัดทำ )</p>
+                    <p style="margin-top: 50px;">..............................................</p>
+                    <p>( ผู้ตรวจสอบ )</p>
                 </div>
             </div>
         </div>
