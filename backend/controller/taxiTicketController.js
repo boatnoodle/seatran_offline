@@ -31,6 +31,8 @@ module.exports = {
                 destination: req.body.destination,
                 price: req.body.price,
                 amount: req.body.amount,
+                amountKid: req.body.amountKid,
+                totalPassenger: req.body.totalPassenger,
                 total: req.body.total,
                 typeCar: req.body.typeCar,
                 remark: req.body.remark

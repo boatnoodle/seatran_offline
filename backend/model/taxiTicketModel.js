@@ -7,6 +7,8 @@ const taxiTicketSchema = new Schema({
     destination: {type: Schema.Types.ObjectId, ref: 'RouteTaxi'},
     price: {type: Number, required: true},
     amount: {type: Number, required: true},
+    amountKid: {type: Number},
+    totalPassenger: {type: Number},
     total: {type: Number, requried: true},
     typeCar: {type: String, require: true},
     remark: String,
