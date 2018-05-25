@@ -48,9 +48,13 @@
                                         <label>ราคา</label>
                                         <input type="number" v-model="data.price" class="form-control" placeholder="ราคา">
                                     </div>
-                                    <div class="col-sm-6">
-                                        <label>จำนวนผู้โดยสาร</label>
-                                        <input type="number" v-model="data.amount" class="form-control" placeholder="กรุณาระบุจำนวนผู้โดยสาร">
+                                    <div class="col-sm-3">
+                                        <label>จำนวนผู้ใหญ่</label>
+                                        <input type="number" v-model="data.amount" class="form-control" placeholder="ผู้ใหญ่">
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <label>จำนวนเด็ก</label>
+                                        <input type="number" v-model="data.amountKid" class="form-control" placeholder="เด็ก">
                                     </div>
                                 </div>
                             </div>
@@ -131,10 +135,18 @@
                                             <span style="float: right">{{ data.price || '-' }}</span>
                                         </div>
                                         <div>
-                                            <span style="font-weight: bold;">No. of Passenger : </span>
+                                            <span style="font-weight: bold;">ADL : </span>
                                             <span style="float: right">{{ data.amount || '-' }}</span>
                                         </div>
-                                            <div>
+                                        <div>
+                                            <span style="font-weight: bold;">CHD : </span>
+                                            <span style="float: right">{{ data.amountKid || '-' }}</span>
+                                        </div>
+                                        <div>
+                                            <span style="font-weight: bold;">Total Passenger : </span>
+                                            <span style="float: right">{{ calAmountPassenger  || '-' }}</span>
+                                        </div>
+                                        <div>
                                             <span style="font-weight: bold;">Type car : </span>
                                             <span style="float: right">{{ data.typeCar || '-' }}</span>
                                         </div>
@@ -201,6 +213,8 @@ export default {
                 destination: '',
                 price: '',
                 amount: '',
+                amountKid: '',
+                totalPassenger: '',
                 total: '',
                 typeCar: '',
                 remark: ''
@@ -323,6 +337,14 @@ export default {
                 this.amountPrint = obj.amountPrint
             })
             
+        },
+        calAmountPassenger(){
+            if(this.data.amountKid == ''){
+                this.data.totalPassenger = this.data.amount
+            }else{
+                this.data.totalPassenger = parseInt(this.data.amount) + parseInt(this.data.amountKid)
+            }
+            return this.data.totalPassenger
         }
     },
     watch: {

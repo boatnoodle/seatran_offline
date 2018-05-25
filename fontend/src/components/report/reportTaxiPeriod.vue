@@ -64,9 +64,7 @@
                     <p>ส่วนแบ่งกำไร ({{ percentTaxi * 100 }}%) : {{ total.fee || 0 }} บาท</p>
                     <p>คงเหลือหลังหักส่วนแบ่ง : {{ total.grandTotal || 0 }} บาท</p>
                 </div>
-            </div>
-             <div class="col-sm-12">
-                <div style="float: right; font-weight: bold; text-align: center; margin-top: 50px;">
+                <div style="float: left; font-weight: bold; text-align: center; margin-top: 50px;">
                     <p>..............................................</p>
                     <p>( ผู้จัดทำ )</p>
                     <p style="margin-top: 50px;">..............................................</p>

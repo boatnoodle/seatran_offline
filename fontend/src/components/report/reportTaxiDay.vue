@@ -30,7 +30,9 @@
                             <th>จุดส่ง</th>
                             <th>ประเภทรถ</th>
                             <th>ราคา</th>
-                            <th>จำนวนผู้โดยสาร</th>
+                            <th>ผู้ใหญ่</th>
+                            <th>เด็ก</th>
+                            <th>รวมจำนวนผู้โดยสาร</th>
                             <th>ราคารวม</th>
                             <th>หมายเหตุ</th>
                             <th>วันที่</th>
@@ -41,37 +43,37 @@
                             <td>{{ data._id }}</td>
                             <td>{{ data.destination.nameRoute }}</td>
                             <td>{{ data.typeCar }}</td>
-                            <td>{{ data.price }}</td>
+                            <td>{{ formatComma(data.price) }}</td>
                             <td>{{ data.amount }}</td>
-                            <td>{{ data.total }}</td>
+                            <td>{{ data.amountKid }}</td>
+                            <td>{{ data.totalPassenger }}</td>
+                            <td>{{ formatComma(data.total) }}</td>
                             <td>{{ data.remark || '-' }}</td>
                             <td>{{ dateFormat(data.created) }}</td>
                         </tr>
                     </tbody>
                     <tfoot id="section-to-hide">
                         <tr>
-                            <th>รวม</th>
-                            <th></th>
-                            <th></th>
-                            <th>{{ total.totalPrice || 0 }}</th>
-                            <th>{{ total.totalAmount || 0 }}</th>
-                            <th>{{ total.total || 0}}</th>
+                            <th colspan="3">รวม</th>
+                            <th class="text-right">{{ formatComma(total.totalPrice || 0) }}</th>
+                            <th class="text-right">{{ formatComma(total.totalAdl || 0) }}</th>
+                            <th class="text-right">{{ formatComma(total.totalKid || 0) }}</th>
+                            <th class="text-right">{{ formatComma(total.totalAmount || 0) }}</th>
+                            <th class="text-right">{{ formatComma(total.total || 0) }}</th>
                             <th></th>
                             <th></th>
                         </tr>
                     </tfoot>
                 </table>
                 <div style="float: right; font-weight: bold; text-align: right">
-                    <p>รวม : {{ total.total || 0 }} บาท</p>
-                    <p>ส่วนแบ่งกำไร ({{ percentTaxi * 100 }}%) : {{ total.fee || 0 }} บาท</p>
-                    <p>คงเหลือหลังหักส่วนแบ่ง : {{ total.grandTotal || 0 }} บาท</p>
+                    <p>รวม : {{ formatComma(total.total || 0) }} บาท</p>
+                    <p>ส่วนแบ่งกำไร ({{ percentTaxi * 100 }}%) : {{ formatComma(total.fee || 0) }} บาท</p>
+                    <p>คงเหลือหลังหักส่วนแบ่ง : {{ formatComma(total.grandTotal || 0) }} บาท</p>
                 </div>
-            </div>
-            <div class="col-sm-12">
-                <div style="float: right; font-weight: bold; text-align: center; margin-top: 50px;">
+                 <div style="float: left; font-weight: bold; text-align: center;">
                     <p>..............................................</p>
                     <p>( ผู้จัดทำ )</p>
-                    <p style="margin-top: 50px;">..............................................</p>
+                    <p style="margin-top: 15px;">..............................................</p>
                     <p>( ผู้ตรวจสอบ )</p>
                 </div>
             </div>
@@ -108,6 +110,9 @@ export default {
     },
     dateFormat(isoDate){
         return moment(isoDate).format("YYYY-MM-DD HH:mm")
+    },
+    formatComma(x){
+        return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
     }
   },
   computed: {
@@ -134,17 +139,17 @@ export default {
   watch: {
     taxiTicket(val) {
       if (val.length > 0) {
-        var totalPrice = val.reduce(
-          (a, b) => parseInt(a) + parseInt(b.price),
-          0
-        );
-        var totalAmount = val.reduce(
-          (a, b) => parseInt(a) + parseInt(b.amount),
-          0
-        );
+          console.log(val)
+        var totalPrice = val.reduce((a, b) => parseInt(a) + parseInt(b.price),0);
+        var totalAdl = val.reduce((a,b) => parseInt(a) + parseInt(b.amount),0);
+        var totalKid = val.reduce((a,b) => parseInt(a) + parseInt(b.amountKid),0);
+        var totalAmount = val.reduce((a, b) => parseInt(a) + parseInt(b.totalPassenger),0);
         var total = val.reduce((a, b) => parseInt(a) + parseInt(b.total), 0);
+
         this.total = {
           totalPrice: totalPrice,
+          totalAdl: totalAdl,
+          totalKid: totalKid,
           totalAmount: totalAmount,
           total: total,
           fee: total * this.percentTaxi,
@@ -153,6 +158,8 @@ export default {
       } else {
         this.total = {
           totalPrice: 0,
+          totalAdl: 0,
+          totalKid: 0,
           totalAmount: 0,
           total: 0,
           fee: 0,
@@ -167,43 +174,21 @@ export default {
 };
 </script>
 <style scoped>
-.VuePagination {
-  text-align: center;
+@media print {
+    #section-to-print{
+        font-size: 18px;
+    }
+    #section-to-print table tr th{
+        white-space: nowrap;
+    }
+    #section-to-print table{
+        font-size: 18px;
+        line-height: 0.8;
+    }
+   
 }
-
-.vue-title {
-  text-align: center;
-  margin-bottom: 10px;
-}
-
-.vue-pagination-ad {
-  text-align: center;
-}
-
-.glyphicon.glyphicon-eye-open {
-  width: 16px;
-  display: block;
-  margin: 0 auto;
-}
-
-th:nth-child(3) {
-  text-align: center;
-}
-
-.VueTables__child-row-toggler {
-  width: 16px;
-  height: 16px;
-  line-height: 16px;
-  display: block;
-  margin: auto;
-  text-align: center;
-}
-
-.VueTables__child-row-toggler--closed::before {
-  content: "+";
-}
-
-.VueTables__child-row-toggler--open::before {
-  content: "-";
+#section-to-print table tr td:nth-child(4),#section-to-print table tr td:nth-child(5),#section-to-print table tr td:nth-child(6),#section-to-print table tr td:nth-child(7),#section-to-print table tr td:nth-child(8)
+{
+    text-align: right !important; 
 }
 </style>
