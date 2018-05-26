@@ -5,25 +5,38 @@
       <div class="row" style="margin-top: 20px;">
           <div class="col-sm-12">
             <table class="table table-hover table-bordered table-sm text-center">
-                    <template v-for="data in getTour">
-                        <thead>
+                    <template v-for="(data,index) in getTour">
+                        <thead :key="index">
                             <tr>
-                                <th  class="bg-info text-white text-left" colspan="2">{{ data.nameAgent }}</th>
+                                <th  class="bg-info text-white text-left" colspan="5">{{ data.nameAgent }}</th>
                             </tr>
                             <tr>
-                                <td>ชื่อทัวร์</td>
-                                <td>ราคา</td>
+                                <td style="vertical-align: middle" rowspan="2">ชื่อทัวร์</td>
+                                <td colspan="2">Price</td>
+                                <td colspan="2">Net Price</td>
+                            </tr>
+                            <tr>
+                                <td>Adult</td>
+                                <td>Children</td>
+                                <td>Adult</td>
+                                <td>Children</td>
                             </tr>
                          </thead>
-                        <tbody>
+                        <tbody :key="data._id">
                             <template v-if="data.tour.length > 0">
-                                <tr v-for="data in data.tour">
+                                <tr v-for="(data,index2) in data.tour" :key="index2">
                                     <td>{{ data.nameTour }}</td>
-                                    <td>{{ data.priceTour }}</td>
+                                    <td>{{ data.priceAdult }}</td>
+                                    <td>{{ data.priceChild }}</td>
+                                    <td>{{ data.netPriceAdult }}</td>
+                                    <td>{{ data.netPriceChild }}</td>
                                 </tr>
                             </template>
                             <tr v-else>
                                 <td>ไม่มีรายการทัวร์</td>        
+                                <td> - </td>      
+                                <td> - </td>      
+                                <td> - </td>      
                                 <td> - </td>      
                             </tr>
                         </tbody>
@@ -35,27 +48,26 @@
   </div>
 </template>
 <script>
-import formSetTour from '@/components/tour/formSetTour'
+import formSetTour from "@/components/tour/formSetTour";
 export default {
-    components:{
-        formSetTour
-    }
-    ,
-    methods: {
-        formSetTour(){
-            this.$refs.formSetTour.toggleModal()
-        },
-        actionGetTour(){
-            this.$store.dispatch('getTour')
-        }
+  components: {
+    formSetTour
+  },
+  methods: {
+    formSetTour() {
+      this.$refs.formSetTour.toggleModal();
     },
-    computed: {
-        getTour(){
-            return this.$store.getters.getTour
-        }
-    },
-    created(){
-        this.actionGetTour()
+    actionGetTour() {
+      this.$store.dispatch("getTour");
     }
-}
+  },
+  computed: {
+    getTour() {
+      return this.$store.getters.getTour;
+    }
+  },
+  created() {
+    this.actionGetTour();
+  }
+};
 </script>

@@ -43,11 +43,11 @@
                             <td>{{ data._id }}</td>
                             <td>{{ data.destination.nameRoute }}</td>
                             <td>{{ data.typeCar }}</td>
-                            <td>{{ formatComma(data.price) }}</td>
-                            <td>{{ data.amount }}</td>
-                            <td>{{ data.amountKid }}</td>
-                            <td>{{ data.totalPassenger }}</td>
-                            <td>{{ formatComma(data.total) }}</td>
+                            <td>{{ formatComma(data.price || 0) }}</td>
+                            <td>{{ formatComma(data.amount || 0) }}</td>
+                            <td>{{ formatComma(data.amountKid || 0) }}</td>
+                            <td>{{ formatComma(parseInt(data.amount + (data.amountKid || 0)) || 0) }}</td>
+                            <td>{{ formatComma(data.total || 0) }}</td>
                             <td>{{ data.remark || '-' }}</td>
                             <td>{{ dateFormat(data.created) }}</td>
                         </tr>
@@ -141,9 +141,9 @@ export default {
       if (val.length > 0) {
           console.log(val)
         var totalPrice = val.reduce((a, b) => parseInt(a) + parseInt(b.price),0);
-        var totalAdl = val.reduce((a,b) => parseInt(a) + parseInt(b.amount),0);
-        var totalKid = val.reduce((a,b) => parseInt(a) + parseInt(b.amountKid),0);
-        var totalAmount = val.reduce((a, b) => parseInt(a) + parseInt(b.totalPassenger),0);
+        var totalAdl = val.reduce((a,b) => parseInt(a) + parseInt(b.amount || 0),0);
+        var totalKid = val.reduce((a,b) => parseInt(a) + parseInt(b.amountKid || 0),0);
+        var totalAmount = val.reduce((a, b) => parseInt(a || 0) + parseInt(b.amount || 0) + parseInt(b.amountKid || 0),0);
         var total = val.reduce((a, b) => parseInt(a) + parseInt(b.total), 0);
 
         this.total = {

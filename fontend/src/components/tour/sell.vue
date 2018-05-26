@@ -39,19 +39,47 @@
                                     </div>
                                     <div class="form-group">
                                         <div class="form-row">
-                                            <div class="col-sm-6">
-                                                <label>ราคา</label>
-                                                <input type="text" v-model="data.price" class="form-control" placeholder="ราคา">
+                                            <div class="col-sm-4">
+                                                <label>จำนวนผู้ใหญ่</label>
+                                                <input type="number" v-model="data.amountAdult" class="form-control" placeholder="ระบุจำนวนผู้ใหญ่">
                                             </div>
-                                            <div class="col-sm-6">
-                                                <label>จำนวนคน</label>
-                                                <input type="text" v-model="data.amount" class="form-control" placeholder="ระบุจำนวนคน">
+                                            <div class="col-sm-4">
+                                                <label>Full Rate <span style="color: red;">x {{ data.amountAdult }} = {{ data.tour.priceAdult * data.amountAdult }}</span></label>
+                                                <input type="number" v-model="data.tour.priceAdult" class="form-control" placeholder="ระบุราคา Full Rate">
+                                            </div>
+                                            <div class="col-sm-4">
+                                                <label>Net Rate <span style="color: red;">x {{ data.amountAdult }} = {{ data.tour.netPriceAdult * data.amountAdult }}</span></label>
+                                                <input type="number" v-model="data.tour.netPriceAdult" class="form-control" placeholder="ระบุราคา Net Rate">
                                             </div>
                                         </div>
-                                    </div>
-                                     <div class="form-group">
-                                        <label>ราคารวมทั้งสิ้น</label>
-                                        <input type="text" v-model="total" readonly class="form-control" placeholder="ราคารวม">
+                                        <div class="form-row">
+                                            <div class="col-sm-4">
+                                                <label>จำนวนเด็ก</label>
+                                                <input type="number" v-model="data.amountChild" class="form-control" placeholder="ระบุจำนวนเด็ก">
+                                            </div>
+                                            <div class="col-sm-4">
+                                                <label>Full Rate <span style="color: red;">x {{ data.amountChild }} = {{ data.tour.priceChild * data.amountChild }}</span></label>
+                                                <input type="number" v-model="data.tour.priceChild" class="form-control" placeholder="ระบุราคา Full Rate">
+                                            </div>
+                                            <div class="col-sm-4">
+                                                <label>Net Rate <span style="color: red;">x {{ data.amountChild }} = {{ data.tour.netPriceChild * data.amountChild }}</span></label>
+                                                <input type="number" v-model="data.tour.netPriceChild" class="form-control" placeholder="ระบุราคา Net Rate">
+                                            </div>
+                                        </div>
+                                        <div class="form-row">
+                                            <div class="col-sm-4">
+                                                <label>จำนวนรวม</label>
+                                                <input readonly type="number" :value="parseInt(data.amountAdult || 0) + parseInt(data.amountChild || 0)" class="form-control" placeholder="ราคา">
+                                            </div>
+                                            <div class="col-sm-4">
+                                                <label>Full Rate Total</label>
+                                                <input readonly type="number" :value="(parseInt(data.tour.priceChild || 0) * data.amountChild) + (parseInt(data.tour.priceAdult || 0) * data.amountAdult)" class="form-control" placeholder="ระบุจำนวนคน">
+                                            </div>
+                                            <div class="col-sm-4">
+                                                <label>Net Rate Total</label>
+                                                <input readonly type="number" :value="(parseInt(data.tour.netPriceChild || 0) * data.amountChild) + (parseInt(data.tour.netPriceAdult || 0) * data.amountAdult)" class="form-control" placeholder="ระบุจำนวนคน">
+                                            </div>
+                                        </div>
                                     </div>
                                     <div class="form-group">
                                         <label>Voucher</label>
@@ -97,8 +125,13 @@
                                     <div class="card-header text-white bg-info">
                                         ราคารวมทั้งสิ้น
                                     </div>
+                                    <h4 style="margin: 10px;">Full Rate Total</h4>
                                     <div class="card-body">
-                                        <div class="boxShowTotal bg-dark">{{ total }}</div>
+                                        <div class="boxShowTotal bg-dark">{{ (parseInt(data.tour.priceChild || 0) * data.amountChild) + (parseInt(data.tour.priceAdult || 0) * data.amountAdult) }}</div>
+                                    </div>
+                                    <h4 style="margin-left: 10px;">Net Rate Total</h4>
+                                    <div class="card-body">
+                                        <div class="boxShowTotal bg-dark">{{ (parseInt(data.tour.netPriceChild || 0) * data.amountChild) + (parseInt(data.tour.netPriceAdult || 0) * data.amountAdult) }}</div>
                                     </div>
                                 </div>
                             </div>
@@ -116,39 +149,49 @@
                                             <p></p>
                                             <p style="text-align: right; font-weight: bold;">No. {{ data._id }}</p>
                                                 <div class="content">
-                                                <div>
-                                                    <span style="font-weight: bold;">Name : </span>
-                                                    <div style="text-align: left">{{ data.name || '-'  }}</div>
-                                                </div>
-                                                <div>
-                                                    <span style="font-weight: bold;">Agent : </span>
-                                                    <span style="float: right">{{ nameAgent || '-' }}</span>
-                                                </div>
-                                                <div>
-                                                    <span style="font-weight: bold;">Tour : </span>
-                                                    <span style="float: right">{{ nameTour || '-' }}</span>
-                                                </div>
-                                                <div>
-                                                    <span style="font-weight: bold;">Price : </span>
-                                                    <span style="float: right">{{ data.price || '-' }}</span>
-                                                </div>
-                                                <div>
-                                                    <span style="font-weight: bold;">No of Person (s) : </span>
-                                                    <span style="float: right">{{ data.amount || '-' }}</span>
-                                                </div>
-                                                <div>
-                                                    <span style="font-weight: bold;">Voucher : </span>
-                                                    <span style="float: right">{{ data.voucher || '-' }}</span>
-                                                </div>
-                                                <div>
-                                                    <span style="font-weight: bold;">Remark. : </span>
-                                                    <span style="float: right">{{ data.remark || '-' }}</span>
-                                                </div>
-                                                <hr style="border: 1px dotted;">
-                                                <div>
-                                                    <span style="font-weight: bold;">Total : </span>
-                                                    <span style="float: right">{{ total }}</span>
-                                                </div>
+                                                    <div>
+                                                        <span style="font-weight: bold;">Name : </span>
+                                                        <div style="text-align: left">{{ data.name || '-'  }}</div>
+                                                    </div>
+                                                    <div>
+                                                        <span style="font-weight: bold;">Agent : </span>
+                                                        <span style="float: right">{{ nameAgent || '-' }}</span>
+                                                    </div>
+                                                    <div>
+                                                        <span style="font-weight: bold;">Tour : </span>
+                                                        <span style="float: right">{{ data.tour.nameTour || '-' }}</span>
+                                                    </div>
+                                                     <div>
+                                                        <span style="font-weight: bold;">Adults : </span>
+                                                        <span>{{ data.amountAdult || '-' }}</span>
+                                                        <span style="float: right;">{{ data.tour.netPriceAdult || '-' }}</span>
+                                                        <span style="font-weight: bold; float: right;">Net Price : </span>
+                                                    </div>
+                                                    <div>
+                                                        <span style="font-weight: bold;">Children : </span>
+                                                        <span>{{ data.amountChild || '-' }}</span>
+                                                        <span style="float: right">{{ data.tour.netPriceChild || '-' }}</span>
+                                                        <span style="font-weight: bold; float: right;">Net Price : </span>
+                                                    </div>
+                                                    <div>
+                                                        <span style="font-weight: bold;">Total : </span>
+                                                        <span>{{ parseInt(data.amountAdult || 0) +  parseInt(data.amountChild || 0)|| '-' }}</span>
+                                                        <span style="float: right">{{ (parseInt(data.tour.netPriceChild || 0) * data.amountChild) + (parseInt(data.tour.netPriceAdult || 0) * data.amountAdult) || '-' }}</span>
+                                                        <span style="font-weight: bold; float: right;">Total Net : </span>
+                                                    </div>
+                                                    <div>
+                                                        <span style="font-weight: bold;">Voucher : </span>
+                                                        <span style="float: right">{{ data.voucher || '-' }}</span>
+                                                    </div>
+                                                    <div>
+                                                        <span style="font-weight: bold;">Remark. : </span>
+                                                        <span style="float: right">{{ data.remark || '-' }}</span>
+                                                    </div>
+                                                    <hr style="border: 1px dotted;">
+                                                    <div>
+                                                        <span style="font-weight: bold;">Total : </span>
+                                                        <span style="float: right">{{ (parseInt(data.tour.netPriceChild || 0) * data.amountChild) + (parseInt(data.tour.netPriceAdult || 0) * data.amountAdult) || '-' }}</span>
+                                                    </div>
                                                 </div>
                                                 <div style="margin-top: 40px;">
                                                     <h6 id="billFoot"></h6>
@@ -161,201 +204,459 @@
                         </div>
                     </div>
                 </div>
+                <div id="section-to-print" style="visibility: hidden; position: fixed;"></div>
             <!-- </div> -->
         <!-- </div> -->
     </div>
 </template>
 <script>
-import printJS from 'print-js'
-import moment from 'moment'
-import Jquery from 'jquery'
-import axios from 'axios'
-export default {
-   data(){
-        return {
-            data: {
-                _id: '',
-                name: 'cash',
-                agent: '',
-                tour: '',
-                price: '',
-                amount: '',
-                total: '',
-                voucher: '',
-                remark: ''
-            },
-            selectTypeName: 'cash',
-            selectAgent: '',
-            nameAgent: '',
-            selectTour: '',
-            nameTour: '',
-            realTime: '',
-            tour: [],
-            tourList: [],
-            billHead: '',
-            billFoot: '',
-            statusPrint: '',
-            amountPrint: ''
-        }
-    },
-    methods: {
-        genIdTicket(lastId){
-            // lastId = "001" fortest
-            var prefix = moment().format('Y') + moment().format('MM')
-            if(lastId){
-                var lastId = lastId.substr(-4)
-                var newId = '000' + (parseInt(lastId) + 1)
-                var id = newId.substr(-4)
-            }else{
-                var id = '0001'
-            }
-            return this.data._id =  "TR" + prefix + id
-           
-        },
-        submit(){
-            this.$store.dispatch('addTourTicket',this.data)
-            .then(() => {
-                moment.locale('en');
-                Jquery('#realTime').text(moment(new Date()).format('MM/DD/YYYY, h:mm:ss a'))
-                if(this.statusPrint){
-                    for(let i = 0; i< this.amountPrint; i++){
-                        // console.log('time')
-                        window.print()
-                    }
-                }
-                this.genIdTicket(this.data._id)
-                this.selectTypeName = 'cash'
-                this.data.name = 'cash',
-                this.data.agent = '',
-                this.data.tour = '',
-                this.data.price = '',
-                this.data.amount = '',
-                this.data.total = '',
-                this.data.voucher = '',
-                this.data.remark = ''
-                this.selectAgent = '',
-                this.nameAgent = '',
-                this.selectTour = '',
-                this.nameTour = '',
-                this.$store.dispatch('getTourTicketLasted')
-            })
-        }
-    },
-    computed: {
-        getTour(){
-            return this.tour =  this.$store.getters.getTour
-        },
-        getTourTicketLasted(){
-            return this.$store.getters.getTourTicketLasted
-        },
-        total(){
-            var total = 0
-            if(this.data.price != '' &&  this.data.amount != ''){
-                var total = this.data.price * this.data.amount
-            }   this.data.total = total
-            return total
-        },
-        getLastTourTicket(){
-            return this.$store.getters.getLastTourTicket
-        },
-        getBillHead(){
-            this.$store.dispatch('getBillHead')
-            .then(() => {
-                const obj = this.$store.getters.getBillHead
-                this.billHead = obj.billHead
-                this.billFoot = obj.billFoot
-                $("#billFoot").html(obj.billFoot)
-            })
-        },
-        getPrintSetting(){
-            this.$store.dispatch('getPrintSetting')
-            .then(() => {
-                const obj = this.$store.getters.getPrintSetting
-                this.statusPrint = obj.statusPrint
-                this.amountPrint = obj.amountPrint
-            })
-            
-        }
-    },
-    watch: {
-        selectAgent(val){
-            if(val != '' && val != undefined){
-                const obj = this.tour.find(v => v._id == val)
-                this.data.agent = obj._id
-                this.tourList = obj.tour
-                this.nameAgent = obj.nameAgent
-            }else{
-                this.data.agent = ''
-                this.tourList = []
-                this.nameAgent = ''
-                this.selectTour = ''
-            }
-        },
-        selectTour(val){
-            if(val != '' && val != undefined){
-                const obj = this.tourList.find(v=> v._id == val)
-                this.data.tour = obj._id
-                this.data.price = obj.priceTour
-                this.nameTour = obj.nameTour
-            }else{
-                this.nameTour = ''
-                this.data.price = ''
-            }
-        },
-        selectTypeName(val){
-            if(val == 'defineName'){
-                this.data.name = ''
-                this.$nextTick(() => this.$refs.name.focus())
-                
-            }else{
-                this.data.name = 'cash'
-            }
-        }
-    },
-    created(){
-        this.getPrintSetting // get print setting (statusPrint , amountPrint)
-        this.getBillHead
-        this.$store.dispatch('getTourTicketLasted')
-        this.$store.dispatch('getTour')
-        this.$store.dispatch('getLastTourTicket').then(() => {
-            var lastId = this.getLastTourTicket
-            if(lastId){
-                this.genIdTicket(lastId._id)
-            }else{
-                this.genIdTicket()
-            }
-        })
-    }
+function PrintElem(content) {
+  var mywindow = window.open("", "PRINT", "height=80,width=80");
+
+  mywindow.document.write("<html><head><title>test</title>");
+  mywindow.document.write("</head><body>");
+  mywindow.document.write(content);
+  mywindow.document.write("</body></html>");
+
+  mywindow.document.close(); // necessary for IE >= 10
+  mywindow.focus(); // necessary for IE >= 10*/
+
+  mywindow.print();
+  mywindow.close();
+
+  return true;
 }
+import printJS from "print-js";
+import moment from "moment";
+import Jquery from "jquery";
+import axios from "axios";
+export default {
+  data() {
+    return {
+      data: {
+        _id: "",
+        name: "cash",
+        agent: "",
+        tour: {
+          nameTour: "",
+          priceAdult: "",
+          priceChild: "",
+          netPriceAdult: "",
+          netPriceChild: ""
+        },
+        amountChild: "",
+        amountAdult: "",
+        voucher: "",
+        remark: ""
+      },
+      selectTypeName: "cash",
+      selectAgent: "",
+      nameAgent: "",
+      selectTour: "",
+      realTime: "",
+      tour: [],
+      tourList: [],
+      billHead: "",
+      billFoot: "",
+      statusPrint: "",
+      amountPrint: ""
+    };
+  },
+  methods: {
+    genIdTicket(lastId) {
+      // lastId = "001" fortest
+      var prefix = moment().format("Y") + moment().format("MM");
+      if (lastId) {
+        var lastId = lastId.substr(-4);
+        var newId = "000" + (parseInt(lastId) + 1);
+        var id = newId.substr(-4);
+      } else {
+        var id = "0001";
+      }
+      return (this.data._id = "TR" + prefix + id);
+    },
+    async submit() {
+      var contentForSeatran = `
+        <h4 style="border: 1px solid; padding: 30px; text-align: center">TOUR VOUCHER</h4>
+                                            <h3 style="text-align: center">${
+                                              this.billHead
+                                            }</h3>
+                                                <p id="realTime"></p>
+                                            <p></p>
+                                            <p style="text-align: right; font-weight: bold;">No. ${
+                                              this.data._id
+                                            }</p>
+                                                <div class="content">
+                                                    <div>
+                                                        <span style="font-weight: bold;">Name : </span>
+                                                        <div style="text-align: left">${this
+                                                          .data.name ||
+                                                          "-"}</div>
+                                                    </div>
+                                                    <div>
+                                                        <span style="font-weight: bold;">Agent : </span>
+                                                        <span style="float: right">${this
+                                                          .nameAgent ||
+                                                          "-"}</span>
+                                                    </div>
+                                                    <div>
+                                                        <span style="font-weight: bold;">Tour : </span>
+                                                        <span style="float: right">${this
+                                                          .data.tour.nameTour ||
+                                                          "-"}</span>
+                                                    </div>
+                                                    <div>
+                                                        <span style="font-weight: bold;">Adults : </span>
+                                                        <span>${this.data
+                                                          .amountAdult ||
+                                                          "-"}</span>
+                                                        <span style="float: right">${this
+                                                          .data.tour
+                                                          .netPriceAdult ||
+                                                          "-"}</span>
+                                                        <span style="font-weight: bold; float: right;">Net Price : </span>
+                                                    </div>
+                                                    <div>
+                                                        <span style="font-weight: bold;">Children : </span>
+                                                        <span>${this.data
+                                                          .amountChild ||
+                                                          "-"}</span>
+                                                        <span style="float: right">${this
+                                                          .data.tour
+                                                          .netPriceChild ||
+                                                          "-"}</span>
+                                                        <span style="font-weight: bold; float: right;">Net Price : </span>
+                                                    </div>
+                                                    <div>
+                                                        <span style="font-weight: bold;">Total : </span>
+                                                        <span>${parseInt(
+                                                          this.data
+                                                            .amountAdult || 0
+                                                        ) +
+                                                          parseInt(
+                                                            this.data
+                                                              .amountChild || 0
+                                                          ) || "-"}</span>
+                                                        <span style="float: right">${parseInt(
+                                                          this.data.tour
+                                                            .netPriceChild || 0
+                                                        ) *
+                                                          this.data
+                                                            .amountChild +
+                                                          parseInt(
+                                                            this.data.tour
+                                                              .netPriceAdult ||
+                                                              0
+                                                          ) *
+                                                            this.data
+                                                              .amountAdult ||
+                                                          "-"}</span>
+                                                        <span style="font-weight: bold; float: right;">Total Net : </span>
+                                                    </div>
+                                                    <div>
+                                                        <span style="font-weight: bold;">Voucher : </span>
+                                                        <span style="float: right">${this
+                                                          .data.voucher ||
+                                                          "-"}</span>
+                                                    </div>
+                                                    <div>
+                                                        <span style="font-weight: bold;">Remark. : </span>
+                                                        <span style="float: right">${this
+                                                          .data.remark ||
+                                                          "-"}</span>
+                                                    </div>
+                                                    <hr style="border: 1px dotted;">
+                                                    <div>
+                                                        <span style="font-weight: bold;">Total : </span>
+                                                        <span style="float: right">${parseInt(
+                                                          this.data.tour
+                                                            .netPriceChild || 0
+                                                        ) *
+                                                          this.data
+                                                            .amountChild +
+                                                          parseInt(
+                                                            this.data.tour
+                                                              .netPriceAdult ||
+                                                              0
+                                                          ) *
+                                                            this.data
+                                                              .amountAdult ||
+                                                          "-"}</span>
+                                                    </div>
+                                                </div>
+                                                <div style="margin-top: 40px;">
+                                                    <h6 id="billFoot"></h6>
+                                                </div>`;
+      var contentForCustomer = `
+        <h4 style="border: 1px solid; padding: 30px; text-align: center">TOUR VOUCHER</h4>
+                                            <h3 style="text-align: center">${
+                                              this.billHead
+                                            }</h3>
+                                                <p id="realTime"></p>
+                                            <p></p>
+                                            <p style="text-align: right; font-weight: bold;">No. ${
+                                              this.data._id
+                                            }</p>
+                                                <div class="content">
+                                                    <div>
+                                                        <span style="font-weight: bold;">Name : </span>
+                                                        <div style="text-align: left">${this
+                                                          .data.name ||
+                                                          "-"}</div>
+                                                    </div>
+                                                    <div>
+                                                        <span style="font-weight: bold;">Agent : </span>
+                                                        <span style="float: right">${this
+                                                          .nameAgent ||
+                                                          "-"}</span>
+                                                    </div>
+                                                    <div>
+                                                        <span style="font-weight: bold;">Tour : </span>
+                                                        <span style="float: right">${this
+                                                          .data.tour.nameTour ||
+                                                          "-"}</span>
+                                                    </div>
+                                                    <div>
+                                                        <span style="font-weight: bold;">Adults : </span>
+                                                        <span>${this.data
+                                                          .amountAdult ||
+                                                          "-"}</span>
+                                                        <span style="float: right">${this
+                                                          .data.tour
+                                                          .priceAdult ||
+                                                          "-"}</span>
+                                                        <span style="font-weight: bold; float: right;">Price Adult : </span>
+                                                    </div>
+                                                    <div>
+                                                        <span style="font-weight: bold;">Children : </span>
+                                                        <span>${this.data
+                                                          .amountChild ||
+                                                          "-"}</span>
+                                                        <span style="float: right">${this
+                                                          .data.tour
+                                                          .priceChild ||
+                                                          "-"}</span>
+                                                        <span style="font-weight: bold; float: right;">Price Child: </span>
+                                                    </div>
+                                                    <div>
+                                                        <span style="font-weight: bold;">Total : </span>
+                                                        <span>${parseInt(
+                                                          this.data
+                                                            .amountAdult || 0
+                                                        ) +
+                                                          parseInt(
+                                                            this.data
+                                                              .amountChild || 0
+                                                          ) || "-"}</span>
+                                                        <span style="float: right">${parseInt(
+                                                          this.data.tour
+                                                            .priceChild || 0
+                                                        ) *
+                                                          this.data
+                                                            .amountChild +
+                                                          parseInt(
+                                                            this.data.tour
+                                                              .priceAdult || 0
+                                                          ) *
+                                                            this.data
+                                                              .amountAdult ||
+                                                          "-"}</span>
+                                                        <span style="font-weight: bold; float: right;">Total Net : </span>
+                                                    </div>
+                                                    <div>
+                                                        <span style="font-weight: bold;">Voucher : </span>
+                                                        <span style="float: right">${this
+                                                          .data.voucher ||
+                                                          "-"}</span>
+                                                    </div>
+                                                    <div>
+                                                        <span style="font-weight: bold;">Remark. : </span>
+                                                        <span style="float: right">${this
+                                                          .data.remark ||
+                                                          "-"}</span>
+                                                    </div>
+                                                    <hr style="border: 1px dotted;">
+                                                    <div>
+                                                        <span style="font-weight: bold;">Total : </span>
+                                                        <span style="float: right">${parseInt(
+                                                          this.data.tour
+                                                            .netPriceChild || 0
+                                                        ) *
+                                                          this.data
+                                                            .amountChild +
+                                                          parseInt(
+                                                            this.data.tour
+                                                              .netPriceAdult ||
+                                                              0
+                                                          ) *
+                                                            this.data
+                                                              .amountAdult ||
+                                                          "-"}</span>
+                                                    </div>
+                                                </div>
+                                                <div style="margin-top: 40px;">
+                                                    <h6 id="billFoot"></h6>
+                                                </div>`;
+      if (this.statusPrint) {
+        for (let i = 0; i < this.amountPrint; i++) {
+          document.getElementsByTagName("BODY")[0].onbeforeprint = function() {
+            $("#section-to-print").html(contentForSeatran);
+          };
+          window.print();
+          document.getElementsByTagName("BODY")[0].onbeforeprint = function() {
+            $("#section-to-print").html(contentForCustomer);
+          };
+          window.print();
+        }
+      }
+      this.$store.dispatch("addTourTicket", this.data).then(() => {
+        moment.locale("en");
+        Jquery("#realTime").text(
+          moment(new Date()).format("MM/DD/YYYY, h:mm:ss a")
+        );
+        this.genIdTicket(this.data._id);
+        this.selectTypeName = "cash";
+        (this.data.name = "cash"),
+          (this.data.agent = ""),
+          (this.data.tour = {
+            nameTour: "",
+            priceAdult: "",
+            priceChild: "",
+            netPriceAdult: "",
+            netPriceChild: ""
+          }),
+          (this.data.amountChild = ""),
+          (this.data.amountAdult = ""),
+          (this.data.voucher = ""),
+          (this.data.remark = "");
+        (this.selectAgent = ""),
+          (this.nameAgent = ""),
+          (this.selectTour = ""),
+          this.$store.dispatch("getTourTicketLasted");
+      });
+    }
+  },
+  computed: {
+    getTour() {
+      return (this.tour = this.$store.getters.getTour);
+    },
+    getTourTicketLasted() {
+      return this.$store.getters.getTourTicketLasted;
+    },
+    total() {
+      var total = 0;
+      if (this.data.price != "" && this.data.amount != "") {
+        var total = this.data.price * this.data.amount;
+      }
+      this.data.total = total;
+      return total;
+    },
+    getLastTourTicket() {
+      return this.$store.getters.getLastTourTicket;
+    },
+    getBillHead() {
+      this.$store.dispatch("getBillHead").then(() => {
+        const obj = this.$store.getters.getBillHead;
+        this.billHead = obj.billHead;
+        this.billFoot = obj.billFoot;
+        $("#billFoot").html(obj.billFoot);
+      });
+    },
+    getPrintSetting() {
+      this.$store.dispatch("getPrintSetting").then(() => {
+        const obj = this.$store.getters.getPrintSetting;
+        this.statusPrint = obj.statusPrint;
+        this.amountPrint = obj.amountPrint;
+      });
+    }
+  },
+  watch: {
+    selectAgent(val) {
+      if (val != "" && val != undefined) {
+        const obj = this.tour.find(v => v._id == val);
+        this.data.agent = obj._id;
+        this.tourList = obj.tour;
+        this.nameAgent = obj.nameAgent;
+      } else {
+        this.data.agent = "";
+        this.tourList = [];
+        this.nameAgent = "";
+        this.selectTour = "";
+      }
+    },
+    selectTour(val) {
+      if (val != "" && val != undefined) {
+        const obj = this.tourList.find(v => v._id == val);
+        this.data.tour.nameTour = obj.nameTour;
+        this.data.tour.amountAdult = obj.amountAdult;
+        this.data.tour.amountChild = obj.amountChild;
+        this.data.tour.priceAdult = obj.priceAdult;
+        this.data.tour.priceChild = obj.priceChild;
+        this.data.tour.netPriceAdult = obj.netPriceAdult;
+        this.data.tour.netPriceChild = obj.netPriceChild;
+      } else {
+        this.data.tour.nameTour = "";
+        this.data.tour.amountAdult = "";
+        this.data.tour.amountChild = "";
+        this.data.tour.priceAdult = "";
+        this.data.tour.priceChild = "";
+        this.data.tour.netPriceAdult = "";
+        this.data.tour.netPriceChild = "";
+      }
+    },
+    selectTypeName(val) {
+      if (val == "defineName") {
+        this.data.name = "";
+        this.$nextTick(() => this.$refs.name.focus());
+      } else {
+        this.data.name = "cash";
+      }
+    }
+  },
+  created() {
+    this.getPrintSetting; // get print setting (statusPrint , amountPrint)
+    this.getBillHead;
+    this.$store.dispatch("getTourTicketLasted");
+    this.$store.dispatch("getTour");
+    this.$store.dispatch("getLastTourTicket").then(() => {
+      var lastId = this.getLastTourTicket;
+      if (lastId) {
+        this.genIdTicket(lastId._id);
+      } else {
+        this.genIdTicket();
+      }
+    });
+  }
+};
 </script>
 <style scoped>
-    .boxSell{
-        background: white;
-        width: 100%;
-        min-height: 100vh;
-        position: absolute;
-        top: 0;
-        left: 0;
-    }
-    .close{
-        position: absolute;
-        right: 10px;
-        top: 10px;
-    }
-    .boxShowTotal{
-        text-align: right;
-        padding: 10px;
-        font-size: 4em;
-        color: white;
-    }
-     .exReceipt{
-        width: 100%;
-        border: 1px solid;
-        margin: 0 auto;
-        padding: 50px;
-        text-align: center;
-    }
-    .exReceipt .content{
-        text-align: left;
-    }
+.boxSell {
+  background: white;
+  width: 100%;
+  min-height: 100vh;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+.close {
+  position: absolute;
+  right: 10px;
+  top: 10px;
+}
+.boxShowTotal {
+  text-align: right;
+  padding: 10px;
+  font-size: 4em;
+  color: white;
+}
+.exReceipt {
+  width: 100%;
+  border: 1px solid;
+  margin: 0 auto;
+  padding: 50px;
+  text-align: center;
+}
+.exReceipt .content {
+  text-align: left;
+}
 </style>
