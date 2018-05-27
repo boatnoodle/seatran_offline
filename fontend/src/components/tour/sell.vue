@@ -97,22 +97,26 @@
                             </div>
                         </div>
                         <h3 style="margin-top: 20px;" class="text-center">รายการขายล่าสุด</h3>
-                        <table class="table table-sm table-hover text-center">
+                        <table id="tableTourRecent" class="table table-sm table-hover text-center">
                             <thead class="text-white bg-info">
                                 <tr>
                                 <th scope="col">#</th>
-                                <th scope="col">ชื่อ</th>
-                                <th scope="col">จำนวนคน</th>
-                                <th scope="col">ราคารวม</th>
+                                <th scope="col">ชื่อทัวร์</th>
+                                <th scope="col">ชื่อผู้โดยสาร</th>
+                                <th scope="col">จำนวนผู้ใหญ่</th>
+                                <th scope="col">จำนวนเด็ก</th>
+                                <th>จำนวนรวม</th>
                                 <th>หมายเหตุ</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr v-for="(data,index) in getTourTicketLasted" :key="index">
                                     <th>{{ index+1 }}</th>
+                                    <th>{{ data.tour.nameTour }}</th>
                                     <th>{{ data.name }}</th>
-                                    <th>{{ data.amount }}</th>
-                                    <th>{{ data.total }}</th>
+                                    <th>{{ data.amountAdult || 0 }}</th>
+                                    <th>{{ data.amountChild || 0 }}</th>
+                                    <th>{{ data.amountAdult +  data.amountChild }}</th>
                                     <th>{{ data.remark || '-' }}</th>
                                 </tr>
                             </tbody>
@@ -625,6 +629,13 @@ export default {
       } else {
         this.genIdTicket();
       }
+    });
+  },
+  mounted() {
+    $("#tableTourRecent").DataTable({
+      bDestroy: true,
+      lengthMenu: [[5, 10, 25, 50, -1], [5, 10, 25, 50, "All"]],
+      order: [[0, "DESC"]]
     });
   }
 };
