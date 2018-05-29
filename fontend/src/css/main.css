@@ -15,6 +15,16 @@
     visibility: visible;
   }
   #section-to-print {
+    font-size: 18px;
+  }
+  #section-to-print table tr th {
+    white-space: nowrap;
+  }
+  #section-to-print table {
+    font-size: 18px;
+    line-height: 0.8;
+  }
+  #section-to-print {
     position: absolute;
     width: 100% !important;
     top: 0 !important;
@@ -25,9 +35,12 @@
   .no-print{
     display: none;
   }
+  p{
+    font-size: 16px !important;
+  }
   #titlePrint{
     font-size: 30px;
-    font-weight: bold;
+    font-weight: bold !important;
   }
   .titleDatePrint{
     font-size: 25px;
