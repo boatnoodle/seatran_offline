@@ -26,28 +26,38 @@
                 <table class="table table-sm table-bordered table-hover text-center">
                     <thead>
                         <tr>
-                            <th>รหัส</th>
-                            <th>ชื่อ</th>
-                            <th>ตัวแทนขาย</th>
-                            <th>ชื่อทัวร์</th>
-                            <th>ราคาทัวร์</th>
-                            <th>จำนวนคน</th>
-                            <th>ราคาทั้งหมด</th>
-                            <th>Voucher</th>
-                            <th>หมายเหตุ</th>
+                            <th rowspan="2">รหัส</th>
+                            <th rowspan="2">ชื่อ</th>
+                            <th rowspan="2">ตัวแทนขาย</th>
+                            <th colspan="2">จำนวน</th>
+                            <th colspan="2">Full Rate</th>
+                            <th colspan="2">Net Rate</th>
+                            <th colspan="2">รวม</th>
+                        </tr>
+                        <tr>
+                          <th>ADL</th>
+                          <th>CHD</th>
+                          <th>ADL</th>
+                          <th>CHD</th>
+                          <th>ADL</th>
+                          <th>CHD</th>
+                          <th>Full</th>
+                          <th>Net</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr v-for="(data,index) in tourTicket" :key="index">
                             <td>{{ data._id }}</td>
-                            <td>{{ data.name }}</td>
-                            <td>{{ data.nameAgent }}</td>
                             <td>{{ data.tour.nameTour }}</td>
-                            <td>{{ data.tour.priceTour }}</td>
-                            <td>{{ data.amount }}</td>
-                            <td>{{ data.tour.priceTour * data.amount }}</td>
-                            <td>{{ data.voucher || '-' }}</td>
-                            <td>{{ data.remark || '-' }}</td>
+                            <td>{{ data.agent.nameAgent }}</td>
+                            <td>{{ data.amountAdult }}</td>
+                            <td>{{ data.amountChild }}</td>
+                            <td>{{ data.tour.priceAdult }}</td>
+                            <td>{{ data.tour.priceChild }}</td>
+                            <td>{{ data.tour.netPriceAdult }}</td>
+                            <td>{{ data.tour.netPriceChild }}</td>
+                            <td>{{ (data.tour.priceAdult * data.amountAdult) + (data.tour.priceChild * data.amountChild) }}</td>
+                            <td>{{ (data.tour.netPriceAdult * data.amountChild) + (data.tour.netPriceChild * data.amountChild)|| '-' }}</td>
                         </tr>
                     </tbody>
                     <tfoot>
@@ -98,7 +108,7 @@ export default {
   methods: {
     submit() {
       this.$store.dispatch("getTourTicketByDate", this.data).then(() => {
-        this.manipulate;
+        this.tourTicket;
       });
     },
     printReport() {
@@ -106,29 +116,31 @@ export default {
     }
   },
   computed: {
-    manipulate() {
-      //ข้อผิดพลาด ของการดึงดาต้าเบสยังไม่ดีพอ
-      this.dataReady = [];
-      const dataRaw = this.$store.getters.getTourTicketByDate;
+    // manipulate() {
+    //   //ข้อผิดพลาด ของการดึงดาต้าเบสยังไม่ดีพอ
+    //   this.dataReady = [];
+    //   const dataRaw = this.$store.getters.getTourTicketByDate;
 
-      dataRaw.forEach(val => {
-        const obj = val.agent.tour.find(v => v._id == val.tour);
-        const data = {
-          _id: val._id,
-          name: val.name,
-          nameAgent: val.agent.nameAgent,
-          tour: obj,
-          amount: val.amount,
-          total: val.total,
-          voucher: val.voucher,
-          remark: val.remark,
-          created: val.created
-        };
-        this.dataReady.push(data);
-      });
-    },
+    //   dataRaw.forEach(val => {
+    //     const obj = val.agent.tour.find(v => v._id == val.tour);
+    //     const data = {
+    //       _id: val._id,
+    //       name: val.name,
+    //       nameAgent: val.agent.nameAgent,
+    //       tour: obj,
+    //       amount: val.amount,
+    //       total: val.total,
+    //       voucher: val.voucher,
+    //       remark: val.remark,
+    //       created: val.created
+    //     };
+    //     this.dataReady.push(data);
+    //   });
+    // },
     tourTicket() {
-      return this.dataReady.filter(v => {
+      const datas = this.$store.getters.getTourTicketByDate;
+      console.log(datas);
+      return datas.filter(v => {
         return (
           v._id.match(this.searchKey) ||
           v.name.match(this.searchKey) ||
@@ -180,5 +192,4 @@ export default {
 };
 </script>
 <style scoped>
-
 </style>
