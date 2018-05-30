@@ -208,7 +208,7 @@
                         </div>
                     </div>
                 </div>
-                <div id="section-to-print" style="visibility: hidden; position: fixed;"></div>
+                <div id="section-to-printBill" style="visibility: hidden; position: fixed;"></div>
             <!-- </div> -->
         <!-- </div> -->
     </div>
@@ -504,11 +504,11 @@ export default {
       if (this.statusPrint) {
         for (let i = 0; i < this.amountPrint; i++) {
           document.getElementsByTagName("BODY")[0].onbeforeprint = function() {
-            $("#section-to-print").html(contentForSeatran);
+            $("#section-to-printBill").html(contentForSeatran);
           };
           window.print();
           document.getElementsByTagName("BODY")[0].onbeforeprint = function() {
-            $("#section-to-print").html(contentForCustomer);
+            $("#section-to-printBill").html(contentForCustomer);
           };
           window.print();
         }

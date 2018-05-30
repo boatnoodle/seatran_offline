@@ -117,7 +117,7 @@
                             </div>
                             <div class="card-body">
                                 <div class="exReceipt">
-                                    <div id="section-to-print2">
+                                    <div id="section-to-print">
                                         <h4 style="border: 1px solid; padding: 30px;">TRANSFER VOUCHER</h4>
                                         <p id="realTime"></p>
                                         <p style="text-align: right; font-weight: bold;">No. {{ data._id }}</p>

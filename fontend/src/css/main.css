@@ -11,7 +11,9 @@
     visibility: hidden !important;
   }
   #section-to-print,
-  #section-to-print * {
+  #section-to-print *,
+  #section-to-printBill,
+  #section-to-printBill * {
     visibility: visible;
   }
   #section-to-print {
@@ -24,7 +26,7 @@
     font-size: 18px;
     line-height: 0.8;
   }
-  #section-to-print {
+  #section-to-print,#section-to-printBill {
     position: absolute;
     width: 100% !important;
     top: 0 !important;
