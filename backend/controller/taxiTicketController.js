@@ -70,10 +70,12 @@ module.exports = {
     getTaxiTicketByDate: (req,res,next) => {
         if(!req.body.dateTo){
             var date = new Date(req.body.dateFrom)
-            var dateTo = date.setDate(date.getDate() + 1) // กรณี ไม่ส่ง ถึงวันที่เท่าไรมา ให้ ทำการ บวก 1 วัน ***รายงานประจำวัน
+            var dateTo = date.setDate((date.getDate() + 1))// กรณี ไม่ส่ง ถึงวันที่เท่าไรมา ให้ ทำการ บวก 1 วัน ***รายงานประจำวัน
         }else{
             var dateTo = new Date(req.body.dateTo + 'T24:00:00')
         }
+        // console.log(new Date(req.body.dateFrom), new Date(dateTo))
+        
         TaxiTicket.find(
             {"created" : {$gte: new Date(req.body.dateFrom), $lt: dateTo}},
         )
@@ -131,7 +133,8 @@ module.exports = {
                     },
                     created: {$first: '$created'},
                     totalPrice: {$sum: '$total'},
-                    totalAmount: {$sum: "$amount"}
+                    totalAmount: {$sum: "$amount"},
+                    totalAmountChild: {$sum: "$amountKid"}
                 }
             },
             {
@@ -142,7 +145,8 @@ module.exports = {
                         $push: {
                             typeCar: "$_id.typeCar",
                             totalPrice: "$totalPrice",
-                            totalAmount: "$totalAmount"
+                            totalAmount: "$totalAmount",
+                            totalAmountChild: "$totalAmountChild"
                         }
                     }
                 }
