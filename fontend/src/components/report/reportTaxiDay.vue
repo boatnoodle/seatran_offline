@@ -108,11 +108,11 @@ export default {
     printReport() {
       window.print();
     },
-    dateFormat(isoDate){
-        return moment(isoDate).format("YYYY-MM-DD HH:mm")
+    dateFormat(isoDate) {
+      return moment(isoDate).format("YYYY-MM-DD HH:mm");
     },
-    formatComma(x){
-        return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    formatComma(x) {
+      return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
     }
   },
   computed: {
@@ -139,11 +139,25 @@ export default {
   watch: {
     taxiTicket(val) {
       if (val.length > 0) {
-          console.log(val)
-        var totalPrice = val.reduce((a, b) => parseInt(a) + parseInt(b.price),0);
-        var totalAdl = val.reduce((a,b) => parseInt(a) + parseInt(b.amount || 0),0);
-        var totalKid = val.reduce((a,b) => parseInt(a) + parseInt(b.amountKid || 0),0);
-        var totalAmount = val.reduce((a, b) => parseInt(a || 0) + parseInt(b.amount || 0) + parseInt(b.amountKid || 0),0);
+        var totalPrice = val.reduce(
+          (a, b) => parseInt(a) + parseInt(b.price),
+          0
+        );
+        var totalAdl = val.reduce(
+          (a, b) => parseInt(a) + parseInt(b.amount || 0),
+          0
+        );
+        var totalKid = val.reduce(
+          (a, b) => parseInt(a) + parseInt(b.amountKid || 0),
+          0
+        );
+        var totalAmount = val.reduce(
+          (a, b) =>
+            parseInt(a || 0) +
+            parseInt(b.amount || 0) +
+            parseInt(b.amountKid || 0),
+          0
+        );
         var total = val.reduce((a, b) => parseInt(a) + parseInt(b.total), 0);
 
         this.total = {
@@ -175,20 +189,22 @@ export default {
 </script>
 <style scoped>
 @media print {
-    #section-to-print{
-        font-size: 18px;
-    }
-    #section-to-print table tr th{
-        white-space: nowrap;
-    }
-    #section-to-print table{
-        font-size: 18px;
-        line-height: 0.8;
-    }
-   
+  #section-to-print {
+    font-size: 18px;
+  }
+  #section-to-print table tr th {
+    white-space: nowrap;
+  }
+  #section-to-print table {
+    font-size: 18px;
+    line-height: 0.8;
+  }
 }
-#section-to-print table tr td:nth-child(4),#section-to-print table tr td:nth-child(5),#section-to-print table tr td:nth-child(6),#section-to-print table tr td:nth-child(7),#section-to-print table tr td:nth-child(8)
-{
-    text-align: right !important; 
+#section-to-print table tr td:nth-child(4),
+#section-to-print table tr td:nth-child(5),
+#section-to-print table tr td:nth-child(6),
+#section-to-print table tr td:nth-child(7),
+#section-to-print table tr td:nth-child(8) {
+  text-align: right !important;
 }
 </style>
