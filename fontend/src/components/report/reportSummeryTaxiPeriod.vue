@@ -42,8 +42,8 @@
                            <td>{{ data.nameRoute }}</td> 
                            <td>{{ data.priceTaxi }}</td> 
                            <td>{{ data.priceVan }}</td> 
-                           <td>{{ data.amountTaxi }}</td> 
-                           <td>{{ data.amountVan }}</td> 
+                           <td>{{ data.amountTaxi + data.amountTaxiChild }}</td> 
+                           <td>{{ data.amountVan + data.amountVanChild }}</td> 
                            <td>{{ data.totalTaxi }}</td> 
                            <td>{{ data.totalVan }}</td> 
                            <td>{{ data.total }}</td> 
@@ -59,10 +59,10 @@
                     <p>ส่วนแบ่งกำไร ({{ percentTaxi * 100 }}%) : {{ (total* percentTaxi) || 0 }} บาท</p>
                     <p>คงเหลือหลังหักส่วนแบ่ง : {{ (total - (total* percentTaxi)) || 0 }} บาท</p>
                 </div>
-                 <div style="float: left; font-weight: bold; text-align: center; margin-top: 50px;">
+                 <div style="float: left; font-weight: bold; text-align: center;">
                     <p>..............................................</p>
                     <p>( ผู้จัดทำ )</p>
-                    <p style="margin-top: 50px;">..............................................</p>
+                    <p style="margin-top: 15px;">..............................................</p>
                     <p>( ผู้ตรวจสอบ )</p>
                 </div>
             </div>
@@ -112,16 +112,21 @@ export default {
                     priceVan: element.destination[0].priceVan,
                     amountTaxi: 0,
                     amountVan: 0,
+                    amountTaxiChild: 0,
+                    amountVanChild: 0,
                     totalTaxi: 0,
                     totalVan: 0,
                     total: 0
                 }
                 element.totalByTypeCar.forEach(val => {
-                    if(val.typeCar === 'Limousine'){2
+                    if(val.typeCar === 'Limousine'){
                         data.amountTaxi += val.totalAmount
+                        data.amountTaxiChild += val.totalAmountChild
+                        
                         data.totalTaxi += val.totalPrice
                     }else{
                         data.amountVan += val.totalAmount
+                        data.amountVanChild += val.totalAmountChild
                         data.totalVan += val.totalPrice
                     }
                 })

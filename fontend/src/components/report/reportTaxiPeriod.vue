@@ -29,7 +29,9 @@
                             <th>จุดส่ง</th>  
                             <th>ประเภทรถ</th>
                             <th>ราคา</th>
-                            <th>จำนวนผู้โดยสาร</th>
+                            <th>ผู้ใหญ่</th>
+                            <th>เด็ก</th>
+                            <th>รวมจำนวนผู้โดยสาร</th>
                             <th>ราคารวม</th>
                             <th>หมายเหตุ</th>
                         </tr>
@@ -40,21 +42,22 @@
                             <td>{{ data._id }}</td>
                             <td>{{ data.destination.nameRoute }}</td>
                             <td>{{ data.typeCar }}</td>
-                            <td>{{ data.price }}</td>
-                            <td>{{ data.amount }}</td>
-                            <td>{{ data.total }}</td>
+                            <td>{{ formatComma(data.price || 0) }}</td>
+                            <td>{{ formatComma(data.amount || 0) }}</td>
+                            <td>{{ formatComma(data.amountKid || 0) }}</td>
+                            <td>{{ formatComma(parseInt(data.amount + (data.amountKid || 0)) || 0) }}</td>
+                            <td>{{ formatComma(data.total || 0) }}</td>
                             <td>{{ data.remark || '-' }}</td>
                         </tr>
                     </tbody>
                     <tfoot id="section-to-hide">
                         <tr>
-                            <th>รวม</th>
-                            <th></th>
-                            <th></th>
-                            <th></th>
-                            <th>{{ total.totalPrice || 0 }}</th>
-                            <th>{{ total.totalAmount || 0 }}</th>
-                            <th>{{ total.total || 0}}</th>
+                            <th colspan="4">รวม</th>
+                            <th>{{ formatComma(total.totalPrice || 0) }}</th>
+                            <th>{{ formatComma(total.totalAdl || 0) }}</th>
+                            <th>{{ formatComma(total.totalKid || 0) }}</th>
+                            <th>{{ formatComma(total.totalAmount || 0) }}</th>
+                            <th>{{ formatComma(total.total || 0)}}</th>
                             <th></th>
                         </tr>
                     </tfoot>
@@ -64,10 +67,10 @@
                     <p>ส่วนแบ่งกำไร ({{ percentTaxi * 100 }}%) : {{ total.fee || 0 }} บาท</p>
                     <p>คงเหลือหลังหักส่วนแบ่ง : {{ total.grandTotal || 0 }} บาท</p>
                 </div>
-                <div style="float: left; font-weight: bold; text-align: center; margin-top: 50px;">
+                <div style="float: left; font-weight: bold; text-align: center;">
                     <p>..............................................</p>
                     <p>( ผู้จัดทำ )</p>
-                    <p style="margin-top: 50px;">..............................................</p>
+                    <p style="margin-top: 15px;">..............................................</p>
                     <p>( ผู้ตรวจสอบ )</p>
                 </div>
             </div>
@@ -103,6 +106,9 @@ export default {
         },
         printReport(){
             window.print();
+        },
+        formatComma(x){
+            return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
         }
     },
     computed: {
@@ -119,10 +125,14 @@ export default {
         getTotal(){
             if(this.dataTable.length > 0){
                 var totalPrice = this.dataTable.reduce((a,b)=> parseInt(a) + parseInt(b.price),0)
-                var totalAmount = this.dataTable.reduce((a,b) => parseInt(a) + parseInt(b.amount),0)
+                var totalAdl = this.dataTable.reduce((a,b) => parseInt(a) + parseInt(b.amount || 0),0);
+                var totalKid = this.dataTable.reduce((a,b) => parseInt(a) + parseInt(b.amountKid || 0),0);
+                var totalAmount = this.dataTable.reduce((a, b) => parseInt(a || 0) + parseInt(b.amount || 0) + parseInt(b.amountKid || 0),0);
                 var total = this.dataTable.reduce((a,b) => parseInt(a) + parseInt(b.total),0)
                 this.total = {
                     totalPrice: totalPrice,
+                    totalAdl: totalAdl,
+                    totalKid: totalKid,
                     totalAmount: totalAmount,
                     total: total,
                     fee: total * this.percentTaxi,
@@ -131,6 +141,8 @@ export default {
             }else{
                 this.total = {
                     totalPrice: 0,
+                    totalAdl: 0,
+                    totalKid: 0,
                     totalAmount: 0,
                     total: 0,
                     fee: 0,
@@ -150,10 +162,14 @@ export default {
         taxiTicket(val){
            if(val.length > 0){
                 var totalPrice = val.reduce((a,b)=> parseInt(a) + parseInt(b.price),0)
-                var totalAmount = val.reduce((a,b) => parseInt(a) + parseInt(b.amount),0)
+                var totalAdl = val.reduce((a,b) => parseInt(a || 0) + parseInt(b.amount || 0),0);
+                var totalKid = val.reduce((a,b) => parseInt(a) + parseInt(b.amountKid || 0),0);
+                var totalAmount = val.reduce((a, b) => parseInt(a || 0) + parseInt(b.amount || 0) + parseInt(b.amountKid || 0),0);
                 var total = val.reduce((a,b) => parseInt(a) + parseInt(b.total),0)
                 this.total = {
                     totalPrice: totalPrice,
+                    totalAdl: totalAdl,
+                    totalKid: totalKid,
                     totalAmount: totalAmount,
                     total: total,
                     fee: total * this.percentTaxi,
@@ -162,6 +178,8 @@ export default {
             }else{
                 this.total = {
                     totalPrice: 0,
+                    totalAdl: 0,
+                    totalKid: 0,
                     totalAmount: 0,
                     total: 0,
                     fee: 0,
@@ -176,43 +194,17 @@ export default {
 }
 </script>
 <style scoped>
-.VuePagination {
-  text-align: center;
-}
-
-.vue-title {
-  text-align: center;
-  margin-bottom: 10px;
-}
-
-.vue-pagination-ad {
-  text-align: center;
-}
-
-.glyphicon.glyphicon-eye-open {
-  width: 16px;
-  display: block;
-  margin: 0 auto;
-}
-
-th:nth-child(3) {
-  text-align: center;
-}
-
-.VueTables__child-row-toggler {
-  width: 16px;
-  height: 16px;
-  line-height: 16px;
-  display: block;
-  margin: auto;
-  text-align: center;
-}
-
-.VueTables__child-row-toggler--closed::before {
-  content: "+";
-}
-
-.VueTables__child-row-toggler--open::before {
-  content: "-";
+@media print {
+    #section-to-print{
+        font-size: 18px;
+    }
+    #section-to-print table tr th{
+        white-space: nowrap;
+    }
+    #section-to-print table{
+        font-size: 18px;
+        line-height: 0.8;
+    }
+   
 }
 </style>

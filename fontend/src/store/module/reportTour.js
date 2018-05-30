@@ -8,33 +8,33 @@ const state = {
 const getters = {
     getTourTicketByDate: (state) => state.tourTicket,
     getTourTicketSummery: (state) => state.tourTicketSummery
-    
+
 }
 
 const mutations = {
-    getTourTicketByDate(state,data){
+    getTourTicketByDate(state, data) {
         state.tourTicket = data
     },
-    getTourTicketSummery: (state,data) => state.tourTicketSummery = data
+    getTourTicketSummery: (state, data) => state.tourTicketSummery = data
 }
 const actions = {
-    async getTourTicketByDate({commit},date){
-        await axios.post('tourTicket/getTourTicketByDate',date)
-        .then((response) => {
-            commit('getTourTicketByDate',response.data)
-        })
-        .catch(err => {
-            console.log(err)
-        })
+    async getTourTicketByDate({ commit }, date) {
+        await axios.post('tourTicket/getTourTicketByDate', date)
+            .then((response) => {
+                commit('getTourTicketByDate', response.data)
+            })
+            .catch(err => {
+                console.log(err)
+            })
     },
-    async getTourTicketSummery({commit},date){
-        await axios.post('tourTicket/getTourTicketSummery',date)
-        .then((response) => {
-            commit('getTourTicketSummery',response.data)
-        })
-        .catch(err => {
-            console.log(err)
-        })
+    async getTourTicketSummery({ commit }, date) {
+        await axios.post('tourTicket/getTourTicketSummery', date)
+            .then((response) => {
+                commit('getTourTicketSummery', response.data)
+            })
+            .catch(err => {
+                console.log(err)
+            })
     },
     // async getTaxiTicketSummery({commit},date){
     //     await axios.post('taxiTicket/getTaxiTicketSummery',date)

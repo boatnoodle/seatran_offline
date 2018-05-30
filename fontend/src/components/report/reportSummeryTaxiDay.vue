@@ -1,7 +1,6 @@
 <template>
     <div id="section-to-print">
-        <h3 id="titlePrint" class="text-center">รายงานสรุปการขนส่งประจำวัน {{ dateToday }}</h3>
-        <!-- <p class="text-center">{{ dateToday }}</p> -->
+        <h3 id="titlePrint" class="text-center">รายงานสรุปการขนส่งประจำวัน</h3>
         <form v-on:submit.prevent="submit" class="col-sm-6 offset-sm-3 no-print">
             <div class="form-group row">
                 <div class="text-right col-sm-2">ค้นหา</div>
@@ -41,8 +40,8 @@
                            <td>{{ data.nameRoute }}</td> 
                            <td>{{ data.priceTaxi }}</td> 
                            <td>{{ data.priceVan }}</td> 
-                           <td>{{ data.amountTaxi }}</td> 
-                           <td>{{ data.amountVan }}</td> 
+                           <td>{{ data.amountTaxi + data.amountTaxiChild }}</td> 
+                           <td>{{ data.amountVan + data.amountVanChild }}</td> 
                            <td>{{ data.totalTaxi }}</td> 
                            <td>{{ data.totalVan }}</td> 
                            <td>{{ data.total }}</td> 
@@ -58,10 +57,10 @@
                     <p>ส่วนแบ่งกำไร ({{percentTaxi * 100}}%) : {{ (total * percentTaxi) || 0 }} บาท</p>
                     <p>คงเหลือหลังหักส่วนแบ่ง : {{ total - (total * percentTaxi) || 0 }} บาท</p>
                 </div>
-                 <div style="float: left; font-weight: bold; text-align: center; margin-top: 50px;">
+                 <div style="float: left; font-weight: bold; text-align: center;">
                     <p>..............................................</p>
                     <p>( ผู้จัดทำ )</p>
-                    <p style="margin-top: 50px;">..............................................</p>
+                    <p style="margin-top: 15px;">..............................................</p>
                     <p>( ผู้ตรวจสอบ )</p>
                 </div>
             </div>
@@ -107,7 +106,7 @@ export default {
         manipulate(){
             this.dataReady = []
             this.total = 0
-            // console.log(this.dataTable)
+            console.log(this.dataTable)
             this.dataTable.forEach(element => {
                 let data = {
                     nameRoute: element.destination[0].nameRoute,
@@ -115,6 +114,8 @@ export default {
                     priceVan: element.destination[0].priceVan,
                     amountTaxi: 0,
                     amountVan: 0,
+                    amountTaxiChild: 0,
+                    amountVanChild: 0,
                     totalTaxi: 0,
                     totalVan: 0,
                     total: 0
@@ -122,21 +123,22 @@ export default {
                 element.totalByTypeCar.forEach(val => {
                     if(val.typeCar === 'Limousine'){
                         data.amountTaxi += val.totalAmount
+                        data.amountTaxiChild += val.totalAmountChild
                         data.totalTaxi += val.totalPrice
                     }else{
                         data.amountVan += val.totalAmount
+                        data.amountVanChild += val.totalAmountChild
                         data.totalVan += val.totalPrice
                     }
                 })
                 data.total = data.totalTaxi + data.totalVan
                 this.total += data.total
                 this.dataReady.push(data)
+                console.log(this.dataReady)
             });
-            // console.log(this.dataReady)
         },
         getTotal(){
             if(this.dataTable.length > 0){
-                // console.log(this.dataTable)
                 return this.dataTable[0].totalByTypeCar.reduce((a,b) => {
                     return parseInt(a) + parseInt(b.totalPrice)
                 })
@@ -155,15 +157,3 @@ export default {
     }
 }
 </script>
-<style scoped>
-.table td, .table th{
-    vertical-align: middle;
-}
-#section-to-print table tr th{
-    white-space: nowrap;
-  }
-  #section-to-print table{
-    font-size: 18px;
-    line-height: 0.8;
-  }
-</style>

@@ -15,9 +15,21 @@ const tourSchema = new Schema({
                 type: String,
                 required: true
             },
-            priceTour: {
+            priceAdult: {
                 type: Number,
                 required: true
+            },
+            priceChild: {
+                type: Number,
+                required: true
+            },
+            netPriceAdult: {
+                type: Number,
+                require: true
+            },
+            netPriceChild: {
+                type: Number,
+                require: true
             }
         }
     ]

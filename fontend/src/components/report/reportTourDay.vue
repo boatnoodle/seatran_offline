@@ -1,14 +1,14 @@
 <template>
-    <div>
+    <div id="section-to-print">
         <h3 id="titlePrint" class="text-center">รางานทัวร์ประจำวัน</h3>
-        <!-- <p class="text-center">{{ dateToday }}</p> -->
         <form v-on:submit.prevent="submit" class=" col-sm-6 offset-sm-3 no-print">
             <div class="form-group row">
                 <div class="text-right col-sm-2">ค้นหา</div>
-                <input type="date" v-model="data.dateFrom" class="form-control col-sm-8" >
+                <input type="date" v-model="data.dateFrom" class="form-control col-sm-8" required>
                 <button type="submit" class="btn btn-info btn-sm col-sm-2">ค้นหา</button>
             </div>
         </form>
+        <h6 class="titleDatePrint text-center" >รายงานประจำวันที่ {{ data.dateFrom || '-' }}</h6>
         <div class="row no-print" style="margin-bottom: 15px;">
             <div class="col-sm-12 text-right">
                 <button id="notPrint" type="button" @click="printReport" class="btn btn-default"><i class="fa fa-print"></i> พิมพ์</button>
@@ -21,56 +21,68 @@
                 </div>
             </div>
         </div>
-        <div id="section-to-print" class="row">
+        <div class="row">
             <div class="col-sm-12">
                 <table class="table table-sm table-bordered table-hover text-center">
                     <thead>
                         <tr>
-                            <th>รหัส</th>
-                            <th>ชื่อ</th>
-                            <th>ตัวแทนขาย</th>
-                            <th>ชื่อทัวร์</th>
-                            <th>ราคาทัวร์</th>
-                            <th>จำนวนคน</th>
-                            <th>ราคาทั้งหมด</th>
-                            <th>Voucher</th>
-                            <th>หมายเหตุ</th>
+                            <th rowspan="2">รหัส</th>
+                            <th rowspan="2">ชื่อ</th>
+                            <th rowspan="2">ตัวแทนขาย</th>
+                            <th colspan="2">จำนวน</th>
+                            <th colspan="2">Full Rate</th>
+                            <th colspan="2">Net Rate</th>
+                            <th colspan="2">รวม</th>
+                        </tr>
+                        <tr>
+                          <th>ADL</th>
+                          <th>CHD</th>
+                          <th>ADL</th>
+                          <th>CHD</th>
+                          <th>ADL</th>
+                          <th>CHD</th>
+                          <th>Full</th>
+                          <th>Net</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr v-for="(data,index) in tourTicket" :key="index">
                             <td>{{ data._id }}</td>
-                            <td>{{ data.name }}</td>
-                            <td>{{ data.nameAgent }}</td>
                             <td>{{ data.tour.nameTour }}</td>
-                            <td>{{ data.tour.priceTour }}</td>
-                            <td>{{ data.amount }}</td>
-                            <td>{{ data.tour.priceTour * data.amount }}</td>
-                            <td>{{ data.voucher || '-' }}</td>
-                            <td>{{ data.remark || '-' }}</td>
+                            <td>{{ data.agent.nameAgent }}</td>
+                            <td>{{ formatComma(data.amountAdult )}}</td>
+                            <td>{{ formatComma(data.amountChild )}}</td>
+                            <td>{{ formatComma(data.tour.priceAdult )}}</td>
+                            <td>{{ formatComma(data.tour.priceChild )}}</td>
+                            <td>{{ formatComma(data.tour.netPriceAdult )}}</td>
+                            <td>{{ formatComma(data.tour.netPriceChild )}}</td>
+                            <td>{{ formatComma((data.tour.priceAdult * data.amountAdult) + (data.tour.priceChild * data.amountChild) || '-' )}}</td>
+                            <td>{{ formatComma((data.tour.netPriceAdult * data.amountAdult) + (data.tour.netPriceChild * data.amountChild) || '-' )}}</td>
                         </tr>
                     </tbody>
                     <tfoot>
                         <tr>
-                            <th colspan="4">รวม</th>
-                            <th>{{ total.totalPrice || 0 }}</th>
-                            <th>{{ total.totalAmount || 0 }}</th>
-                            <th>{{ total.total || 0}}</th>
-                            <th colspan="4"></th>
+                            <th colspan="3">รวม</th>
+                            <th>{{ formatComma(objTotal.totalAmountAdult || 0 ) }}</th>
+                            <th>{{ formatComma(objTotal.totalAmountChild || 0 ) }}</th>
+                            <th>{{ formatComma(objTotal.totalPriceAdult || 0 ) }}</th>
+                            <th>{{ formatComma(objTotal.totalPriceChild || 0 ) }}</th>
+                            <th>{{ formatComma(objTotal.totalNetPriceAdult || 0 ) }}</th>
+                            <th>{{ formatComma(objTotal.totalNetPriceChild || 0 ) }}</th>
+                            <th>{{ formatComma(objTotal.total || 0  ) }}</th>
+                            <th>{{ formatComma(objTotal.totalNet || 0 ) }}</th>
                         </tr>
                     </tfoot>
                 </table>
                 <div style="float: right; font-weight: bold; text-align: right">
-                    <p>รวม : {{ total.total || 0 }} บาท</p>
-                    <p>({{ percentTour * 100 }}%) : {{ total.fee || 0 }} บาท</p>
-                    <p>รวมทั้งสิ้น : {{ total.grandTotal || 0 }} บาท</p>
+                    <p>รวม Full Rate : {{ formatComma(objTotal.total || 0) }} บาท || รวม Net Rate : {{ formatComma(objTotal.totalNet || 0) }} บาท</p>
+                    <p>ส่วนแบ่งกำไร Full Rate ({{ percentTour * 100 }}%) : {{ formatComma(objTotal.feeFullRate || 0) }} บาท || ส่วนแบ่งกำไร Net Rate ({{ percentTour * 100 }}%) : {{ formatComma(objTotal.feeNetRate || 0) }} บาท</p>
+                    <p>คงเหลือหลังหักส่วนแบ่ง Full Rate : {{ formatComma(objTotal.grandTotalFullRate || 0) }} บาท || คงเหลือหลังหักส่วนแบ่ง Net Rate : {{ formatComma(objTotal.grandTotalNetRate || 0) }} บาท</p>
                 </div>
-            </div>
-            <div class="col-sm-12">
-                <div style="float: right; font-weight: bold; text-align: center; margin-top: 50px;">
+                <div style="float: left; font-weight: bold; text-align: center;">
                     <p>..............................................</p>
                     <p>( ผู้จัดทำ )</p>
-                    <p style="margin-top: 50px;">..............................................</p>
+                    <p style="margin-top: 15px;">..............................................</p>
                     <p>( ผู้ตรวจสอบ )</p>
                 </div>
             </div>
@@ -86,49 +98,36 @@ export default {
       data: {
         dateFrom: ""
       },
-      dataReady: [],
+      dataTable: [],
       dateToday: moment()
         .locale("th")
         .format("Do MMM YYYY"),
       searchKey: "",
-      total: {},
+      objTotal: {},
       percentTour: ""
     };
   },
   methods: {
     submit() {
       this.$store.dispatch("getTourTicketByDate", this.data).then(() => {
-        this.manipulate;
+        this.getTourTicketByDate();
+        this.tourTicket;
       });
     },
     printReport() {
       window.print();
+    },
+    getTourTicketByDate() {
+      this.dataTable = this.$store.getters.getTourTicketByDate;
+      return this.dataTable;
+    },
+    formatComma(x) {
+      return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
     }
   },
   computed: {
-    manipulate() {
-      //ข้อผิดพลาด ของการดึงดาต้าเบสยังไม่ดีพอ
-      this.dataReady = [];
-      const dataRaw = this.$store.getters.getTourTicketByDate;
-
-      dataRaw.forEach(val => {
-        const obj = val.agent.tour.find(v => v._id == val.tour);
-        const data = {
-          _id: val._id,
-          name: val.name,
-          nameAgent: val.agent.nameAgent,
-          tour: obj,
-          amount: val.amount,
-          total: val.total,
-          voucher: val.voucher,
-          remark: val.remark,
-          created: val.created
-        };
-        this.dataReady.push(data);
-      });
-    },
     tourTicket() {
-      return this.dataReady.filter(v => {
+      return this.dataTable.filter(v => {
         return (
           v._id.match(this.searchKey) ||
           v.name.match(this.searchKey) ||
@@ -147,29 +146,66 @@ export default {
   watch: {
     tourTicket(val) {
       if (val.length > 0) {
-        var totalPrice = val.reduce(
-          (a, b) => parseInt(a) + parseInt(b.tour.priceTour),
+        var totalAmountAdult = val.reduce(
+          (a, b) => parseInt(a) + parseInt(b.amountAdult),
           0
         );
-        var totalAmount = val.reduce(
-          (a, b) => parseInt(a) + parseInt(b.amount),
+        var totalAmountChild = val.reduce(
+          (a, b) => parseInt(a) + parseInt(b.amountChild),
           0
         );
-        var total = val.reduce((a, b) => parseInt(a) + parseInt(b.total), 0);
-        this.total = {
-          totalPrice: totalPrice,
-          totalAmount: totalAmount,
+        var totalPriceAdult = val.reduce(
+          (a, b) => parseInt(a) + parseInt(b.tour.priceAdult),
+          0
+        );
+        var totalPriceChild = val.reduce(
+          (a, b) => parseInt(a) + parseInt(b.tour.priceChild),
+          0
+        );
+        var totalNetPriceAdult = val.reduce(
+          (a, b) => parseInt(a) + parseInt(b.tour.netPriceAdult),
+          0
+        );
+        var totalNetPriceChild = val.reduce(
+          (a, b) => parseInt(a) + parseInt(b.tour.netPriceChild),
+          0
+        );
+        var total = val.reduce(
+          (a, b) => parseInt(a) + parseInt((b.tour.priceAdult * b.amountAdult) + (b.tour.priceChild * b.amountChild)),
+          0
+        );
+        var totalNet = val.reduce(
+          (a, b) => parseInt(a) + parseInt((b.tour.netPriceAdult * b.amountAdult) + (b.tour.netPriceChild * b.amountChild)),
+          0
+        );
+        this.objTotal = {
+          totalAmountAdult: totalAmountAdult,
+          totalAmountChild: totalAmountChild,
+          totalPriceAdult: totalPriceAdult,
+          totalPriceChild: totalPriceChild,
+          totalNetPriceAdult: totalNetPriceAdult,
+          totalNetPriceChild: totalNetPriceChild,
           total: total,
-          fee: total * this.percentTour,
-          grandTotal: total + total * this.percentTour
+          totalNet: totalNet,
+          feeFullRate: total * this.percentTour,
+          feeNetRate: totalNet * this.percentTour,
+          grandTotalFullRate: total - (total * this.percentTour),
+          grandTotalNetRate: totalNet - (totalNet * this.percentTour)
         };
       } else {
-        this.total = {
-          totalPrice: 0,
-          totalAmount: 0,
+        this.objTotal = {
+          totalAmountAdult: 0,
+          totalAmountChild: 0,
+          totalPriceAdult: 0,
+          totalPriceChild: 0,
+          totalNetPriceAdult: 0,
+          totalNetPriceChild: 0,
           total: 0,
-          fee: 0,
-          grandTotal: 0
+          totalNet: 0,
+          feeFullRate: 0,
+          feeNetRate: 0,
+          grandTotalFullRate: 0,
+          grandTotalNetRate: 0
         };
       }
     }
@@ -179,6 +215,4 @@ export default {
   }
 };
 </script>
-<style scoped>
 
-</style>
