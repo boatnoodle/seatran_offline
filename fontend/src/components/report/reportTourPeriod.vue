@@ -53,7 +53,7 @@
                                 <th colspan="11"><b>{{ titleAgent }}</b></th>
                             </tr>
                             <template v-for="(data,index) in tourTicket">
-                                <tr v-if="titleAgent == data.agent.nameAgent" :key="index">
+                                <tr v-if="titleAgent == data.agent.nameAgent" :key="titleAgent + index + index">
                                     <td>{{ data._id }}</td>
                                     <td>{{ data.tour.nameTour }}</td>
                                     <td>{{ data.agent.nameAgent }}</td>
@@ -67,11 +67,22 @@
                                     <td>{{ formatComma((data.tour.netPriceAdult * data.amountAdult) + (data.tour.netPriceChild * data.amountChild) || '-' )}}</td>
                                 </tr>
                             </template>
+                            <tr :key="'subTotal'+titleAgent">
+                                <td colspan="3">Sub Total</td>
+                                <td>{{ formatComma( subTotals[titleAgent].amountAdult || 0) }}</td>
+                                <td>{{ formatComma( subTotals[titleAgent].amountChild || 0) }}</td>
+                                <td>{{ formatComma( subTotals[titleAgent].fullRateAdult || 0) }}</td>
+                                <td>{{ formatComma( subTotals[titleAgent].fullRateChild || 0) }}</td>
+                                <td>{{ formatComma( subTotals[titleAgent].netPriceAdult || 0) }}</td>
+                                <td>{{ formatComma( subTotals[titleAgent].netPriceChild || 0) }}</td>
+                                <td>{{ formatComma( subTotals[titleAgent].fullRate || 0) }}</td>
+                                <td>{{ formatComma( subTotals[titleAgent].netRate || 0) }}</td>
+                            </tr>
                         </template>
                     </tbody>
                     <tfoot>
                         <tr>
-                            <th colspan="3">รวม</th>
+                            <th colspan="3" style="font-size: 20px;">Total</th>
                             <th>{{ formatComma(objTotal.totalAmountAdult || 0 ) }}</th>
                             <th>{{ formatComma(objTotal.totalAmountChild || 0 ) }}</th>
                             <th>{{ formatComma(objTotal.totalPriceAdult || 0 ) }}</th>
@@ -109,6 +120,7 @@ export default {
                 dateTo: ''
             },
             dataTable: [],
+            subTotals: [],
             dateToday: moment().locale('th').format("Do MMM YYYY"),
             searchKey: '',
             objTotal: {},
@@ -119,8 +131,9 @@ export default {
         submit(){
             this.$store.dispatch('getTourTicketByDate',this.data)
             .then(() => {
-             this.getTourTicketByDate();
-                this.manipulate
+                this.subTotals = []
+                this.getTourTicketByDate();
+                this.getSubTotal()
             })
         },
         dateFormat(date){
@@ -135,11 +148,36 @@ export default {
         },
         formatComma(x) {
             return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+        },
+        getSubTotal(target,obj){
+            this.dataTable.forEach(data => {
+                if(this.subTotals[data.agent.nameAgent] == undefined){
+                    this.subTotals[data.agent.nameAgent] = {
+                        amountAdult: 0,
+                        amountChild: 0,
+                        fullRateAdult: 0,
+                        fullRateChild: 0,
+                        netPriceAdult: 0,
+                        netPriceChild: 0,
+                        fullRate: 0,
+                        netRate: 0
+                    }
+                }
+               
+                this.subTotals[data.agent.nameAgent].amountAdult += data.amountAdult
+                this.subTotals[data.agent.nameAgent].amountChild += data.amountChild
+                this.subTotals[data.agent.nameAgent].fullRateAdult += data.tour.priceAdult
+                this.subTotals[data.agent.nameAgent].fullRateChild += data.tour.priceChild
+                this.subTotals[data.agent.nameAgent].netPriceAdult += data.tour.netPriceAdult
+                this.subTotals[data.agent.nameAgent].netPriceChild += data.tour.netPriceChild
+                this.subTotals[data.agent.nameAgent].fullRate += (data.tour.priceAdult * data.amountAdult) + (data.tour.priceChild * data.amountChild)
+                this.subTotals[data.agent.nameAgent].netRate += (data.tour.netPriceAdult * data.amountAdult) + (data.tour.netPriceChild * data.amountChild)
+            });
+            
         }
     },
     computed: {
         tourTicket() {
-            console.log(this.dataTable)
             return this.dataTable.filter(v => {
                 return (
                 v._id.match(this.searchKey) ||
