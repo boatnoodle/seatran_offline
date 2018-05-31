@@ -48,19 +48,26 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr v-for="(data,index) in tourTicket" :key="index">
-                            <td>{{ data._id }}</td>
-                            <td>{{ data.tour.nameTour }}</td>
-                            <td>{{ data.agent.nameAgent }}</td>
-                            <td>{{ formatComma(data.amountAdult )}}</td>
-                            <td>{{ formatComma(data.amountChild )}}</td>
-                            <td>{{ formatComma(data.tour.priceAdult )}}</td>
-                            <td>{{ formatComma(data.tour.priceChild )}}</td>
-                            <td>{{ formatComma(data.tour.netPriceAdult )}}</td>
-                            <td>{{ formatComma(data.tour.netPriceChild )}}</td>
-                            <td>{{ formatComma((data.tour.priceAdult * data.amountAdult) + (data.tour.priceChild * data.amountChild) || '-' )}}</td>
-                            <td>{{ formatComma((data.tour.netPriceAdult * data.amountAdult) + (data.tour.netPriceChild * data.amountChild) || '-' )}}</td>
-                        </tr>
+                        <template v-for="titleAgent in getTitleAgent">
+                            <tr class="text-left" :key="titleAgent">
+                                <th colspan="11"><b>{{ titleAgent }}</b></th>
+                            </tr>
+                            <template v-for="(data,index) in tourTicket">
+                                <tr v-if="titleAgent == data.agent.nameAgent" :key="index">
+                                    <td>{{ data._id }}</td>
+                                    <td>{{ data.tour.nameTour }}</td>
+                                    <td>{{ data.agent.nameAgent }}</td>
+                                    <td>{{ formatComma(data.amountAdult )}}</td>
+                                    <td>{{ formatComma(data.amountChild )}}</td>
+                                    <td>{{ formatComma(data.tour.priceAdult )}}</td>
+                                    <td>{{ formatComma(data.tour.priceChild )}}</td>
+                                    <td>{{ formatComma(data.tour.netPriceAdult )}}</td>
+                                    <td>{{ formatComma(data.tour.netPriceChild )}}</td>
+                                    <td>{{ formatComma((data.tour.priceAdult * data.amountAdult) + (data.tour.priceChild * data.amountChild) || '-' )}}</td>
+                                    <td>{{ formatComma((data.tour.netPriceAdult * data.amountAdult) + (data.tour.netPriceChild * data.amountChild) || '-' )}}</td>
+                                </tr>
+                            </template>
+                        </template>
                     </tbody>
                     <tfoot>
                         <tr>
@@ -132,6 +139,7 @@ export default {
     },
     computed: {
         tourTicket() {
+            console.log(this.dataTable)
             return this.dataTable.filter(v => {
                 return (
                 v._id.match(this.searchKey) ||
@@ -147,6 +155,10 @@ export default {
                 const obj = this.$store.getters.getPercent
                 this.percentTour = obj.percentTour / 100
             })
+        },
+        getTitleAgent(){
+            const titleGroup = [...new Set(this.dataTable.map(item => item.agent.nameAgent))];
+            return titleGroup
         }
     },
     watch: {

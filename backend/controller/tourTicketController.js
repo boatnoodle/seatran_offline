@@ -39,10 +39,9 @@ module.exports = {
         } else {
             var dateTo = new Date(req.body.dateTo + 'T24:00:00')
         }
-        TourTicket.find(
-            { "created": { $gte: new Date(req.body.dateFrom), $lt: dateTo } },
-        )
+        TourTicket.find({ "created": { $gte: new Date(req.body.dateFrom), $lt: dateTo } })
             .populate('agent')
+            .sort([['agent', -1]])
             .exec()
             .then(result => {
                 res.status(200).json(result)
@@ -58,46 +57,51 @@ module.exports = {
         } else {
             var dateTo = new Date(req.body.dateTo + 'T24:00:00')
         }
-        TourTicket.aggregate([
-            {
-                $match: {
-                    created: { $gte: new Date(req.body.dateFrom), $lt: dateTo }
-                }
-            },
-            {
-                $group: {
-                    _id: {
-                        agent: "$agent",
-                        tour: "$tour"
+            TourTicket.aggregate([
+                {
+                    $match: {
+                        created: { $gte: new Date(req.body.dateFrom), $lt: dateTo }
                     },
-                    created: { $first: '$created' },
-                    totalPrice: { $sum: { $multiply: ["$price", "$amount"] } },
-                    totalAmount: { $sum: "$amount" }
-                }
-            },
-            {
-                $group: {
-                    _id: "$_id.agent",
-                    created: { $first: "$created" },
-                    tour: {
-                        $push: {
-                            _id: "$_id.tour",
-                            totalAmount: "$totalAmount",
-                            totalPrice: "$totalPrice"
+                    
+                },
+                {
+                    $group: {
+                        _id: {
+                            agent: "$agent",
+                            tour: "$tour"
+                        },
+                        created: { $first: '$created' },
+                        totalPrice: { $sum: { $multiply: ["$price", "$amount"] } },
+                        totalAmount: { $sum: "$amount" }
+                    }
+                },
+                {
+                    $sort : {
+                        "_id.agent": -1
+                    }
+                },  
+                {
+                    $group: {
+                        _id: "$_id.agent",
+                        created: { $first: "$created" },
+                        tour: {
+                            $push: {
+                                _id: "$_id.tour",
+                                totalAmount: "$totalAmount",
+                                totalPrice: "$totalPrice"
+                            }
                         }
+                    },
+                },
+                {
+                    $lookup: {
+                        from: 'tours',
+                        localField: '_id',
+                        foreignField: '_id',
+                        as: 'detailAgentTour'
                     }
                 }
-            }
-            ,
-            {
-                $lookup: {
-                    from: 'tours',
-                    localField: '_id',
-                    foreignField: '_id',
-                    as: 'detailAgentTour'
-                }
-            }
-        ])
+            ])
             .then(result => {
                 res.status(200).json(result)
             })
