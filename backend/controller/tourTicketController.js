@@ -68,37 +68,23 @@ module.exports = {
                     $group: {
                         _id: {
                             agent: "$agent",
-                            tour: "$tour"
+                            // tour: "$tour"
                         },
                         created: { $first: '$created' },
-                        totalPrice: { $sum: { $multiply: ["$price", "$amount"] } },
-                        totalAmount: { $sum: "$amount" }
+                        totalAmountAdult: { $sum: "$amountAdult" },
+                        totalAmountChild: { $sum: "$amountChild" },
+                        totalPriceAdult: { $sum: { $multiply: ["$tour.priceAdult", "$amountAdult"] } },
+                        totalPriceChild: { $sum: { $multiply: ["$tour.priceChild", "$amountChild"] } },
+                        totalNetPriceAdult: { $sum: { $multiply: ["$tour.netPriceAdult", "$amountAdult"] } },
+                        totalNetPriceChild: { $sum: { $multiply: ["$tour.netPriceChild", "$amountChild"] } }
                     }
-                },
-                {
-                    $sort : {
-                        "_id.agent": -1
-                    }
-                },  
-                {
-                    $group: {
-                        _id: "$_id.agent",
-                        created: { $first: "$created" },
-                        tour: {
-                            $push: {
-                                _id: "$_id.tour",
-                                totalAmount: "$totalAmount",
-                                totalPrice: "$totalPrice"
-                            }
-                        }
-                    },
                 },
                 {
                     $lookup: {
                         from: 'tours',
-                        localField: '_id',
+                        localField: '_id.agent',
                         foreignField: '_id',
-                        as: 'detailAgentTour'
+                        as: 'detailAgent'
                     }
                 }
             ])
