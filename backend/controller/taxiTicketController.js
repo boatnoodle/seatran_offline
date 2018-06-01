@@ -24,7 +24,6 @@ module.exports = {
             }else{
                 var _id = req.body._id
             }
-            
             const data = {
                 _id: _id,
                 namePassenger: req.body.namePassenger,
@@ -74,8 +73,6 @@ module.exports = {
         }else{
             var dateTo = new Date(req.body.dateTo + 'T24:00:00')
         }
-        // console.log(new Date(req.body.dateFrom), new Date(dateTo))
-        
         TaxiTicket.find(
             {"created" : {$gte: new Date(req.body.dateFrom), $lt: dateTo}},
         )

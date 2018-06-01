@@ -44,7 +44,31 @@ module.exports = {
             .sort([['agent', -1]])
             .exec()
             .then(result => {
-                res.status(200).json(result)
+                var obj = []
+                result.forEach(data => {
+                    if(data.statusTicket == 99){
+                        var data = {
+                            _id: data._id,
+                            agent: data.agent,
+                            amountChild: 0,
+                            amountAdult: 0,
+                            tour: {
+                                nameTour: data.tour.nameTour,
+                                priceAdult: 0,
+                                priceChild: 0,
+                                netPriceAdult: 0,
+                                netPriceChild: 0
+                            },
+                            voucher: data.voucher,
+                            remark: data.remark,
+                            statusTicket: data.statusTicket
+                        }
+                    }else{
+                        var data = data
+                    }
+                    obj.push(data)
+                });
+                res.status(200).json(obj)
             })
             .catch(err => {
                 console.log('err', err.message)
@@ -60,7 +84,10 @@ module.exports = {
             TourTicket.aggregate([
                 {
                     $match: {
-                        created: { $gte: new Date(req.body.dateFrom), $lt: dateTo }
+                        created: { $gte: new Date(req.body.dateFrom), $lt: dateTo },
+                        statusTicket: {
+                            $ne: 99
+                        }
                     },
                     
                 },
@@ -107,6 +134,15 @@ module.exports = {
                 console.log('err', err)
                 res.send(err.message)
             })
+    },
+    cancelTourTicket(req,res,next){
+        TourTicket.update({_id: req.params.id}, { $set : {remark: req.body.remark, statusTicket: 99}})
+        .then(result => {
+            res.status(200).json(result)
+        })
+        .catch(err => {
+            console.log(err.message)
+        })
     }
 
 }

@@ -82,7 +82,7 @@
                     </tbody>
                     <tfoot>
                         <tr>
-                            <th colspan="3" style="font-size: 20px;">Total</th>
+                            <th colspan="3" style="font-size: 18px;">รวม</th>
                             <th>{{ formatComma(objTotal.totalAmountAdult || 0 ) }}</th>
                             <th>{{ formatComma(objTotal.totalAmountChild || 0 ) }}</th>
                             <th>{{ formatComma(objTotal.totalPriceAdult || 0 ) }}</th>

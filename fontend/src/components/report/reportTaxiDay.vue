@@ -139,25 +139,10 @@ export default {
   watch: {
     taxiTicket(val) {
       if (val.length > 0) {
-        var totalPrice = val.reduce(
-          (a, b) => parseInt(a) + parseInt(b.price),
-          0
-        );
-        var totalAdl = val.reduce(
-          (a, b) => parseInt(a) + parseInt(b.amount || 0),
-          0
-        );
-        var totalKid = val.reduce(
-          (a, b) => parseInt(a) + parseInt(b.amountKid || 0),
-          0
-        );
-        var totalAmount = val.reduce(
-          (a, b) =>
-            parseInt(a || 0) +
-            parseInt(b.amount || 0) +
-            parseInt(b.amountKid || 0),
-          0
-        );
+        var totalPrice = val.reduce((a, b) => parseInt(a) + parseInt(b.price),0);
+        var totalAdl = val.reduce((a, b) => parseInt(a) + parseInt(b.amount || 0),0);
+        var totalKid = val.reduce((a, b) => parseInt(a) + parseInt(b.amountKid || 0),0);
+        var totalAmount = val.reduce((a, b) => parseInt(a || 0) + parseInt(b.amount || 0) + parseInt(b.amountKid || 0), 0);
         var total = val.reduce((a, b) => parseInt(a) + parseInt(b.total), 0);
 
         this.total = {

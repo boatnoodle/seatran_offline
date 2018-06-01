@@ -9,4 +9,7 @@ route.post('/addTourTicket',tourTicket.addTourTicket)
 route.post('/getTourTicketByDate',tourTicket.getTourTicketByDate)
 route.post('/getTourTicketSummery',tourTicket.getTourTicketSummery)
 
+route.put('/cancelTourTicket/:id', tourTicket.cancelTourTicket)
+
+
 module.exports = route

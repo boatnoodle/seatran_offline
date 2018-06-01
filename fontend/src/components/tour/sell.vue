@@ -100,24 +100,27 @@
                         <table id="tableTourRecent" class="table table-sm table-hover text-center">
                             <thead class="text-white bg-info">
                                 <tr>
-                                <th scope="col">#</th>
-                                <th scope="col">ชื่อทัวร์</th>
-                                <th scope="col">ชื่อผู้โดยสาร</th>
-                                <th scope="col">จำนวนผู้ใหญ่</th>
-                                <th scope="col">จำนวนเด็ก</th>
-                                <th>จำนวนรวม</th>
-                                <th>หมายเหตุ</th>
+                                    <th scope="col">#</th>
+                                    <th scope="col">ชื่อทัวร์</th>
+                                    <th scope="col">ชื่อผู้โดยสาร</th>
+                                    <th scope="col">จำนวนผู้ใหญ่</th>
+                                    <th scope="col">จำนวนเด็ก</th>
+                                    <th>จำนวนรวม</th>
+                                    <th>ยกเลิก</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr v-for="(data,index) in getTourTicketLasted" :key="index">
-                                    <th>{{ index+1 }}</th>
+                                    <th>{{ data._id }}</th>
                                     <th>{{ data.tour.nameTour }}</th>
                                     <th>{{ data.name }}</th>
                                     <th>{{ data.amountAdult || 0 }}</th>
                                     <th>{{ data.amountChild || 0 }}</th>
                                     <th>{{ data.amountAdult +  data.amountChild }}</th>
-                                    <th>{{ data.remark || '-' }}</th>
+                                    <th>
+                                        <div v-if="data.statusTicket == 99" style="color: red; font-weight: bold">ยกเลิก</div>
+                                        <button v-else @click="modalCancel(data._id)" class="btn btn-danger btn-sm">ยกเลิก</button>
+                                    </th>
                                 </tr>
                             </tbody>
                         </table>
@@ -208,6 +211,31 @@
                         </div>
                     </div>
                 </div>
+                <!-- Modal cancel -->
+                <div ref="modalCancel" class="modal" tabindex="-1" role="dialog">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header text-white bg-info">
+                                <h5 class="modal-title">ยกเลิกตั๋ว</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <form v-on:submit.prevent="cencelTicket">
+                                    <div class="form-group">
+                                        <label>หมายเหตุ</label>
+                                        <input type="text" v-model="cancelTourTicket.remark" class="form-control" placeholder="กรุณาระบุหมายเหตุการยกเลิก" required>
+                                    </div>
+                                    <div class="text-center">
+                                        <button type="submit" class="btn btn-info btn-sm">บันทึก</button>
+                                        <button type="button" class="btn btn-default btn-sm"  data-dismiss="modal" aria-label="Close">ยกเลิก</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 <div id="section-to-printBill" style="visibility: hidden; position: fixed;"></div>
             <!-- </div> -->
         <!-- </div> -->
@@ -263,7 +291,11 @@ export default {
       billHead: "",
       billFoot: "",
       statusPrint: "",
-      amountPrint: ""
+      amountPrint: "",
+      cancelTourTicket: {
+        _id: '',
+        remark: ''
+      }
     };
   },
   methods: {
@@ -520,24 +552,37 @@ export default {
         );
         this.genIdTicket(this.data._id);
         this.selectTypeName = "cash";
-        (this.data.name = "cash"),
-          (this.data.agent = ""),
-          (this.data.tour = {
-            nameTour: "",
-            priceAdult: "",
-            priceChild: "",
-            netPriceAdult: "",
-            netPriceChild: ""
-          }),
-          (this.data.amountChild = ""),
-          (this.data.amountAdult = ""),
-          (this.data.voucher = ""),
-          (this.data.remark = "");
-        (this.selectAgent = ""),
-          (this.nameAgent = ""),
-          (this.selectTour = ""),
+        this.data.name = "cash",
+        this.data.agent = "",
+        this.data.tour = {
+          nameTour: "",
+          priceAdult: "",
+          priceChild: "",
+          netPriceAdult: "",
+          netPriceChild: ""
+        },
+        this.data.amountChild = "",
+        this.data.amountAdult = "",
+        this.data.voucher = "",
+        this.data.remark = "";
+        this.selectAgent = "",
+        this.nameAgent = "",
+        this.selectTour = "",
           this.$store.dispatch("getTourTicketLasted");
       });
+    },
+    modalCancel(_id){
+        this.cancelTourTicket._id = _id
+        $(this.$refs.modalCancel).modal('toggle')
+    },
+    cencelTicket(){
+        this.$store.dispatch('cancelTourTicket',this.cancelTourTicket)
+        .then(() => {
+            this.cancelTourTicket._id = ''
+            this.cancelTourTicket.remark = ''
+            this.$store.dispatch('getTourTicketLasted')
+            $(this.$refs.modalCancel).modal('hide')
+        })
     }
   },
   computed: {

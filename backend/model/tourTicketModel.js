@@ -29,9 +29,12 @@ const tourTicketSchema = new Schema({
     },
     amountAdult: { type: Number, required: true },
     amountChild: { type: Number },
-    // total: {type: Number, requried: true},
     voucher: String,
     remark: String,
+    statusTicket: {
+        type: Number,
+        defualt: 1
+    },
     created: {
         type: Date,
         default: Date.now

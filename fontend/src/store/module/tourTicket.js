@@ -48,6 +48,17 @@ const actions = {
             console.log(err)
         })
     },
+    async cancelTourTicket({commit},data){
+        await axios.put('tourTicket/cancelTourTicket/' + data._id , data)
+        .then(res =>{
+            if(res){
+                console.log(res)
+            }
+        })
+        .catch(err =>{
+            console.log(err)
+        })
+    }
 }
 
 export default {
