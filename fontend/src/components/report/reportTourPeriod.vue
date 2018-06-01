@@ -70,7 +70,7 @@
                                 </tr>
                             </template>
                             <tr :key="'subTotal'+titleAgent">
-                                <td colspan="3">Sub Total</td>
+                                <td colspan="4">Sub Total</td>
                                 <td>{{ formatComma( subTotals[titleAgent].amountAdult || 0) }}</td>
                                 <td>{{ formatComma( subTotals[titleAgent].amountChild || 0) }}</td>
                                 <td>{{ formatComma( subTotals[titleAgent].fullRateAdult || 0) }}</td>
@@ -84,7 +84,7 @@
                     </tbody>
                     <tfoot>
                         <tr>
-                            <th colspan="3" style="font-size: 18px;">รวม</th>
+                            <th colspan="4" style="font-size: 18px;">รวม</th>
                             <th>{{ formatComma(objTotal.totalAmountAdult || 0 ) }}</th>
                             <th>{{ formatComma(objTotal.totalAmountChild || 0 ) }}</th>
                             <th>{{ formatComma(objTotal.totalPriceAdult || 0 ) }}</th>
