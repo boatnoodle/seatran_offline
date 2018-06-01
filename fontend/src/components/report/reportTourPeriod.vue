@@ -28,6 +28,7 @@
                 <table class="table table-sm table-bordered table-hover text-center">
                     <thead>
                         <tr>
+                            <th rowspan="2">วันที่</th>
                             <th rowspan="2">รหัส</th>
                             <th rowspan="2">ชื่อ</th>
                             <th rowspan="2">ตัวแทนขาย</th>
@@ -50,10 +51,11 @@
                     <tbody>
                         <template v-for="titleAgent in getTitleAgent">
                             <tr class="text-left" :key="titleAgent">
-                                <th colspan="11"><b>{{ titleAgent }}</b></th>
+                                <th colspan="12"><b>{{ titleAgent }}</b></th>
                             </tr>
                             <template v-for="(data,index) in tourTicket">
                                 <tr v-if="titleAgent == data.agent.nameAgent" :key="titleAgent + index + index">
+                                    <td>{{ dateFormat(data.created) }}</td>
                                     <td>{{ data._id }}</td>
                                     <td>{{ data.tour.nameTour }}</td>
                                     <td>{{ data.agent.nameAgent }}</td>
@@ -148,6 +150,9 @@ export default {
         },
         formatComma(x) {
             return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+        },
+         dateFormat(isoDate) {
+            return moment(isoDate).format("YYYY-MM-DD HH:mm");
         },
         getSubTotal(target,obj){
             this.dataTable.forEach(data => {
