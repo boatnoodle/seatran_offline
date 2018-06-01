@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div id="section-to-print">
         <h3 id="titlePrint" class="text-center">รายงานสรุปทัวร์ประจำช่วง</h3>
         <form v-on:submit.prevent="submit" class="col-sm-12 no-print">
             <div class="form-group row">
@@ -10,63 +10,69 @@
                 <button type="submit" class="btn btn-info btn-sm">ค้นหา</button>
             </div>
         </form>
+        <h6 class="titleDatePrint text-center">รายงานประจำวันที่: {{data.dateFrom || '-'}} ถึง {{data.dateTo || '-'}}</h6>
         <div class="row no-print" style="margin-bottom: 15px;">
             <div class="col-sm-12 text-right">
                 <button id="notPrint" type="button" @click="printReport" class="btn btn-default"><i class="fa fa-print"></i> พิมพ์</button>
             </div>
         </div>
         <div class="row">
-            <div id="section-to-print" class="col-sm-12">
+            <div class="col-sm-12">
                 <table class="table table-sm table-bordered table-hover text-center">
                     <thead>
+                       <tr>
+                            <th rowspan="2" class="text-left" width="40%">ชื่อทัวร์</th>
+                            <th colspan="2">จำนวนรวม</th>
+                            <th colspan="2">ราคารวม Full Rate</th>
+                            <th colspan="2">ราคารวม Net Rate</th>
+                        </tr>
                         <tr>
-                            <th class="text-left" width="40%">ชื่อทัวร์</th>
-                            <th>ราคา</th>
-                            <th>จำนวน</th>
-                            <th>ราคารวม</th>
+                            <th>ADL</th>
+                            <th>CHL</th>
+                            <th>ADL</th>
+                            <th>CHL</th>
+                            <th>ADL</th>
+                            <th>CHL</th>
                         </tr>
                     </thead>
-                    <tbody v-for="(data,index) in dataReady" :key="index">
-                        <tr>
-                            <th class="text-left" colspan="5">{{ data.nameAgent }}</th>
-                        </tr>
-                        <template v-for="data in data.tour">
-                            <tr :key="data._id">
-                                <td class="text-left">{{ data.nameList }}</td> 
-                                <td>{{ data.priceList }}</td> 
-                                <td>{{ data.totalAmountList }}</td> 
-                                <td>{{ data.totalPriceList }}</td> 
+                    <tbody>
+                        <template v-for="(data,index) in dataTable">
+                            <tr :key="index">
+                                <td class="text-left">{{ data.detailAgent[0].nameAgent || '-' }}</td>
+                                <td>{{ formatComma(data.totalAmountAdult) }}</td> 
+                                <td>{{ formatComma(data.totalAmountChild) }}</td> 
+                                <td>{{ formatComma(data.totalPriceAdult) }}</td> 
+                                <td>{{ formatComma(data.totalPriceChild) }}</td> 
+                                <td>{{ formatComma(data.totalNetPriceAdult) }}</td> 
+                                <td>{{ formatComma(data.totalNetPriceChild) }}</td> 
                             </tr>
                         </template>
-                        <tr>
-                            <th>Sub Total</th>
-                            <th>{{ data.totalPriceList || 0 }}</th>
-                            <th>{{ data.totalAmount || 0 }}</th>
-                            <th>{{ data.totalPrice || 0}}</th>
-                        </tr>
                     </tbody>
                      <tfoot>
                         <tr>
-                            <th>Grand Total</th>
-                            <th>{{ total.totalPriceList || 0 }}</th>
-                            <th>{{ total.totalAmount || 0 }}</th>
-                            <th>{{ total.total || 0}}</th>
+                            <th>รวม</th>
+                            <th>{{ formatComma(totals.totalAmountAdult || 0) }}</th>
+                            <th>{{ formatComma(totals.totalAmountChild || 0) }}</th>
+                            <th>{{ formatComma(totals.totalPriceAdult || 0) }}</th>
+                            <th>{{ formatComma(totals.totalPriceChild || 0) }}</th>
+                            <th>{{ formatComma(totals.totalNetPriceAdult || 0) }}</th>
+                            <th>{{ formatComma(totals.totalNetPriceChild || 0) }}</th>
                         </tr>
                     </tfoot>
                 </table>
             </div>
         </div>
-        <div id="section-to-print" class="row">
+        <div class="row">
             <div class="col-sm-12">
                 <div style="float: right; font-weight: bold; text-align: right">
-                    <p>รวม : {{ total.total || 0 }} บาท</p>
-                    <p>({{ percentTour * 100 }}%) : {{ (total.total * percentTour) || 0 }} บาท</p>
-                    <p>รวมทั้งสิ้น : {{ (total.total + (total.total * percentTour)) || 0 }} บาท</p>
+                    <p>รวม Full Rate : {{ formatComma(totals.totalPriceAdult + totals.totalPriceChild || 0) }} บาท || รวม Net Rate : {{ formatComma(totals.totalNetPriceAdult + totals.totalNetPriceChild || 0) }} บาท</p>
+                    <p>ส่วนแบ่งกำไร Full Rate ({{ percentTour * 100 }}%) : {{ formatComma(totals.feeFullRate || 0) }} บาท || ส่วนแบ่งกำไร Net Rate ({{ percentTour * 100 }}%) : {{ formatComma(totals.feeNetRate || 0) }} บาท</p>
+                    <p>คงเหลือหลังหักส่วนแบ่ง Full Rate : {{ formatComma((totals.totalPriceAdult + totals.totalPriceChild) - totals.feeFullRate || 0) }} บาท || คงเหลือหลังหักส่วนแบ่ง Net Rate : {{ formatComma((totals.totalNetPriceAdult + totals.totalNetPriceChild) - totals.feeNetRate|| 0) }} บาท</p>
                 </div>
-                  <div style="float: left; font-weight: bold; text-align: center; margin-top: 50px;">
+                <div style="float: left; font-weight: bold; text-align: center;">
                     <p>..............................................</p>
                     <p>( ผู้จัดทำ )</p>
-                    <p style="margin-top: 50px;">..............................................</p>
+                    <p style="margin-top: 15px;">..............................................</p>
                     <p>( ผู้ตรวจสอบ )</p>
                 </div>
             </div>
@@ -84,11 +90,15 @@ export default {
                 dateTo: ''
             },
             dataTable: [],
-            dataReady: [],
-            total: {
-                'totalAmount': 0,
-                'totalPrice': 0,
-                'total': 0
+            totals: {
+                'totalAmountAdult': 0,
+                'totalAmountChild': 0,
+                'totalPriceAdult': 0,
+                'totalPriceChild': 0,
+                'totalNetPriceAdult': 0,
+                'totalNetPriceChild': 0,
+                'feeFullRate': 0,
+                'feeNetRate' : 0
             },
             percentTour: '' 
         }
@@ -98,62 +108,30 @@ export default {
             this.$store.dispatch('getTourTicketSummery',this.data)
             .then(() => {
                 this.getTourTicketSummery
-                this.manipulate
+                this.getTotal()
             })
         },
-        setTotal(total,total2){
-            this.total += (total + total2)
-            return total
+        getTotal(){
+            this.totals.totalAmountAdult = this.dataTable.reduce((a,b) => a + b.totalAmountAdult,0)
+            this.totals.totalAmountChild = this.dataTable.reduce((a,b) => a + b.totalAmountChild,0)
+            this.totals.totalPriceAdult = this.dataTable.reduce((a,b) => a + b.totalPriceAdult,0)
+            this.totals.totalPriceChild = this.dataTable.reduce((a,b) => a + b.totalPriceChild,0)
+            this.totals.totalNetPriceAdult = this.dataTable.reduce((a,b) => a + b.totalNetPriceAdult,0)
+            this.totals.totalNetPriceChild = this.dataTable.reduce((a,b) => a + b.totalNetPriceChild,0)
+            this.totals.feeFullRate = (this.totals.totalPriceAdult + this.totals.totalPriceChild) * this.percentTour
+            this.totals.feeNetRate = (this.totals.totalNetPriceAdult + this.totals.totalNetPriceChild) * this.percentTour
         },
         printReport(){
             window.print();
+        },
+        formatComma(x) {
+            return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
         }
     },
     computed: {
         getTourTicketSummery(){
             this.dataTable = this.$store.getters.getTourTicketSummery
              return this.dataTable
-        },
-        manipulate(){ // เหี้ยมาก ยอมรับ โปรเจคหน้าขอแก้ตัว ผิดพลาด ตรงการ ดึงยังดึงไม่ดี ทำให้ต้อง ปรับแต่งก่อนนำใช้ เยอะมาก อาจำทให้ตอนดึงช้าขึ้น ToT
-            this.dataReady = []
-            this.total = {
-                'totalPriceList': 0,
-                'totalAmount': 0,
-                'totalPrice': 0,
-                'total': 0
-            }
-            
-            this.dataTable.forEach(element => {
-                let data = {
-                    'nameAgent': element.detailAgentTour[0].nameAgent,
-                    'tour': [],
-                    'totalPriceList': 0,
-                    'totalAmount': 0,
-                    'totalPrice': 0
-                }
-                element.tour.forEach(val => {
-                     element.detailAgentTour[0].tour.forEach(x => {
-                        if(val._id == x._id){
-                            let tourList = {
-                                _id: val._id,
-                                nameList: x.nameTour,
-                                priceList: x.priceTour,
-                                totalAmountList: val.totalAmount,
-                                totalPriceTour: val.totalPrice
-                            }
-                            data.totalPriceList += tourList.priceList
-                            data.totalAmount += tourList.totalAmountList
-                            data.totalPrice += tourList.totalPriceTour
-                            data.tour.push(tourList)
-                        }
-                    })
-                })
-                this.total.totalPriceList += parseInt(data.totalPriceList)
-                this.total.totalAmount += parseInt(data.totalAmount)
-                this.total.totalPrice += parseInt(data.priceTour)
-                this.total.total += parseInt(data.totalPrice)
-                this.dataReady.push(data)
-            });
         },
         getPercentTour(){
             this.$store.dispatch('getPercent')

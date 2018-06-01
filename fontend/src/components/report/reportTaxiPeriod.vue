@@ -114,41 +114,13 @@ export default {
     computed: {
         getTaxiTicketByDate(){
             this.dataTable = this.$store.getters.getTaxiTicketByDate
-            this.getTotal
+            this.taxiTicket
              return this.dataTable
         },
         taxiTicket(){
             return this.dataTable.filter(v => {
                   return v._id.match(this.searchKey) || v.destination.nameRoute.match(this.searchKey) || v.typeCar.match(this.searchKey)
              })
-        },
-        getTotal(){
-            if(this.dataTable.length > 0){
-                var totalPrice = this.dataTable.reduce((a,b)=> parseInt(a) + parseInt(b.price),0)
-                var totalAdl = this.dataTable.reduce((a,b) => parseInt(a) + parseInt(b.amount || 0),0);
-                var totalKid = this.dataTable.reduce((a,b) => parseInt(a) + parseInt(b.amountKid || 0),0);
-                var totalAmount = this.dataTable.reduce((a, b) => parseInt(a || 0) + parseInt(b.amount || 0) + parseInt(b.amountKid || 0),0);
-                var total = this.dataTable.reduce((a,b) => parseInt(a) + parseInt(b.total),0)
-                this.total = {
-                    totalPrice: totalPrice,
-                    totalAdl: totalAdl,
-                    totalKid: totalKid,
-                    totalAmount: totalAmount,
-                    total: total,
-                    fee: total * this.percentTaxi,
-                    grandTotal: total - (total * this.percentTaxi)
-                }
-            }else{
-                this.total = {
-                    totalPrice: 0,
-                    totalAdl: 0,
-                    totalKid: 0,
-                    totalAmount: 0,
-                    total: 0,
-                    fee: 0,
-                    grandTotal: 0
-                }
-            }
         },
         getPercentTaxi(){
             this.$store.dispatch('getPercent')

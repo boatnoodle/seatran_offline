@@ -4,7 +4,7 @@
         <form v-on:submit.prevent="submit" class="col-sm-6 offset-sm-3 no-print">
             <div class="form-group row">
                 <div class="text-right col-sm-2">ค้นหา</div>
-                <input type="date" v-model="data.dateFrom" class="form-control col-sm-8" >
+                <input type="date" v-model="data.dateFrom" class="form-control col-sm-8" required>
                 <button type="submit" class="btn btn-info btn-sm col-sm-2">ค้นหา</button>
             </div>
         </form>
@@ -106,7 +106,6 @@ export default {
         manipulate(){
             this.dataReady = []
             this.total = 0
-            console.log(this.dataTable)
             this.dataTable.forEach(element => {
                 let data = {
                     nameRoute: element.destination[0].nameRoute,

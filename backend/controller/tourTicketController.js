@@ -39,13 +39,36 @@ module.exports = {
         } else {
             var dateTo = new Date(req.body.dateTo + 'T24:00:00')
         }
-        TourTicket.find(
-            { "created": { $gte: new Date(req.body.dateFrom), $lt: dateTo } },
-        )
+        TourTicket.find({ "created": { $gte: new Date(req.body.dateFrom), $lt: dateTo } })
             .populate('agent')
+            .sort([['agent', -1]])
             .exec()
             .then(result => {
-                res.status(200).json(result)
+                var obj = []
+                result.forEach(data => {
+                    if(data.statusTicket == 99){
+                        var data = {
+                            _id: data._id,
+                            agent: data.agent,
+                            amountChild: 0,
+                            amountAdult: 0,
+                            tour: {
+                                nameTour: data.tour.nameTour,
+                                priceAdult: 0,
+                                priceChild: 0,
+                                netPriceAdult: 0,
+                                netPriceChild: 0
+                            },
+                            voucher: data.voucher,
+                            remark: data.remark,
+                            statusTicket: data.statusTicket
+                        }
+                    }else{
+                        var data = data
+                    }
+                    obj.push(data)
+                });
+                res.status(200).json(obj)
             })
             .catch(err => {
                 console.log('err', err.message)
@@ -58,46 +81,40 @@ module.exports = {
         } else {
             var dateTo = new Date(req.body.dateTo + 'T24:00:00')
         }
-        TourTicket.aggregate([
-            {
-                $match: {
-                    created: { $gte: new Date(req.body.dateFrom), $lt: dateTo }
-                }
-            },
-            {
-                $group: {
-                    _id: {
-                        agent: "$agent",
-                        tour: "$tour"
-                    },
-                    created: { $first: '$created' },
-                    totalPrice: { $sum: { $multiply: ["$price", "$amount"] } },
-                    totalAmount: { $sum: "$amount" }
-                }
-            },
-            {
-                $group: {
-                    _id: "$_id.agent",
-                    created: { $first: "$created" },
-                    tour: {
-                        $push: {
-                            _id: "$_id.tour",
-                            totalAmount: "$totalAmount",
-                            totalPrice: "$totalPrice"
+            TourTicket.aggregate([
+                {
+                    $match: {
+                        created: { $gte: new Date(req.body.dateFrom), $lt: dateTo },
+                        statusTicket: {
+                            $ne: 99
                         }
+                    },
+                    
+                },
+                {
+                    $group: {
+                        _id: {
+                            agent: "$agent",
+                            // tour: "$tour"
+                        },
+                        created: { $first: '$created' },
+                        totalAmountAdult: { $sum: "$amountAdult" },
+                        totalAmountChild: { $sum: "$amountChild" },
+                        totalPriceAdult: { $sum: { $multiply: ["$tour.priceAdult", "$amountAdult"] } },
+                        totalPriceChild: { $sum: { $multiply: ["$tour.priceChild", "$amountChild"] } },
+                        totalNetPriceAdult: { $sum: { $multiply: ["$tour.netPriceAdult", "$amountAdult"] } },
+                        totalNetPriceChild: { $sum: { $multiply: ["$tour.netPriceChild", "$amountChild"] } }
+                    }
+                },
+                {
+                    $lookup: {
+                        from: 'tours',
+                        localField: '_id.agent',
+                        foreignField: '_id',
+                        as: 'detailAgent'
                     }
                 }
-            }
-            ,
-            {
-                $lookup: {
-                    from: 'tours',
-                    localField: '_id',
-                    foreignField: '_id',
-                    as: 'detailAgentTour'
-                }
-            }
-        ])
+            ])
             .then(result => {
                 res.status(200).json(result)
             })
@@ -117,6 +134,15 @@ module.exports = {
                 console.log('err', err)
                 res.send(err.message)
             })
+    },
+    cancelTourTicket(req,res,next){
+        TourTicket.update({_id: req.params.id}, { $set : {remark: req.body.remark, statusTicket: 99}})
+        .then(result => {
+            res.status(200).json(result)
+        })
+        .catch(err => {
+            console.log(err.message)
+        })
     }
 
 }

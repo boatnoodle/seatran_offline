@@ -119,6 +119,7 @@ export default {
     },
     getTourTicketByDate() {
       this.dataTable = this.$store.getters.getTourTicketByDate;
+      console.log(this.dataTable)
       return this.dataTable;
     },
     formatComma(x) {
