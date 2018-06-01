@@ -26,6 +26,7 @@
                 <table class="table table-sm table-bordered table-hover">
                     <thead>
                         <tr>
+                            <th>วันที่</th>
                             <th>รหัส</th>
                             <th>จุดส่ง</th>
                             <th>ประเภทรถ</th>
@@ -35,11 +36,11 @@
                             <th>รวมจำนวนผู้โดยสาร</th>
                             <th>ราคารวม</th>
                             <th>หมายเหตุ</th>
-                            <th>วันที่</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr v-for="(data,index) in taxiTicket" :key="index">
+                            <td>{{ dateFormat(data.created) }}</td>
                             <td>{{ data._id }}</td>
                             <td>{{ data.destination.nameRoute }}</td>
                             <td>{{ data.typeCar }}</td>
@@ -49,7 +50,6 @@
                             <td>{{ formatComma(parseInt(data.amount + (data.amountKid || 0)) || 0) }}</td>
                             <td>{{ formatComma(data.total || 0) }}</td>
                             <td>{{ data.remark || '-' }}</td>
-                            <td>{{ dateFormat(data.created) }}</td>
                         </tr>
                     </tbody>
                     <tfoot id="section-to-hide">
