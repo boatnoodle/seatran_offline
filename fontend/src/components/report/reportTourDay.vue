@@ -26,6 +26,7 @@
                 <table class="table table-sm table-bordered table-hover text-center">
                     <thead>
                         <tr>
+                            <th rowspan="2">วันที่</th>
                             <th rowspan="2">รหัส</th>
                             <th rowspan="2">ชื่อ</th>
                             <th rowspan="2">ตัวแทนขาย</th>
@@ -47,6 +48,7 @@
                     </thead>
                     <tbody>
                         <tr v-for="(data,index) in tourTicket" :key="index">
+                            <td>{{ dateFormat(data.created) }}</td>
                             <td>{{ data._id }}</td>
                             <td>{{ data.tour.nameTour }}</td>
                             <td>{{ data.agent.nameAgent }}</td>
@@ -62,7 +64,7 @@
                     </tbody>
                     <tfoot>
                         <tr>
-                            <th colspan="3">รวม</th>
+                            <th colspan="4">รวม</th>
                             <th>{{ formatComma(objTotal.totalAmountAdult || 0 ) }}</th>
                             <th>{{ formatComma(objTotal.totalAmountChild || 0 ) }}</th>
                             <th>{{ formatComma(objTotal.totalPriceAdult || 0 ) }}</th>
@@ -121,6 +123,9 @@ export default {
       this.dataTable = this.$store.getters.getTourTicketByDate;
       console.log(this.dataTable)
       return this.dataTable;
+    },
+    dateFormat(isoDate) {
+      return moment(isoDate).format("YYYY-MM-DD HH:mm");
     },
     formatComma(x) {
       return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
