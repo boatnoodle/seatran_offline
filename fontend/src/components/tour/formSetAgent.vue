@@ -15,6 +15,14 @@
                         <label>ชื่อตัวแทนขาย</label>
                         <input type="text" v-model="data.nameAgent" class="form-control" placeholder="กรุณาระบุชื่อตัวแทนขาย">
                     </div>
+                    <div class="form-group">
+                        <label>หัวบิล</label>
+                        <textarea v-model="data.detailTitleBill" cols="30" rows="10" class="form-control" placeholder="ระบุรายละเอียดหัวบิล"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Logo</label>
+                        <input type="text" v-model="data.logo" class="form-control" placeholder="ระบุ URL Logo...">
+                    </div>
                     <div class="text-center">
                         <button type="submit" class="btn btn-info btn-sm">บันทึก</button>
                         <button type="button" class="btn btn-default btn-sm"  data-dismiss="modal" aria-label="Close">ยกเลิก</button>
@@ -40,7 +48,9 @@ export default {
             data: {
                 update: false,
                 id: '',
-                nameAgent: ''
+                nameAgent: '',
+                detailTitleBill: '',
+                logo: ''
             }
         }
     },
@@ -49,6 +59,7 @@ export default {
             $(this.$refs.modal).modal('toggle')
         },
         submit(){
+            this.data.detailTitleBill = this.data.detailTitleBill.replace(/\n/g, "<br />")
             if(this.data.update){
                 this.$store.dispatch('updateAgent',this.data)
                 .then(() => {
@@ -75,12 +86,14 @@ export default {
             this.data.update = true
             this.data.id = val._id
             this.data.nameAgent = val.nameAgent
+            this.data.detailTitleBill = val.detailTitleBill.replace(/<br\s*[\/]?>/gi, "\n");
+            this.data.logo = val.logo
         }
     },
     mounted(){
         $(this.$refs.modal).on('hidden.bs.modal',this.clearData)
     }
-  
 }
 </script>
+
 

@@ -58,7 +58,7 @@ module.exports = {
         })
     },
     updatePrintSetting: (req,res,next) => {
-        System.update({ _id: "seatran_offline"}, { $set: { statusPrint: req.body.statusPrint, amountPrint: req.body.amountPrint }})
+        System.update({ _id: "seatran_offline"}, { $set: { statusPrint: req.body.statusPrint, amountPrint: req.body.amountPrint, statusPrintTour: req.body.statusPrintTour, amountPrintTour: req.body.amountPrintTour }})
         .then(result => {
             res.status(200).json(result)
         })
@@ -67,7 +67,7 @@ module.exports = {
         })
     },
     getPrintSetting: (req,res,next)=> {
-        System.findOne({_id: "seatran_offline"},'statusPrint amountPrint')
+        System.findOne({_id: "seatran_offline"})
         .exec()
         .then((result) => {
             res.status(200).json(result)

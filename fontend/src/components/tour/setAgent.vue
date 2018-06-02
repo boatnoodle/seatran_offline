@@ -8,12 +8,18 @@
                     <thead class="bg-info text-white">
                         <tr>
                             <th>ชื่อตัวแทนขาย</th>
+                            <th>หัวบิล</th>
+                            <th>Logo</th>
                             <th>จัดการ</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr v-for="(data,index) in getAgent" :key="index">
-                            <td>{{ data.nameAgent }}</td>
+                            <td>{{ data.nameAgent || '-' }}</td>
+                            <td>{{ addNewLine(data.detailTitleBill) || '-' }}</td>
+                            <td>
+                                <img :src="getLogo(data.logo)" alt="logoAgent" width="70">
+                            </td>
                             <td width="15%">
                                 <button @click="updateAgent(data)" class="btn btn-info btn-sm"><i class="fa fa-pencil"></i> แก้ไข</button>
                                 <button @click="removeAgent(data._id)" class="btn btn-default btn-sm"><i class="fa fa-trash-o"></i> ลบ</button>
@@ -61,6 +67,18 @@ export default {
         actionGetAgent(){
             this.$store.dispatch('getAgent')
         },
+        getLogo(logoAddress){
+            if(logoAddress){
+                return logoAddress
+            }else{
+                return 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/No_image_available.svg/2000px-No_image_available.svg.png'
+            }
+        },
+        addNewLine(x){
+            if(x != null){
+                return x.replace(/<br\s*[\/]?>/gi, "\n")
+            }
+        }
     },
     computed: {
         getAgent(){

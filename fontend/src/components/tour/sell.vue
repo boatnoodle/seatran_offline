@@ -149,11 +149,11 @@
                                     </div>
                                     <div class="card-body">
                                        <div class="exReceipt">
-                                           <div id="section-to-print2">
+                                           <div id="section-to-print">
                                             <h4 style="border: 1px solid; padding: 30px;">TOUR VOUCHER</h4>
-                                            <h3>{{ billHead }}</h3>
-                                                <p id="realTime"></p>
-                                            <p></p>
+                                            <img :src="logo" width="100%" alt="" style="margin: 15px 0;">
+                                            <h5 id="detailTitleBill" style="line-height: 0.8; text-align: left;"></h5>
+                                            <p id="realTime"></p>
                                             <p style="text-align: right; font-weight: bold;">No. {{ data._id }}</p>
                                                 <div class="content">
                                                     <div>
@@ -171,20 +171,20 @@
                                                      <div>
                                                         <span style="font-weight: bold;">Adults : </span>
                                                         <span>{{ data.amountAdult || '-' }}</span>
-                                                        <span style="float: right;">{{ data.tour.netPriceAdult || '-' }}</span>
-                                                        <span style="font-weight: bold; float: right;">Net Price : </span>
+                                                        <span style="float: right;">{{ data.tour.priceAdult || '-' }}</span>
+                                                        <span style="font-weight: bold; float: right;">Price : </span>
                                                     </div>
                                                     <div>
                                                         <span style="font-weight: bold;">Children : </span>
                                                         <span>{{ data.amountChild || '-' }}</span>
-                                                        <span style="float: right">{{ data.tour.netPriceChild || '-' }}</span>
-                                                        <span style="font-weight: bold; float: right;">Net Price : </span>
+                                                        <span style="float: right">{{ data.tour.priceChild || '-' }}</span>
+                                                        <span style="font-weight: bold; float: right;">Price : </span>
                                                     </div>
                                                     <div>
                                                         <span style="font-weight: bold;">Total : </span>
                                                         <span>{{ parseInt(data.amountAdult || 0) +  parseInt(data.amountChild || 0)|| '-' }}</span>
-                                                        <span style="float: right">{{ (parseInt(data.tour.netPriceChild || 0) * data.amountChild) + (parseInt(data.tour.netPriceAdult || 0) * data.amountAdult) || '-' }}</span>
-                                                        <span style="font-weight: bold; float: right;">Total Net : </span>
+                                                        <!-- <span style="float: right">{{ (parseInt(data.tour.priceChild || 0) * data.amountChild) + (parseInt(data.tour.priceAdult || 0) * data.amountAdult) || '-' }}</span>
+                                                        <span style="font-weight: bold; float: right;">Total : </span> -->
                                                     </div>
                                                     <div>
                                                         <span style="font-weight: bold;">Voucher : </span>
@@ -197,7 +197,7 @@
                                                     <hr style="border: 1px dotted;">
                                                     <div>
                                                         <span style="font-weight: bold;">Total : </span>
-                                                        <span style="float: right">{{ (parseInt(data.tour.netPriceChild || 0) * data.amountChild) + (parseInt(data.tour.netPriceAdult || 0) * data.amountAdult) || '-' }}</span>
+                                                        <span style="float: right">{{ (parseInt(data.tour.priceChild || 0) * data.amountChild) + (parseInt(data.tour.priceAdult || 0) * data.amountAdult) || '-' }}</span>
                                                     </div>
                                                 </div>
                                                 <div style="margin-top: 40px;">
@@ -289,9 +289,10 @@ export default {
       tour: [],
       tourList: [],
       billHead: "",
+      logo: "",
       billFoot: "",
-      statusPrint: "",
-      amountPrint: "",
+      statusPrintTour: "",
+      amountPrintTour: "",
       cancelTourTicket: {
         _id: '',
         remark: ''
@@ -312,236 +313,236 @@ export default {
       return (this.data._id = "TR" + prefix + id);
     },
     async submit() {
-      var contentForSeatran = `
-        <h4 style="border: 1px solid; padding: 30px; text-align: center">TOUR VOUCHER</h4>
-                                            <h3 style="text-align: center">${
-                                              this.billHead
-                                            }</h3>
-                                                <p id="realTime"></p>
-                                            <p></p>
-                                            <p style="text-align: right; font-weight: bold;">No. ${
-                                              this.data._id
-                                            }</p>
-                                                <div class="content">
-                                                    <div>
-                                                        <span style="font-weight: bold;">Name : </span>
-                                                        <div style="text-align: left">${this
-                                                          .data.name ||
-                                                          "-"}</div>
-                                                    </div>
-                                                    <div>
-                                                        <span style="font-weight: bold;">Agent : </span>
-                                                        <span style="float: right">${this
-                                                          .nameAgent ||
-                                                          "-"}</span>
-                                                    </div>
-                                                    <div>
-                                                        <span style="font-weight: bold;">Tour : </span>
-                                                        <span style="float: right">${this
-                                                          .data.tour.nameTour ||
-                                                          "-"}</span>
-                                                    </div>
-                                                    <div>
-                                                        <span style="font-weight: bold;">Adults : </span>
-                                                        <span>${this.data
-                                                          .amountAdult ||
-                                                          "-"}</span>
-                                                        <span style="float: right">${this
-                                                          .data.tour
-                                                          .netPriceAdult ||
-                                                          "-"}</span>
-                                                        <span style="font-weight: bold; float: right;">Net Price : </span>
-                                                    </div>
-                                                    <div>
-                                                        <span style="font-weight: bold;">Children : </span>
-                                                        <span>${this.data
-                                                          .amountChild ||
-                                                          "-"}</span>
-                                                        <span style="float: right">${this
-                                                          .data.tour
-                                                          .netPriceChild ||
-                                                          "-"}</span>
-                                                        <span style="font-weight: bold; float: right;">Net Price : </span>
-                                                    </div>
-                                                    <div>
-                                                        <span style="font-weight: bold;">Total : </span>
-                                                        <span>${parseInt(
-                                                          this.data
-                                                            .amountAdult || 0
-                                                        ) +
-                                                          parseInt(
-                                                            this.data
-                                                              .amountChild || 0
-                                                          ) || "-"}</span>
-                                                        <span style="float: right">${parseInt(
-                                                          this.data.tour
-                                                            .netPriceChild || 0
-                                                        ) *
-                                                          this.data
-                                                            .amountChild +
-                                                          parseInt(
-                                                            this.data.tour
-                                                              .netPriceAdult ||
-                                                              0
-                                                          ) *
-                                                            this.data
-                                                              .amountAdult ||
-                                                          "-"}</span>
-                                                        <span style="font-weight: bold; float: right;">Total Net : </span>
-                                                    </div>
-                                                    <div>
-                                                        <span style="font-weight: bold;">Voucher : </span>
-                                                        <span style="float: right">${this
-                                                          .data.voucher ||
-                                                          "-"}</span>
-                                                    </div>
-                                                    <div>
-                                                        <span style="font-weight: bold;">Remark. : </span>
-                                                        <span style="float: right">${this
-                                                          .data.remark ||
-                                                          "-"}</span>
-                                                    </div>
-                                                    <hr style="border: 1px dotted;">
-                                                    <div>
-                                                        <span style="font-weight: bold;">Total : </span>
-                                                        <span style="float: right">${parseInt(
-                                                          this.data.tour
-                                                            .netPriceChild || 0
-                                                        ) *
-                                                          this.data
-                                                            .amountChild +
-                                                          parseInt(
-                                                            this.data.tour
-                                                              .netPriceAdult ||
-                                                              0
-                                                          ) *
-                                                            this.data
-                                                              .amountAdult ||
-                                                          "-"}</span>
-                                                    </div>
-                                                </div>
-                                                <div style="margin-top: 40px;">
-                                                    <h6 id="billFoot"></h6>
-                                                </div>`;
-      var contentForCustomer = `
-        <h4 style="border: 1px solid; padding: 30px; text-align: center">TOUR VOUCHER</h4>
-                                            <h3 style="text-align: center">${
-                                              this.billHead
-                                            }</h3>
-                                                <p id="realTime"></p>
-                                            <p></p>
-                                            <p style="text-align: right; font-weight: bold;">No. ${
-                                              this.data._id
-                                            }</p>
-                                                <div class="content">
-                                                    <div>
-                                                        <span style="font-weight: bold;">Name : </span>
-                                                        <div style="text-align: left">${this
-                                                          .data.name ||
-                                                          "-"}</div>
-                                                    </div>
-                                                    <div>
-                                                        <span style="font-weight: bold;">Agent : </span>
-                                                        <span style="float: right">${this
-                                                          .nameAgent ||
-                                                          "-"}</span>
-                                                    </div>
-                                                    <div>
-                                                        <span style="font-weight: bold;">Tour : </span>
-                                                        <span style="float: right">${this
-                                                          .data.tour.nameTour ||
-                                                          "-"}</span>
-                                                    </div>
-                                                    <div>
-                                                        <span style="font-weight: bold;">Adults : </span>
-                                                        <span>${this.data
-                                                          .amountAdult ||
-                                                          "-"}</span>
-                                                        <span style="float: right">${this
-                                                          .data.tour
-                                                          .priceAdult ||
-                                                          "-"}</span>
-                                                        <span style="font-weight: bold; float: right;">Price Adult : </span>
-                                                    </div>
-                                                    <div>
-                                                        <span style="font-weight: bold;">Children : </span>
-                                                        <span>${this.data
-                                                          .amountChild ||
-                                                          "-"}</span>
-                                                        <span style="float: right">${this
-                                                          .data.tour
-                                                          .priceChild ||
-                                                          "-"}</span>
-                                                        <span style="font-weight: bold; float: right;">Price Child: </span>
-                                                    </div>
-                                                    <div>
-                                                        <span style="font-weight: bold;">Total : </span>
-                                                        <span>${parseInt(
-                                                          this.data
-                                                            .amountAdult || 0
-                                                        ) +
-                                                          parseInt(
-                                                            this.data
-                                                              .amountChild || 0
-                                                          ) || "-"}</span>
-                                                        <span style="float: right">${parseInt(
-                                                          this.data.tour
-                                                            .priceChild || 0
-                                                        ) *
-                                                          this.data
-                                                            .amountChild +
-                                                          parseInt(
-                                                            this.data.tour
-                                                              .priceAdult || 0
-                                                          ) *
-                                                            this.data
-                                                              .amountAdult ||
-                                                          "-"}</span>
-                                                        <span style="font-weight: bold; float: right;">Total Net : </span>
-                                                    </div>
-                                                    <div>
-                                                        <span style="font-weight: bold;">Voucher : </span>
-                                                        <span style="float: right">${this
-                                                          .data.voucher ||
-                                                          "-"}</span>
-                                                    </div>
-                                                    <div>
-                                                        <span style="font-weight: bold;">Remark. : </span>
-                                                        <span style="float: right">${this
-                                                          .data.remark ||
-                                                          "-"}</span>
-                                                    </div>
-                                                    <hr style="border: 1px dotted;">
-                                                    <div>
-                                                        <span style="font-weight: bold;">Total : </span>
-                                                        <span style="float: right">${parseInt(
-                                                          this.data.tour
-                                                            .netPriceChild || 0
-                                                        ) *
-                                                          this.data
-                                                            .amountChild +
-                                                          parseInt(
-                                                            this.data.tour
-                                                              .netPriceAdult ||
-                                                              0
-                                                          ) *
-                                                            this.data
-                                                              .amountAdult ||
-                                                          "-"}</span>
-                                                    </div>
-                                                </div>
-                                                <div style="margin-top: 40px;">
-                                                    <h6 id="billFoot"></h6>
-                                                </div>`;
-      if (this.statusPrint) {
-        for (let i = 0; i < this.amountPrint; i++) {
-          document.getElementsByTagName("BODY")[0].onbeforeprint = function() {
-            $("#section-to-printBill").html(contentForSeatran);
-          };
-          window.print();
-          document.getElementsByTagName("BODY")[0].onbeforeprint = function() {
-            $("#section-to-printBill").html(contentForCustomer);
-          };
+    //   var contentForSeatran = `
+    //     <h4 style="border: 1px solid; padding: 30px; text-align: center">TOUR VOUCHER</h4>
+    //                                         <h3 style="text-align: center">${
+    //                                           this.billHead
+    //                                         }</h3>
+    //                                             <p id="realTime"></p>
+    //                                         <p></p>
+    //                                         <p style="text-align: right; font-weight: bold;">No. ${
+    //                                           this.data._id
+    //                                         }</p>
+    //                                             <div class="content">
+    //                                                 <div>
+    //                                                     <span style="font-weight: bold;">Name : </span>
+    //                                                     <div style="text-align: left">${this
+    //                                                       .data.name ||
+    //                                                       "-"}</div>
+    //                                                 </div>
+    //                                                 <div>
+    //                                                     <span style="font-weight: bold;">Agent : </span>
+    //                                                     <span style="float: right">${this
+    //                                                       .nameAgent ||
+    //                                                       "-"}</span>
+    //                                                 </div>
+    //                                                 <div>
+    //                                                     <span style="font-weight: bold;">Tour : </span>
+    //                                                     <span style="float: right">${this
+    //                                                       .data.tour.nameTour ||
+    //                                                       "-"}</span>
+    //                                                 </div>
+    //                                                 <div>
+    //                                                     <span style="font-weight: bold;">Adults : </span>
+    //                                                     <span>${this.data
+    //                                                       .amountAdult ||
+    //                                                       "-"}</span>
+    //                                                     <span style="float: right">${this
+    //                                                       .data.tour
+    //                                                       .netPriceAdult ||
+    //                                                       "-"}</span>
+    //                                                     <span style="font-weight: bold; float: right;">Net Price : </span>
+    //                                                 </div>
+    //                                                 <div>
+    //                                                     <span style="font-weight: bold;">Children : </span>
+    //                                                     <span>${this.data
+    //                                                       .amountChild ||
+    //                                                       "-"}</span>
+    //                                                     <span style="float: right">${this
+    //                                                       .data.tour
+    //                                                       .netPriceChild ||
+    //                                                       "-"}</span>
+    //                                                     <span style="font-weight: bold; float: right;">Net Price : </span>
+    //                                                 </div>
+    //                                                 <div>
+    //                                                     <span style="font-weight: bold;">Total : </span>
+    //                                                     <span>${parseInt(
+    //                                                       this.data
+    //                                                         .amountAdult || 0
+    //                                                     ) +
+    //                                                       parseInt(
+    //                                                         this.data
+    //                                                           .amountChild || 0
+    //                                                       ) || "-"}</span>
+    //                                                     <span style="float: right">${parseInt(
+    //                                                       this.data.tour
+    //                                                         .netPriceChild || 0
+    //                                                     ) *
+    //                                                       this.data
+    //                                                         .amountChild +
+    //                                                       parseInt(
+    //                                                         this.data.tour
+    //                                                           .netPriceAdult ||
+    //                                                           0
+    //                                                       ) *
+    //                                                         this.data
+    //                                                           .amountAdult ||
+    //                                                       "-"}</span>
+    //                                                     <span style="font-weight: bold; float: right;">Total Net : </span>
+    //                                                 </div>
+    //                                                 <div>
+    //                                                     <span style="font-weight: bold;">Voucher : </span>
+    //                                                     <span style="float: right">${this
+    //                                                       .data.voucher ||
+    //                                                       "-"}</span>
+    //                                                 </div>
+    //                                                 <div>
+    //                                                     <span style="font-weight: bold;">Remark. : </span>
+    //                                                     <span style="float: right">${this
+    //                                                       .data.remark ||
+    //                                                       "-"}</span>
+    //                                                 </div>
+    //                                                 <hr style="border: 1px dotted;">
+    //                                                 <div>
+    //                                                     <span style="font-weight: bold;">Total : </span>
+    //                                                     <span style="float: right">${parseInt(
+    //                                                       this.data.tour
+    //                                                         .netPriceChild || 0
+    //                                                     ) *
+    //                                                       this.data
+    //                                                         .amountChild +
+    //                                                       parseInt(
+    //                                                         this.data.tour
+    //                                                           .netPriceAdult ||
+    //                                                           0
+    //                                                       ) *
+    //                                                         this.data
+    //                                                           .amountAdult ||
+    //                                                       "-"}</span>
+    //                                                 </div>
+    //                                             </div>
+    //                                             <div style="margin-top: 40px;">
+    //                                                 <h6 id="billFoot"></h6>
+    //                                             </div>`;
+    //   var contentForCustomer = `
+    //     <h4 style="border: 1px solid; padding: 30px; text-align: center">TOUR VOUCHER</h4>
+    //                                         <h3 style="text-align: center">${
+    //                                           this.billHead
+    //                                         }</h3>
+    //                                             <p id="realTime"></p>
+    //                                         <p></p>
+    //                                         <p style="text-align: right; font-weight: bold;">No. ${
+    //                                           this.data._id
+    //                                         }</p>
+    //                                             <div class="content">
+    //                                                 <div>
+    //                                                     <span style="font-weight: bold;">Name : </span>
+    //                                                     <div style="text-align: left">${this
+    //                                                       .data.name ||
+    //                                                       "-"}</div>
+    //                                                 </div>
+    //                                                 <div>
+    //                                                     <span style="font-weight: bold;">Agent : </span>
+    //                                                     <span style="float: right">${this
+    //                                                       .nameAgent ||
+    //                                                       "-"}</span>
+    //                                                 </div>
+    //                                                 <div>
+    //                                                     <span style="font-weight: bold;">Tour : </span>
+    //                                                     <span style="float: right">${this
+    //                                                       .data.tour.nameTour ||
+    //                                                       "-"}</span>
+    //                                                 </div>
+    //                                                 <div>
+    //                                                     <span style="font-weight: bold;">Adults : </span>
+    //                                                     <span>${this.data
+    //                                                       .amountAdult ||
+    //                                                       "-"}</span>
+    //                                                     <span style="float: right">${this
+    //                                                       .data.tour
+    //                                                       .priceAdult ||
+    //                                                       "-"}</span>
+    //                                                     <span style="font-weight: bold; float: right;">Price Adult : </span>
+    //                                                 </div>
+    //                                                 <div>
+    //                                                     <span style="font-weight: bold;">Children : </span>
+    //                                                     <span>${this.data
+    //                                                       .amountChild ||
+    //                                                       "-"}</span>
+    //                                                     <span style="float: right">${this
+    //                                                       .data.tour
+    //                                                       .priceChild ||
+    //                                                       "-"}</span>
+    //                                                     <span style="font-weight: bold; float: right;">Price Child: </span>
+    //                                                 </div>
+    //                                                 <div>
+    //                                                     <span style="font-weight: bold;">Total : </span>
+    //                                                     <span>${parseInt(
+    //                                                       this.data
+    //                                                         .amountAdult || 0
+    //                                                     ) +
+    //                                                       parseInt(
+    //                                                         this.data
+    //                                                           .amountChild || 0
+    //                                                       ) || "-"}</span>
+    //                                                     <span style="float: right">${parseInt(
+    //                                                       this.data.tour
+    //                                                         .priceChild || 0
+    //                                                     ) *
+    //                                                       this.data
+    //                                                         .amountChild +
+    //                                                       parseInt(
+    //                                                         this.data.tour
+    //                                                           .priceAdult || 0
+    //                                                       ) *
+    //                                                         this.data
+    //                                                           .amountAdult ||
+    //                                                       "-"}</span>
+    //                                                     <span style="font-weight: bold; float: right;">Total Net : </span>
+    //                                                 </div>
+    //                                                 <div>
+    //                                                     <span style="font-weight: bold;">Voucher : </span>
+    //                                                     <span style="float: right">${this
+    //                                                       .data.voucher ||
+    //                                                       "-"}</span>
+    //                                                 </div>
+    //                                                 <div>
+    //                                                     <span style="font-weight: bold;">Remark. : </span>
+    //                                                     <span style="float: right">${this
+    //                                                       .data.remark ||
+    //                                                       "-"}</span>
+    //                                                 </div>
+    //                                                 <hr style="border: 1px dotted;">
+    //                                                 <div>
+    //                                                     <span style="font-weight: bold;">Total : </span>
+    //                                                     <span style="float: right">${parseInt(
+    //                                                       this.data.tour
+    //                                                         .netPriceChild || 0
+    //                                                     ) *
+    //                                                       this.data
+    //                                                         .amountChild +
+    //                                                       parseInt(
+    //                                                         this.data.tour
+    //                                                           .netPriceAdult ||
+    //                                                           0
+    //                                                       ) *
+    //                                                         this.data
+    //                                                           .amountAdult ||
+    //                                                       "-"}</span>
+    //                                                 </div>
+    //                                             </div>
+    //                                             <div style="margin-top: 40px;">
+    //                                                 <h6 id="billFoot"></h6>
+    //                                             </div>`;
+      if (this.statusPrintTour) {
+        for (let i = 0; i < this.amountPrintTour; i++) {
+        //   document.getElementsByTagName("BODY")[0].onbeforeprint = function() {
+        //     $("#section-to-printBill").html(contentForSeatran);
+        //   };
+        //   window.print();
+        //   document.getElementsByTagName("BODY")[0].onbeforeprint = function() {
+        //     $("#section-to-printBill").html(contentForCustomer);
+        //   };
           window.print();
         }
       }
@@ -568,7 +569,8 @@ export default {
         this.selectAgent = "",
         this.nameAgent = "",
         this.selectTour = "",
-          this.$store.dispatch("getTourTicketLasted");
+        $("#detailTitleBill,#realTime").html('');
+        this.$store.dispatch("getTourTicketLasted");
       });
     },
     modalCancel(_id){
@@ -606,7 +608,6 @@ export default {
     getBillHead() {
       this.$store.dispatch("getBillHead").then(() => {
         const obj = this.$store.getters.getBillHead;
-        this.billHead = obj.billHead;
         this.billFoot = obj.billFoot;
         $("#billFoot").html(obj.billFoot);
       });
@@ -614,8 +615,8 @@ export default {
     getPrintSetting() {
       this.$store.dispatch("getPrintSetting").then(() => {
         const obj = this.$store.getters.getPrintSetting;
-        this.statusPrint = obj.statusPrint;
-        this.amountPrint = obj.amountPrint;
+        this.statusPrintTour = obj.statusPrintTour;
+        this.amountPrintTour = obj.amountPrintTour;
       });
     }
   },
@@ -626,10 +627,19 @@ export default {
         this.data.agent = obj._id;
         this.tourList = obj.tour;
         this.nameAgent = obj.nameAgent;
+        if(obj.detailTitleBill != null){
+            this.billHead = obj.detailTitleBill.replace(/\n/g, "<br />")
+            $("#detailTitleBill").html(this.billHead)
+        }else{
+            $("#detailTitleBill").html('')
+        }
+        this.logo = obj.logo;
       } else {
         this.data.agent = "";
         this.tourList = [];
         this.nameAgent = "";
+        this.billHead = "";
+        this.logo = "";
         this.selectTour = "";
       }
     },

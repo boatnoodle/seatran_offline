@@ -5,7 +5,9 @@ module.exports = {
     addAgent: (req,res,next) => {
         const agent = new Tour({
             _id: mongoose.Types.ObjectId(),
-            nameAgent: req.body.nameAgent
+            nameAgent: req.body.nameAgent,
+            detailTitleBill : req.body.detailTitleBill,
+            logo: req.body.logo
         })
         agent.save()
         .then((result) => {
@@ -16,7 +18,7 @@ module.exports = {
         })
     },
     getAgent: (req,res,next) => {
-        Tour.find({}, 'nameAgent')
+        Tour.find({})
         .exec()
         .then(result => {
             res.status(200).json(result)
@@ -26,7 +28,8 @@ module.exports = {
         })
     },
     updateAgent: (req,res,next) => {
-        Tour.update({_id: req.params.id},{$set: {nameAgent: req.body.nameAgent}})
+        console.log(req.body.detailTitleBill)
+        Tour.update({_id: req.params.id},{$set: {nameAgent: req.body.nameAgent, detailTitleBill: req.body.detailTitleBill, logo: req.body.logo}})
         .then(result => {
             res.status(200).json(result)
         })

@@ -25,6 +25,14 @@ const systemSchema = new Schema({
     amountPrint: {
         type: Number,
         default: 1
+    },
+    statusPrintTour: {
+        type: Boolean,
+        default: true
+    },
+    amountPrintTour: {
+        type: Number,
+        default: 1
     }
 })
 

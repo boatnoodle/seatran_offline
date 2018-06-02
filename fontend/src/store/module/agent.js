@@ -39,7 +39,9 @@ const actions = {
     },
     async updateAgent({commit},data){
         const dataUpdate = {
-            nameAgent: data.nameAgent
+            nameAgent: data.nameAgent,
+            detailTitleBill: data.detailTitleBill,
+            logo: data.logo
         }
         await axios.put('tour/updateAgent/'+ data.id,dataUpdate)
         .then(result => {

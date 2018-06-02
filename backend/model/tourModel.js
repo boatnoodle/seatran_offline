@@ -9,6 +9,13 @@ const tourSchema = new Schema({
         type: String,
         required: true
     },
+    detailTitleBill: {
+        type: String,
+        required: true
+    },
+    logo: {
+        type: String
+    },
     tour: [
         {
             nameTour: {
