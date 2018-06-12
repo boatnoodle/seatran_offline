@@ -59,14 +59,14 @@
                                     <td>{{ data._id }}</td>
                                     <td>{{ data.tour.nameTour }}</td>
                                     <td>{{ data.agent.nameAgent }}</td>
-                                    <td>{{ formatComma(data.amountAdult )}}</td>
-                                    <td>{{ formatComma(data.amountChild )}}</td>
-                                    <td>{{ formatComma(data.tour.priceAdult )}}</td>
-                                    <td>{{ formatComma(data.tour.priceChild )}}</td>
-                                    <td>{{ formatComma(data.tour.netPriceAdult )}}</td>
-                                    <td>{{ formatComma(data.tour.netPriceChild )}}</td>
-                                    <td>{{ formatComma((data.tour.priceAdult * data.amountAdult) + (data.tour.priceChild * data.amountChild) || '-' )}}</td>
-                                    <td>{{ formatComma((data.tour.netPriceAdult * data.amountAdult) + (data.tour.netPriceChild * data.amountChild) || '-' )}}</td>
+                                    <td>{{ formatComma(data.amountAdult || 0 )}}</td>
+                                    <td>{{ formatComma(data.amountChild || 0 )}}</td>
+                                    <td>{{ formatComma(data.tour.priceAdult || 0 )}}</td>
+                                    <td>{{ formatComma(data.tour.priceChild || 0 )}}</td>
+                                    <td>{{ formatComma(data.tour.netPriceAdult || 0 )}}</td>
+                                    <td>{{ formatComma(data.tour.netPriceChild || 0 )}}</td>
+                                    <td>{{ formatComma((data.tour.priceAdult * data.amountAdult) + (data.tour.priceChild * data.amountChild) || 0 )}}</td>
+                                    <td>{{ formatComma((data.tour.netPriceAdult * data.amountAdult) + (data.tour.netPriceChild * data.amountChild) || 0 )}}</td>
                                 </tr>
                             </template>
                             <tr :key="'subTotal'+titleAgent">
@@ -207,14 +207,14 @@ export default {
     watch: {
          tourTicket(val) {
             if (val.length > 0) {
-                var totalAmountAdult = val.reduce((a, b) => parseInt(a) + parseInt(b.amountAdult),0);
-                var totalAmountChild = val.reduce((a, b) => parseInt(a) + parseInt(b.amountChild),0);
-                var totalPriceAdult = val.reduce((a, b) => parseInt(a) + parseInt(b.tour.priceAdult),0);
-                var totalPriceChild = val.reduce((a, b) => parseInt(a) + parseInt(b.tour.priceChild),0);
-                var totalNetPriceAdult = val.reduce((a, b) => parseInt(a) + parseInt(b.tour.netPriceAdult),0);
-                var totalNetPriceChild = val.reduce((a, b) => parseInt(a) + parseInt(b.tour.netPriceChild),0);
-                var total = val.reduce((a, b) => parseInt(a) + parseInt((b.tour.priceAdult * b.amountAdult) + (b.tour.priceChild * b.amountChild)),0);
-                var totalNet = val.reduce((a, b) => parseInt(a) + parseInt((b.tour.netPriceAdult * b.amountAdult) + (b.tour.netPriceChild * b.amountChild)),0);
+                var totalAmountAdult = val.reduce((a, b) => parseInt(a) + parseInt(b.amountAdult || 0),0);
+                var totalAmountChild = val.reduce((a, b) => parseInt(a) + parseInt(b.amountChild || 0),0);
+                var totalPriceAdult = val.reduce((a, b) => parseInt(a) + parseInt(b.tour.priceAdult || 0),0);
+                var totalPriceChild = val.reduce((a, b) => parseInt(a) + parseInt(b.tour.priceChild || 0),0);
+                var totalNetPriceAdult = val.reduce((a, b) => parseInt(a) + parseInt(b.tour.netPriceAdult || 0),0);
+                var totalNetPriceChild = val.reduce((a, b) => parseInt(a) + parseInt(b.tour.netPriceChild || 0),0);
+                var total = val.reduce((a, b) => parseInt(a) + parseInt((b.tour.priceAdult * b.amountAdult) + (b.tour.priceChild * b.amountChild) || 0),0);
+                var totalNet = val.reduce((a, b) => parseInt(a) + parseInt((b.tour.netPriceAdult * b.amountAdult) + (b.tour.netPriceChild * b.amountChild) || 0),0);
                 
                 this.objTotal = {
                 totalAmountAdult: totalAmountAdult,
