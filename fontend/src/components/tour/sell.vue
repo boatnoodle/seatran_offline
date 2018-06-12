@@ -535,6 +535,9 @@ export default {
     //                                                 <h6 id="billFoot"></h6>
     //                                             </div>`;
       if (this.statusPrintTour) {
+          Jquery("#realTime").text(
+            moment(new Date()).format("MM/DD/YYYY, h:mm:ss a")
+          );
         for (let i = 0; i < this.amountPrintTour; i++) {
         //   document.getElementsByTagName("BODY")[0].onbeforeprint = function() {
         //     $("#section-to-printBill").html(contentForSeatran);
@@ -548,9 +551,6 @@ export default {
       }
       this.$store.dispatch("addTourTicket", this.data).then(() => {
         moment.locale("en");
-        Jquery("#realTime").text(
-          moment(new Date()).format("MM/DD/YYYY, h:mm:ss a")
-        );
         this.genIdTicket(this.data._id);
         this.selectTypeName = "cash";
         this.data.name = "cash",
