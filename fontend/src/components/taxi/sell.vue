@@ -9,6 +9,10 @@
                     </div>
                     <div class="card-body">
                         <form v-on:submit.prevent="submit">
+                            <div v-show="getStatusUser" class="form-group">
+                                <label>เลือกวันที่</label>
+                                <input v-model="data.created" type="date" class="form-control">
+                            </div>
                             <div class="form-group">
                                 <label>เลือกประเภท</label>
                                 <select v-model="selectTypeNamePassenger" class="form-control">
@@ -217,7 +221,8 @@ export default {
                 totalPassenger: '',
                 total: '',
                 typeCar: '',
-                remark: ''
+                remark: '',
+                created: null
             },
             selectTypeNamePassenger: 'cash',
             selectRoute: '',
@@ -252,6 +257,13 @@ export default {
            
         },
         submit(){
+            // for admin
+            if(this.data.created != null){
+                let changeFormat = (moment(new Date(this.data.created)).format('YYYY-MM-DD h:mm:ss'))
+                let dateIso = new Date(changeFormat).toISOString()
+                this.data.created = dateIso
+            }
+
             this.$store.dispatch('addTaxiTicketRealTime',this.data)
             .then(() => {
                 moment.locale('en');
@@ -301,6 +313,12 @@ export default {
         }
     },
     computed: {
+        getStatusUser(){
+            if(this.$store.getters.checkLoginUser.status != 99){
+                return false
+            }
+            return true
+        },
         getAllRouteTaxi(){
             return this.routeTaxi =  this.$store.getters.getAllRouteTaxi
         },

@@ -24,7 +24,7 @@ module.exports = {
             }else{
                 var _id = req.body._id
             }
-            const data = {
+            let data = {
                 _id: _id,
                 namePassenger: req.body.namePassenger,
                 destination: req.body.destination,
@@ -35,6 +35,9 @@ module.exports = {
                 total: req.body.total,
                 typeCar: req.body.typeCar,
                 remark: req.body.remark
+            }
+            if(req.body.created != null){
+                data.created = req.body.created
             }
             const taxiTicket = new TaxiTicket(data)
             taxiTicket.save()

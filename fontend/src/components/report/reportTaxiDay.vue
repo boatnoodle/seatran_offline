@@ -54,7 +54,7 @@
                     </tbody>
                     <tfoot id="section-to-hide">
                         <tr>
-                            <th colspan="3">รวม</th>
+                            <th colspan="4">รวม</th>
                             <th class="text-right">{{ formatComma(total.totalPrice || 0) }}</th>
                             <th class="text-right">{{ formatComma(total.totalAdl || 0) }}</th>
                             <th class="text-right">{{ formatComma(total.totalKid || 0) }}</th>
