@@ -421,6 +421,11 @@ export default {
 }
 </script>
 <style scoped>
+@media print {
+    #section-to-print{
+        position: fixed !important
+    }
+}
 .boxShowTotal {
   text-align: right;
   padding: 10px;

@@ -696,6 +696,11 @@ export default {
 };
 </script>
 <style scoped>
+@media print {
+    #section-to-print{
+        position: fixed !important
+    }
+}
 .boxSell {
   background: white;
   width: 100%;
