@@ -470,7 +470,10 @@ export default {
 <style scoped>
 @media print {
     #section-to-print{
-        position: fixed !important
+        position: fixed !important;
+        top: 0;
+        height: 100vh !important;
+        overflow: hidden;
     }
 }
 .boxSell {
