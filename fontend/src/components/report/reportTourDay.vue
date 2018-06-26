@@ -7,7 +7,19 @@
                 <input type="date" v-model="data.dateFrom" class="form-control col-sm-8" required>
                 <button type="submit" class="btn btn-info btn-sm col-sm-2">ค้นหา</button>
             </div>
+            <p class="text-right" style="color: red; display: none;">กรุณาเลือกวันที่เพื่อค้นหา!</p>
         </form>
+        <div class="col-sm-6 offset-sm-3 no-print">
+          <div class="form-group row">
+              <div class="text-right col-sm-3">เลือกตัวแทนขาย</div>
+              <select v-model="selectAgent" class="form-control col-sm-7">
+                <option value="">กรุณาเลือกตัวแทนขาย</option>
+                <option value="all">All</option>
+                <option v-for="(data,index) in objAgent" :value="data._id" :key="index">{{ data.nameAgent }}</option>
+              </select>
+              <button type="submit" @click="filterAgentReport()" class="btn btn-info btn-sm col-sm-2">ค้นหา</button>
+          </div>
+        </div>
         <h6 class="titleDatePrint text-center" >รายงานประจำวันที่ {{ data.dateFrom || '-' }}</h6>
         <div class="row no-print" style="margin-bottom: 15px;">
             <div class="col-sm-12 text-right">
@@ -108,7 +120,9 @@ export default {
         .format("Do MMM YYYY"),
       searchKey: "",
       objTotal: {},
-      percentTour: ""
+      percentTour: "",
+      objAgent: {},
+      selectAgent: ""
     };
   },
   methods: {
@@ -123,7 +137,6 @@ export default {
     },
     getTourTicketByDate() {
       this.dataTable = this.$store.getters.getTourTicketByDate;
-      console.log(this.dataTable)
       return this.dataTable;
     },
     dateFormat(isoDate) {
@@ -138,6 +151,17 @@ export default {
         return sub
       }
       return x
+    },
+    filterAgentReport() {
+      this.getTourTicketByDate()
+      if(this.selectAgent != 'all'){
+        let objFound =  this.dataTable.filter(v => {
+            return (
+              v.agent._id == (this.selectAgent)
+            );
+          });
+          this.dataTable = objFound
+      }
     }
   },
   computed: {
@@ -146,8 +170,8 @@ export default {
         return (
           v._id.match(this.searchKey) ||
           v.name.match(this.searchKey) ||
-          v.nameAgent.match(this.searchKey) ||
-          v.tour.nameTour.match(this.searchKey)
+          v.agent.nameAgent.match(this.searchKey) ||
+          v.tour.nameTour.match(this.searchKey) 
         );
       });
     },
@@ -156,6 +180,12 @@ export default {
         const obj = this.$store.getters.getPercent;
         this.percentTour = obj.percentTour / 100;
       });
+    },
+    getAgent() {
+      this.$store.dispatch("getAgent").then(() => {
+        // console.log(this.$store.getters.getAgent)
+        this.objAgent = this.$store.getters.getAgent;
+      })
     }
   },
   watch: {
@@ -227,6 +257,7 @@ export default {
   },
   created() {
     this.getPercentTour;
+    this.getAgent;
   }
 };
 </script>

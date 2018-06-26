@@ -32,6 +32,7 @@
                             <th rowspan="2">รหัส</th>
                             <th rowspan="2">ชื่อ</th>
                             <th rowspan="2">ตัวแทนขาย</th>
+                            <th width="5%" rowspan="2">Voucher</th>
                             <th colspan="2">จำนวน</th>
                             <th colspan="2">Full Rate</th>
                             <th colspan="2">Net Rate</th>
@@ -51,14 +52,15 @@
                     <tbody>
                         <template v-for="titleAgent in getTitleAgent">
                             <tr class="text-left" :key="titleAgent">
-                                <th colspan="12"><b>{{ titleAgent }}</b></th>
+                                <th colspan="13"><b>{{ titleAgent }}</b></th>
                             </tr>
                             <template v-for="(data,index) in tourTicket">
                                 <tr v-if="titleAgent == data.agent.nameAgent" :key="titleAgent + index + index">
                                     <td>{{ dateFormat(data.created) }}</td>
                                     <td>{{ data._id }}</td>
                                     <td>{{ data.tour.nameTour }}</td>
-                                    <td>{{ data.agent.nameAgent }}</td>
+                                    <td>{{ subString(data.agent.nameAgent) }}</td>
+                                    <td>{{ data.voucher || '-'}}</td>
                                     <td>{{ formatComma(data.amountAdult || 0 )}}</td>
                                     <td>{{ formatComma(data.amountChild || 0 )}}</td>
                                     <td>{{ formatComma(data.tour.priceAdult || 0 )}}</td>
@@ -70,7 +72,7 @@
                                 </tr>
                             </template>
                             <tr :key="'subTotal'+titleAgent">
-                                <td colspan="4">Sub Total</td>
+                                <td colspan="5">Sub Total</td>
                                 <td>{{ formatComma( subTotals[titleAgent].amountAdult || 0) }}</td>
                                 <td>{{ formatComma( subTotals[titleAgent].amountChild || 0) }}</td>
                                 <td>{{ formatComma( subTotals[titleAgent].fullRateAdult || 0) }}</td>
@@ -84,7 +86,7 @@
                     </tbody>
                     <tfoot>
                         <tr>
-                            <th colspan="4" style="font-size: 18px;">รวม</th>
+                            <th colspan="5" style="font-size: 18px;">รวม</th>
                             <th>{{ formatComma(objTotal.totalAmountAdult || 0 ) }}</th>
                             <th>{{ formatComma(objTotal.totalAmountChild || 0 ) }}</th>
                             <th>{{ formatComma(objTotal.totalPriceAdult || 0 ) }}</th>
@@ -179,6 +181,13 @@ export default {
                 this.subTotals[data.agent.nameAgent].netRate += (data.tour.netPriceAdult * data.amountAdult) + (data.tour.netPriceChild * data.amountChild)
             });
             
+        },
+        subString(x){
+            if(x.length > 15){
+                let sub = x.substring(0,15) + '...'
+                return sub
+            }
+            return x
         }
     },
     computed: {
