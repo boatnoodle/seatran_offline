@@ -41,7 +41,7 @@ module.exports = {
         }
         TourTicket.find({ "created": { $gte: new Date(req.body.dateFrom), $lt: dateTo } })
             .populate('agent')
-            .sort([['agent', -1]])
+            .sort([['_id', -1]])
             .exec()
             .then(result => {
                 var obj = []
