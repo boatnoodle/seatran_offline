@@ -154,7 +154,7 @@
                                             <img :src="logo" width="100%" alt="" style="margin: 15px 0;">
                                             <h5 id="detailTitleBill" style="line-height: 0.8; text-align: left;"></h5>
                                             <p id="realTime"></p>
-                                            <p style="text-align: right; font-weight: bold;">No. {{ data._id }}</p>
+                                            <p class="runNoPrint" style="text-align: right; font-weight: bold;">No. {{ data._id }}</p>
                                                 <div class="content">
                                                     <div>
                                                         <span style="font-weight: bold;">Name : </span>
@@ -470,10 +470,14 @@ export default {
 <style scoped>
 @media print {
     #section-to-print{
+        width: 100% !important;
         position: fixed !important;
-        top: 0;
-        height: 100vh !important;
-        overflow: hidden;
+        top: 0 !important;
+        left: 0 !important;
+        page-break-before: always;
+    }
+    .runNoPrint{
+        font-size: 40px !important;
     }
 }
 .boxSell {

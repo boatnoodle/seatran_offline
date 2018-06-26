@@ -61,7 +61,6 @@
                             <th class="text-right">{{ formatComma(total.totalAmount || 0) }}</th>
                             <th class="text-right">{{ formatComma(total.total || 0) }}</th>
                             <th></th>
-                            <th></th>
                         </tr>
                     </tfoot>
                 </table>

@@ -26,10 +26,11 @@
                 <table class="table table-sm table-bordered table-hover text-center">
                     <thead>
                         <tr>
-                            <th rowspan="2">วันที่</th>
                             <th rowspan="2">รหัส</th>
                             <th rowspan="2">ชื่อ</th>
                             <th rowspan="2">ตัวแทนขาย</th>
+                            <th rowspan="2">Voucher</th>
+                            <th rowspan="2">วันที่</th>
                             <th colspan="2">จำนวน</th>
                             <th colspan="2">Full Rate</th>
                             <th colspan="2">Net Rate</th>
@@ -48,10 +49,11 @@
                     </thead>
                     <tbody>
                         <tr v-for="(data,index) in tourTicket" :key="index">
-                            <td>{{ dateFormat(data.created) }}</td>
                             <td>{{ data._id }}</td>
                             <td>{{ data.tour.nameTour }}</td>
-                            <td>{{ data.agent.nameAgent }}</td>
+                            <td>{{ subString(data.agent.nameAgent) }}</td>
+                            <td>{{ data.voucher || '-' }}</td>
+                            <td>{{ dateFormat(data.created) }}</td>
                             <td>{{ formatComma(data.amountAdult || 0 )}}</td>
                             <td>{{ formatComma(data.amountChild || 0 )}}</td>
                             <td>{{ formatComma(data.tour.priceAdult || 0 )}}</td>
@@ -64,7 +66,7 @@
                     </tbody>
                     <tfoot>
                         <tr>
-                            <th colspan="4">รวม</th>
+                            <th colspan="5">รวม</th>
                             <th>{{ formatComma(objTotal.totalAmountAdult || 0 ) }}</th>
                             <th>{{ formatComma(objTotal.totalAmountChild || 0 ) }}</th>
                             <th>{{ formatComma(objTotal.totalPriceAdult || 0 ) }}</th>
@@ -129,6 +131,13 @@ export default {
     },
     formatComma(x) {
       return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    },
+    subString(x){
+      if(x.length > 15){
+        let sub = x.substring(0,15) + '...'
+        return sub
+      }
+      return x
     }
   },
   computed: {
