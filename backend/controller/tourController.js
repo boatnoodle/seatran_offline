@@ -48,6 +48,7 @@ module.exports = {
     },
     getTour: (req,res,next) => {
         Tour.find()
+        .sort([['tour.nameTour', -1]])
         .exec()
         .then(result=>{
             res.status(200).json(result)
